@@ -1,0 +1,141 @@
+@charset "utf-8";
+/*
+
+  - Very Frankensteinian 
+
+*/
+.block {
+	display: block;
+}
+/* .container {
+	width: min(100% - 30px, 1200px);
+	margin-inline: auto;
+} */
+
+.flex {
+	display: flex;
+}
+.f-col {
+	flex-direction: column;
+}
+
+.circle {
+	border-radius: 50%;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.red {
+  background-color: #d00;
+  height: 50px;
+  width: 50px;
+}
+
+body {
+	font-family: "Poppins", Arial, Helvetica, sans-serif;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+.draggable {
+  width: 100px;
+  height: 100px;
+  background-color: #3498db;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: move;
+  position: absolute;
+}
+
+h2 {
+	font-size: 2rem;
+	color: #fff;
+}
+
+main {
+	width: 100%;
+	height: 100svh;
+	justify-content: center;
+	align-items: center;
+}
+
+.game-area {
+	width: 350px;
+	height: fit-content;
+	justify-content: center;
+	align-items: center;
+  background-color: antiquewhite;
+  padding: 25px;
+}
+
+input {
+	outline: none;
+	border: none;
+	height: 120px;
+	width: 120px;
+	border-radius: 50%;
+	line-height: 120px;
+	text-align: center;
+	font-size: 1.8rem;
+	font-weight: 500;
+  margin: 10px;
+}
+
+button {
+	border: none;
+  outline: none;
+  background: none;
+  box-shadow: none;
+	margin: 10px;
+	border-radius: 15px;
+  font-size: 1.2rem;
+  color: #fff;
+	text-align: center;
+	padding: 5px 15px;
+	background-color: #9d6;
+}
+
+.code-selector, .grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+  grid-template-rows: auto;
+  gap: 20px;         
+}
+
+.number-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 100px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+.number-display {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+.arrow {
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+}
+.arrow:active {
+  color: #007bff;
+}
