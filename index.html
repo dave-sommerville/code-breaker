@@ -18,7 +18,7 @@
 </head>
 <body>
   <main class="flex f-col">
-    <section>
+    <section class="flex">
       <div class="code-selector glow-text">
         <div class="number-selector">
           <div class="arrow up">▲</div>
@@ -40,11 +40,28 @@
           <div class="number-display">1</div>
           <div class="arrow down">▼</div>
         </div>
+      </div>
+      <div class="collect-wrap flex">
+        <button class="collect-values-button">
+          Guess
+        </button>
+      </div>
     </section>
-    <button class="collect-values-button">Collect Values</button>
+    <section class="flex">
+      <div class="grid-container">
+        <span class="box"></span>
+        <span class="box"></span>
+        <span class="box"></span>
+        <span class="box"></span>
+        <span class="box"></span>
 
-    <section>
-      <div id="grid-container"></div>
+      </div>
+      <div class="clues">
+        <span class="checkboxes"></span>
+        <span class="checkboxes"></span>
+        <span class="checkboxes"></span>
+        <span class="checkboxes"></span>
+      </div>
     </section>
   </main>
 </body>

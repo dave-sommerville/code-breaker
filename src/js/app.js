@@ -72,50 +72,16 @@ selectAll('.number-selector').forEach(selector => {
   });
 });
 
-// Button to collect the selected values
 const collectButton = document.querySelector('.collect-values-button');
 
-// Event listener for the button
 listen('click', collectButton, () => {
-  const values = []; // Initialize an array to store the values
+  const values = []; 
 
-  // Loop through each number selector
   selectAll('.number-selector').forEach(selector => {
     const display = selector.querySelector('.number-display');
     values.push(parseInt(display.textContent)); // Push the current number to the array
   });
 
-  console.log(values); // Log the array for verification or further use
+  console.log(values); 
 });
 
-const gridData = [
-  [1, 2, 3, 4],
-  [5, 6, 7, 8],
-  [9, 10, 11, 12],
-  [13, 14, 15, 16],
-  [17, 18, 19, 20],
-  [21, 22, 23, 24],
-  [25, 26, 27, 28],
-  [29, 30, 31, 32],
-];
-
-// Select the grid container
-const gridContainer = document.getElementById('grid-container');
-
-// Apply styles to the grid container
-gridContainer.style.display = 'grid';
-gridContainer.style.gridTemplateRows = `repeat(${gridData.length}, auto)`;
-gridContainer.style.gridTemplateColumns = `repeat(4, 1fr)`;
-gridContainer.style.gap = '10px';
-
-// Generate the grid
-gridData.forEach(row => {
-  row.forEach(cell => {
-    const cellElement = document.createElement('div');
-    cellElement.textContent = cell;
-    cellElement.style.border = '1px solid black';
-    cellElement.style.padding = '10px';
-    cellElement.style.textAlign = 'center';
-    gridContainer.appendChild(cellElement);
-  });
-});
