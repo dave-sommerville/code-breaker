@@ -15,6 +15,11 @@ function listen(event, element, callback) {
   return element.addEventListener(event, callback);
 }
 
+function create(element) {
+  const newElement = document.createElement(element); 
+  return newElement;
+}
+
 function addClass(element, customClass) {
   element.classList.add(customClass);
   return element;
@@ -76,6 +81,34 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   }
 }
 
+const gridContainer = select('.grid-container');
+
+const trialTest = [1,2,3,4,5,6,7,8,9];
+
+function populateWithSpans(valuesArray) {
+  // Select the container element
+
+  // Check if the container exists
+  if (!gridContainer) {
+    console.error("Container not found. Please provide a valid selector.");
+    return;
+  }
+
+  // Clear any existing content in the container
+  gridContainer.innerHTML = "";
+
+  // Iterate over the array and create span elements
+  valuesArray.forEach(value => {
+    const span = create("span");
+    span.textContent = value; // Add the value as the span's text content
+    span.classList.add("box");
+
+    // Append the span to the container
+    gridContainer.appendChild(span);
+  });
+}
+
+populateWithSpans(trialTest);
 // Get the token counts
 // const { redTokens, whiteTokens } = countTokens(arr1, arr2);
 

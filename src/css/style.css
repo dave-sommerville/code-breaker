@@ -103,7 +103,8 @@ main {
 .box {
   width: 50px;
   height: 50px;
-  background-color: #5f9;
+  line-height: 50px;
+  text-align: center;
 }
 
 .checkboxes {
@@ -143,20 +144,18 @@ main {
 	}
 }
 
-
-
 .fade {
 	animation: fadeInOut 1s infinite; 
 }
 
 @keyframes fadeInOut {
 	0% {
-    border: 1px solid rgb(0 255 0 / 0);
+    border: none;
 	}
 	50% {
     border: 1px solid rgb(0 255 0 / 1);
 	}
 	100% {
-    border: 1px solid rgb(0 255 0 / 0);
+    border: none;
 	}
 }
