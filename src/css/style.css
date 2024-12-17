@@ -88,9 +88,20 @@ main {
 }
 
 .collect-values-button {
-  height: 50px;
+  height: 75px;
   width: 75px;
   margin: 20px;
+  background-color: #001;
+  font-size: 2.6rem;
+  color: #0f0;
+	text-shadow: 
+			0 0 5px #0f0,
+			0 0 10px #0e0,
+			0 0 20px #0f0,
+			0 0 40px #0e0,
+			0 0 80px #4f4; 
+	animation: flicker 1.5s infinite alternate;
+
 }
 
 .clues {
