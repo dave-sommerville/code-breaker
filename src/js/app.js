@@ -1,6 +1,7 @@
 'use strict';
-/*------------------------------------------------>
 
+/*------------------------------------------------>
+Utility Functions
 <------------------------------------------------*/
 
 function select(selector, scope = document) {
@@ -16,18 +17,7 @@ function listen(event, element, callback) {
 }
 
 function create(element) {
-  const newElement = document.createElement(element); 
-  return newElement;
-}
-
-function addClass(element, customClass) {
-  element.classList.add(customClass);
-  return element;
-}
-
-function removeClass(element, customClass) {
-  element.classList.remove(customClass);
-  return element;
+  return document.createElement(element);
 }
 
 function getRandomNumber(min, max) {
@@ -35,86 +25,106 @@ function getRandomNumber(min, max) {
 }
 
 /*------------------------------------------------>
-Master mind 
+Mastermind Game Logic
 <------------------------------------------------*/
-const arr1 = [2, 2, 2, 2];
-const arr2 = [1, 2, 3, 2];
 
-function countTokens(arr1, arr2) {
+// Generate a random master code
+function generateMasterCode(length = 4, min = 1, max = 6) {
+  return Array.from({ length }, () => getRandomNumber(min, max));
+}
+
+let masterCode = generateMasterCode();
+console.log("Master Code:", masterCode); // Debugging purpose
+
+// Compare player's guess with the master code
+function countTokens(code, guess) {
   let redTokens = 0;
   let whiteTokens = 0;
-  const arr2Copy = [...arr2];
+  const codeCopy = [...code];
+  const guessCopy = [...guess];
 
-  arr1.forEach((num, index) => {
-    if (num === arr2[index]) {
+  // Check for red tokens (correct number, correct position)
+  guessCopy.forEach((num, index) => {
+    if (num === codeCopy[index]) {
       redTokens++;
-      arr2Copy[index] = null; 
-    } else if (arr2Copy.includes(num)) {
+      codeCopy[index] = null;
+      guessCopy[index] = null;
+    }
+  });
+
+  // Check for white tokens (correct number, wrong position)
+  guessCopy.forEach((num) => {
+    if (num !== null && codeCopy.includes(num)) {
       whiteTokens++;
-      arr2Copy[arr2Copy.indexOf(num)] = null; 
+      codeCopy[codeCopy.indexOf(num)] = null;
     }
   });
 
   return { redTokens, whiteTokens };
 }
 
-const { redTokens, whiteTokens } = countTokens(arr1, arr2);
-console.log(redTokens, whiteTokens);
+/*------------------------------------------------>
+UI Updates and Game Mechanics
+<------------------------------------------------*/
 
+const gridContainer = select('.grid-container');
+const collectButton = select('.collect-values-button');
+const checkboxes = selectAll('.checkboxes');
+const guessHistory = [];
+
+// Populate grid with guesses
+function populateWithSpans(valuesArray) {
+  gridContainer.innerHTML = ""; // Clear previous content
+  valuesArray.forEach((value) => {
+    const span = create("span");
+    span.textContent = value;
+    span.classList.add("box");
+    gridContainer.appendChild(span);
+  });
+}
+
+// Update checkbox colors based on red and white tokens
 function updateCheckboxColors(redTokens, whiteTokens) {
-  const checkboxes = document.querySelectorAll('.checkboxes');
   let index = 0;
 
-  // Set red tokens (e.g., red background)
+  // Set red tokens
   for (; index < redTokens; index++) {
     checkboxes[index].style.backgroundColor = 'red';
   }
 
-  // Set white tokens (e.g., white background)
+  // Set white tokens
   for (let i = 0; i < whiteTokens; i++, index++) {
     checkboxes[index].style.backgroundColor = 'white';
   }
 
-  // Set remaining checkboxes to default (gray)
+  // Reset remaining checkboxes
   for (; index < checkboxes.length; index++) {
     checkboxes[index].style.backgroundColor = 'gray';
   }
 }
 
-const gridContainer = select('.grid-container');
-
-const trialTest = [1,2,3,4,5,6,7,8,9];
-
-function populateWithSpans(valuesArray) {
-  // Select the container element
-
-  // Check if the container exists
-  if (!gridContainer) {
-    console.error("Container not found. Please provide a valid selector.");
-    return;
+// Check for win condition
+function checkWinCondition(redTokens, codeLength) {
+  if (redTokens === codeLength) {
+    alert("🎉 You guessed the code! Congratulations!");
+    resetGame();
   }
-
-  // Clear any existing content in the container
-  gridContainer.innerHTML = "";
-
-  // Iterate over the array and create span elements
-  valuesArray.forEach(value => {
-    const span = create("span");
-    span.textContent = value; // Add the value as the span's text content
-    span.classList.add("box");
-
-    // Append the span to the container
-    gridContainer.appendChild(span);
-  });
 }
 
-populateWithSpans(trialTest);
-// Get the token counts
-// const { redTokens, whiteTokens } = countTokens(arr1, arr2);
+// Reset the game
+function resetGame() {
+  masterCode = generateMasterCode();
+  console.log("New Master Code:", masterCode); // Debugging purpose
+  gridContainer.innerHTML = ""; // Clear guesses
+  checkboxes.forEach(box => box.style.backgroundColor = 'gray'); // Reset clues
+  guessHistory.length = 0; // Clear guess history
+}
 
-// Update the checkbox colors
-updateCheckboxColors(redTokens, whiteTokens);
+/*------------------------------------------------>
+Event Listeners and Input Management
+<------------------------------------------------*/
 
+// Number selector logic
 selectAll('.number-selector').forEach(selector => {
   const display = selector.querySelector('.number-display');
   const upArrow = selector.querySelector('.arrow.up');
@@ -131,16 +141,28 @@ selectAll('.number-selector').forEach(selector => {
   });
 });
 
-const collectButton = document.querySelector('.collect-values-button');
-
+// Collect player guess on button click
 listen('click', collectButton, () => {
-  const values = []; 
+  const playerGuess = [];
 
+  // Collect values from number selectors
   selectAll('.number-selector').forEach(selector => {
     const display = selector.querySelector('.number-display');
-    values.push(parseInt(display.textContent)); // Push the current number to the array
+    playerGuess.push(parseInt(display.textContent));
   });
 
-  console.log(values); 
-});
+  console.log("Player Guess:", playerGuess); // Debugging purpose
 
+  // Compare player's guess with master code
+  const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
+
+  // Update clue display
+  updateCheckboxColors(redTokens, whiteTokens);
+
+  // Add guess to history and display it in grid
+  guessHistory.push([...playerGuess]);
+  populateWithSpans(guessHistory.flat());
+
+  // Check for win condition
+  checkWinCondition(redTokens, masterCode.length);
+});

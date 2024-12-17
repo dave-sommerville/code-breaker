@@ -65,11 +65,13 @@ main {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
+
 .number-display {
   font-size: 24px;
   font-weight: bold;
   margin: 8px 0;
 }
+
 .arrow {
   cursor: pointer;
   font-size: 20px;
