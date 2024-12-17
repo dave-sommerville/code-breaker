@@ -31,36 +31,13 @@
   display: none;
 }
 
-.red {
-  background-color: #d00;
-  height: 50px;
-  width: 50px;
-}
-
 body {
 	font-family: "Poppins", Arial, Helvetica, sans-serif;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
-  background-color: #f0f0f0;
-}
-
-.draggable {
-  width: 100px;
-  height: 100px;
-  background-color: #3498db;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: move;
-  position: absolute;
-}
-
-h2 {
-	font-size: 2rem;
-	color: #fff;
+  /* background-color: #001; */
 }
 
 main {
@@ -70,45 +47,10 @@ main {
 	align-items: center;
 }
 
-.game-area {
-	width: 350px;
-	height: fit-content;
-	justify-content: center;
-	align-items: center;
-  background-color: antiquewhite;
-  padding: 25px;
-}
-
-input {
-	outline: none;
-	border: none;
-	height: 120px;
-	width: 120px;
-	border-radius: 50%;
-	line-height: 120px;
-	text-align: center;
-	font-size: 1.8rem;
-	font-weight: 500;
-  margin: 10px;
-}
-
-button {
-	border: none;
-  outline: none;
-  background: none;
-  box-shadow: none;
-	margin: 10px;
-	border-radius: 15px;
-  font-size: 1.2rem;
-  color: #fff;
-	text-align: center;
-	padding: 5px 15px;
-	background-color: #9d6;
-}
 
 .code-selector, .grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: auto;
   gap: 20px;         
 }
@@ -119,10 +61,10 @@ button {
   align-items: center;
   justify-content: center;
   width: 50px;
-  height: 100px;
-  border: 1px solid #ccc;
+  height: 110px;
+  border: 1px solid #0f0;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #001;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
@@ -138,4 +80,54 @@ button {
 }
 .arrow:active {
   color: #007bff;
+}
+
+.glow-text {
+	font-size: 2rem;
+	color: #0f0; /* Base color for the text */
+	text-shadow: 
+			0 0 5px #0f0,
+			0 0 10px #0e0,
+			0 0 20px #0f0,
+			0 0 40px #0e0,
+			0 0 80px #4f4; /* Layered glow effect */
+	animation: flicker 1.5s infinite alternate;
+}
+
+/* Add a subtle flicker animation */
+@keyframes flicker {
+	0%, 100% {
+			text-shadow: 
+					0 0 3px #0f0,
+					0 0 7px #0f0,
+					0 0 15px #0f0,
+					0 0 30px #0f0,
+					0 0 60px #0f0;
+	}
+	50% {
+			text-shadow: 
+					0 0 2px #0f0,
+					0 0 5px #0f0,
+					0 0 10px #0f0,
+					0 0 20px #0f0,
+					0 0 40px #0f0;
+	}
+}
+
+
+
+.fade {
+	animation: fadeInOut 1s infinite; 
+}
+
+@keyframes fadeInOut {
+	0% {
+    border: 1px solid rgb(0 255 0 / 0);
+	}
+	50% {
+    border: 1px solid rgb(0 255 0 / 1);
+	}
+	100% {
+    border: 1px solid rgb(0 255 0 / 0);
+	}
 }

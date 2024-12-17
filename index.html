@@ -17,19 +17,15 @@
   <script src="./src/js/app.js" defer></script>
 </head>
 <body>
-  <main class="flex">
-    <section class="game-area flex f-col hidden">
-			<h2>Take your chance</h2>
-			<input type="text" class="player-input">
-			<button class="start">Start</button>
-			<button class="restart">Restart</button>
-		</section>
-    <section class="hidden">
-      <div id="draggable" class="draggable">Drag me!
-    </section>
+  <main class="flex f-col">
     <section>
-      <div class="code-selector">
+      <div class="code-selector glow-text">
         <div class="number-selector">
+          <div class="arrow up">▲</div>
+          <div class="number-display">1</div>
+          <div class="arrow down">▼</div>
+        </div>
+        <div class="number-selector fade-in">
           <div class="arrow up">▲</div>
           <div class="number-display">1</div>
           <div class="arrow down">▼</div>
@@ -44,15 +40,11 @@
           <div class="number-display">1</div>
           <div class="arrow down">▼</div>
         </div>
-        <div class="number-selector">
-          <div class="arrow up">▲</div>
-          <div class="number-display">1</div>
-          <div class="arrow down">▼</div>
-        </div>
-        <button class="collect-values-button">Collect Values</button>
-        <div class="red"></div>
-        <div class="red"></div>
-        <div class="red"></div>
+    </section>
+    <button class="collect-values-button">Collect Values</button>
+
+    <section>
+      <div id="grid-container"></div>
     </section>
   </main>
 </body>
