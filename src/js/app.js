@@ -56,6 +56,32 @@ function countTokens(arr1, arr2) {
 const { redTokens, whiteTokens } = countTokens(arr1, arr2);
 console.log(redTokens, whiteTokens);
 
+function updateCheckboxColors(redTokens, whiteTokens) {
+  const checkboxes = document.querySelectorAll('.checkboxes');
+  let index = 0;
+
+  // Set red tokens (e.g., red background)
+  for (; index < redTokens; index++) {
+    checkboxes[index].style.backgroundColor = 'red';
+  }
+
+  // Set white tokens (e.g., white background)
+  for (let i = 0; i < whiteTokens; i++, index++) {
+    checkboxes[index].style.backgroundColor = 'white';
+  }
+
+  // Set remaining checkboxes to default (gray)
+  for (; index < checkboxes.length; index++) {
+    checkboxes[index].style.backgroundColor = 'gray';
+  }
+}
+
+// Get the token counts
+// const { redTokens, whiteTokens } = countTokens(arr1, arr2);
+
+// Update the checkbox colors
+updateCheckboxColors(redTokens, whiteTokens);
+
 selectAll('.number-selector').forEach(selector => {
   const display = selector.querySelector('.number-display');
   const upArrow = selector.querySelector('.arrow.up');
