@@ -83,42 +83,58 @@ function populateWithSpans(valuesArray) {
   });
 }
 
-// Update checkbox colors based on red and white tokens
 function updateCheckboxColors(redTokens, whiteTokens) {
+  // Create a new group of checkboxes for this guess
+  const checkboxContainer = select('.checkbox-container');
+  const checkboxGroup = create('div');
+  checkboxGroup.classList.add('checkbox-group');
+
+  // Create 4 checkboxes for the current guess
+  for (let i = 0; i < 4; i++) {
+    const checkbox = create('div');
+    checkbox.classList.add('checkboxes');
+    checkbox.style.backgroundColor = 'gray'; // Default color
+    checkboxGroup.appendChild(checkbox);
+  }
+
+  // Append the new checkbox group to the container
+  checkboxContainer.appendChild(checkboxGroup);
+
+  // Select the latest checkbox group
+  const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
+
   let index = 0;
 
   // Set red tokens
   for (; index < redTokens; index++) {
-    checkboxes[index].style.backgroundColor = 'red';
+    currentCheckboxes[index].style.backgroundColor = 'red';
   }
 
   // Set white tokens
   for (let i = 0; i < whiteTokens; i++, index++) {
-    checkboxes[index].style.backgroundColor = 'white';
+    currentCheckboxes[index].style.backgroundColor = 'white';
   }
 
-  // Reset remaining checkboxes
-  for (; index < checkboxes.length; index++) {
-    checkboxes[index].style.backgroundColor = 'gray';
-  }
+  // Any remaining checkboxes remain gray (default)
 }
-
 // Check for win condition
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
-    alert("🎉 You guessed the code! Congratulations!");
+    alert("You guessed the code! Congratulations!");
     resetGame();
   }
 }
 
-// Reset the game
 function resetGame() {
   masterCode = generateMasterCode();
   console.log("New Master Code:", masterCode); // Debugging purpose
+
   gridContainer.innerHTML = ""; // Clear guesses
-  checkboxes.forEach(box => box.style.backgroundColor = 'gray'); // Reset clues
+  const checkboxContainer = select('.checkbox-container');
+  checkboxContainer.innerHTML = ""; // Clear all checkbox groups
   guessHistory.length = 0; // Clear guess history
 }
+
 
 /*------------------------------------------------>
 Event Listeners and Input Management
