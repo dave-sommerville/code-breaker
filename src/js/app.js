@@ -69,8 +69,9 @@ UI Updates and Game Mechanics
 
 const gridContainer = select('.grid-container');
 const collectButton = select('.collect-values-button');
-const checkboxes = selectAll('.checkboxes');
 const guessHistory = [];
+let guessCount = 0; // Tracks the number of guesses made
+const maxGuesses = 8; // Maximum guesses allowed
 
 // Populate grid with guesses
 function populateWithSpans(valuesArray) {
@@ -83,8 +84,8 @@ function populateWithSpans(valuesArray) {
   });
 }
 
+// Update checkbox colors based on red and white tokens
 function updateCheckboxColors(redTokens, whiteTokens) {
-  // Create a new group of checkboxes for this guess
   const checkboxContainer = select('.checkbox-container');
   const checkboxGroup = create('div');
   checkboxGroup.classList.add('checkbox-group');
@@ -117,6 +118,7 @@ function updateCheckboxColors(redTokens, whiteTokens) {
 
   // Any remaining checkboxes remain gray (default)
 }
+
 // Check for win condition
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
@@ -125,6 +127,7 @@ function checkWinCondition(redTokens, codeLength) {
   }
 }
 
+// Reset the game
 function resetGame() {
   masterCode = generateMasterCode();
   console.log("New Master Code:", masterCode); // Debugging purpose
@@ -133,8 +136,8 @@ function resetGame() {
   const checkboxContainer = select('.checkbox-container');
   checkboxContainer.innerHTML = ""; // Clear all checkbox groups
   guessHistory.length = 0; // Clear guess history
+  guessCount = 0; // Reset guess count
 }
-
 
 /*------------------------------------------------>
 Event Listeners and Input Management
@@ -159,6 +162,11 @@ selectAll('.number-selector').forEach(selector => {
 
 // Collect player guess on button click
 listen('click', collectButton, () => {
+  if (guessCount >= maxGuesses) {
+    alert("Game Over! You've reached the maximum number of guesses.");
+    return;
+  }
+
   const playerGuess = [];
 
   // Collect values from number selectors
@@ -179,6 +187,15 @@ listen('click', collectButton, () => {
   guessHistory.push([...playerGuess]);
   populateWithSpans(guessHistory.flat());
 
+  // Increment the guess count
+  guessCount++;
+
   // Check for win condition
   checkWinCondition(redTokens, masterCode.length);
+
+  // If the maximum number of guesses is reached, show game over message
+  if (guessCount >= maxGuesses) {
+    alert("Game Over! You've used all your guesses. The code was: " + masterCode.join(", "));
+    resetGame();
+  }
 });
