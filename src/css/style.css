@@ -1,8 +1,18 @@
 @charset "utf-8";
+/*
+
+- Set maximum guesses 
+- Change winning / losing display
+- One level of responsiveness 
+- Add game info
+- Add timer 
+- Add local storage for top score 
+
+*/
+
 .block {
 	display: block;
 }
-
 .container {
 	width: min(100% - 30px, 1200px);
 	margin-inline: auto;
@@ -31,7 +41,7 @@ body {
 	font-family: "Poppins", Arial, Helvetica, sans-serif;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 140svh;
   margin: 0;
   background-color: #001;
 }
@@ -39,10 +49,22 @@ body {
 main {
 	width: 100%;
 	height: 100svh;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 }
 
+h1 {
+  text-align: center;
+  font-size: 4rem;
+  color: #0f0;
+	text-shadow: 
+			0 0 5px #0f0,
+			0 0 10px #0e0,
+			0 0 20px #0f0,
+			0 0 40px #0e0,
+			0 0 80px #4f4; 
+	animation: flicker 1.5s infinite alternate;
+}
 
 .code-selector, .grid-container {
   display: grid;
