@@ -179,18 +179,34 @@ h1 {
 	}
 }
 
-.fade {
-	animation: fadeInOut 1s infinite; 
-}
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.6rem;
+  }
 
-@keyframes fadeInOut {
-	0% {
-    border: none;
-	}
-	50% {
-    border: 1px solid rgb(0 255 0 / 1);
-	}
-	100% {
-    border: none;
-	}
+  .number-selector {
+    width: 40px;
+    height: 90px;
+  }
+  .number-display {
+    font-size: 18px;
+    margin: 4px 0;
+  }
+  .collect-values-button {
+    height: 50px;
+    width: 50px;
+    margin: 10px;
+  }
+
+  .box {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .checkbox-group {
+    width: 50px;
+    height: 40px;
+  }
+
 }
