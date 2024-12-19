@@ -36,14 +36,12 @@ function generateMasterCode(length = 4, min = 1, max = 6) {
 let masterCode = generateMasterCode();
 console.log("Master Code:", masterCode); // Debugging purpose
 
-// Compare player's guess with the master code
 function countTokens(code, guess) {
   let redTokens = 0;
   let whiteTokens = 0;
   const codeCopy = [...code];
   const guessCopy = [...guess];
 
-  // Check for red tokens (correct number, correct position)
   guessCopy.forEach((num, index) => {
     if (num === codeCopy[index]) {
       redTokens++;
@@ -52,7 +50,6 @@ function countTokens(code, guess) {
     }
   });
 
-  // Check for white tokens (correct number, wrong position)
   guessCopy.forEach((num) => {
     if (num !== null && codeCopy.includes(num)) {
       whiteTokens++;
@@ -64,7 +61,7 @@ function countTokens(code, guess) {
 }
 
 /*------------------------------------------------>
-UI Updates and Game Mechanics
+
 <------------------------------------------------*/
 
 const gridContainer = select('.grid-container');
@@ -73,9 +70,8 @@ const guessHistory = [];
 let guessCount = 0; // Tracks the number of guesses made
 const maxGuesses = 8; // Maximum guesses allowed
 
-// Populate grid with guesses
 function populateWithSpans(valuesArray) {
-  gridContainer.innerHTML = ""; // Clear previous content
+  gridContainer.innerHTML = ""; 
   valuesArray.forEach((value) => {
     const span = create("span");
     span.textContent = value;
@@ -84,42 +80,33 @@ function populateWithSpans(valuesArray) {
   });
 }
 
-// Update checkbox colors based on red and white tokens
 function updateCheckboxColors(redTokens, whiteTokens) {
   const checkboxContainer = select('.checkbox-container');
   const checkboxGroup = create('div');
   checkboxGroup.classList.add('checkbox-group');
 
-  // Create 4 checkboxes for the current guess
   for (let i = 0; i < 4; i++) {
     const checkbox = create('div');
     checkbox.classList.add('checkboxes');
-    checkbox.style.backgroundColor = 'gray'; // Default color
+    checkbox.style.backgroundColor = '#234'; // Default color
     checkboxGroup.appendChild(checkbox);
   }
 
-  // Append the new checkbox group to the container
   checkboxContainer.appendChild(checkboxGroup);
 
-  // Select the latest checkbox group
   const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
 
   let index = 0;
 
-  // Set red tokens
   for (; index < redTokens; index++) {
     currentCheckboxes[index].style.backgroundColor = 'red';
   }
 
-  // Set white tokens
   for (let i = 0; i < whiteTokens; i++, index++) {
     currentCheckboxes[index].style.backgroundColor = 'white';
   }
-
-  // Any remaining checkboxes remain gray (default)
 }
 
-// Check for win condition
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
     alert("You guessed the code! Congratulations!");
@@ -127,23 +114,21 @@ function checkWinCondition(redTokens, codeLength) {
   }
 }
 
-// Reset the game
 function resetGame() {
   masterCode = generateMasterCode();
   console.log("New Master Code:", masterCode); // Debugging purpose
 
-  gridContainer.innerHTML = ""; // Clear guesses
+  gridContainer.innerHTML = ""; 
   const checkboxContainer = select('.checkbox-container');
-  checkboxContainer.innerHTML = ""; // Clear all checkbox groups
-  guessHistory.length = 0; // Clear guess history
-  guessCount = 0; // Reset guess count
+  checkboxContainer.innerHTML = ""; 
+  guessHistory.length = 0; 
+  guessCount = 0; 
 }
 
 /*------------------------------------------------>
 Event Listeners and Input Management
 <------------------------------------------------*/
 
-// Number selector logic
 selectAll('.number-selector').forEach(selector => {
   const display = selector.querySelector('.number-display');
   const upArrow = selector.querySelector('.arrow.up');
@@ -160,7 +145,6 @@ selectAll('.number-selector').forEach(selector => {
   });
 });
 
-// Collect player guess on button click
 listen('click', collectButton, () => {
   if (guessCount >= maxGuesses) {
     alert("Game Over! You've reached the maximum number of guesses.");
@@ -169,7 +153,6 @@ listen('click', collectButton, () => {
 
   const playerGuess = [];
 
-  // Collect values from number selectors
   selectAll('.number-selector').forEach(selector => {
     const display = selector.querySelector('.number-display');
     playerGuess.push(parseInt(display.textContent));
@@ -177,25 +160,35 @@ listen('click', collectButton, () => {
 
   console.log("Player Guess:", playerGuess); // Debugging purpose
 
-  // Compare player's guess with master code
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
 
-  // Update clue display
   updateCheckboxColors(redTokens, whiteTokens);
 
-  // Add guess to history and display it in grid
   guessHistory.push([...playerGuess]);
   populateWithSpans(guessHistory.flat());
-
-  // Increment the guess count
   guessCount++;
 
-  // Check for win condition
   checkWinCondition(redTokens, masterCode.length);
 
-  // If the maximum number of guesses is reached, show game over message
   if (guessCount >= maxGuesses) {
     alert("Game Over! You've used all your guesses. The code was: " + masterCode.join(", "));
     resetGame();
+  }
+});
+
+//  
+
+const rulesButton = select('.rules');
+const rulesModal = select('dialog');
+
+listen('click', rulesButton, () => {
+  rulesModal.showModal();
+});
+
+listen('click', rulesModal, function(ev) {
+  const rect = this.getBoundingClientRect();
+  if (ev.clientY < rect.top || ev.clientY > rect.bottom || 
+    ev.clientX < rect.left || ev.clientX > rect.right) {
+      rulesModal.close();
   }
 });

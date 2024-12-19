@@ -47,8 +47,46 @@
         <button class="collect-values-button">
           <i class="fa-solid fa-circle-up"></i>
         </button>
+        <div class="rules">
+          <p class="glow-text">I</p>
+        </div>
       </div>
     </section>
+    <dialog>
+      <h3>Objective:</h3>
+      <p>
+        The goal of Code-Breaker is to guess the secret 
+        code created by the game. The code consists of a 
+        sequence of numbers.
+      </p>
+      <h3>Setup:</h3>
+      <p>
+        The code is 4 digits long, with each digit randomly 
+        chosen between 1 and 6. Players can make up to 8 
+        guesses to crack the code.
+      <h3>Gameplay:</h3>
+      <p>
+        For each turn, the player selects a combination of 4 
+        numbers. The game provides feedback after each guess:
+      </p>
+      <p>
+        Red Tokens: Number is correct and in the correct position.
+      </p>
+      <p>
+        White Tokens: Number is correct but in the wrong position.
+      </p>
+      <p>
+        No token indicates a number not in the code.
+      </p>
+      <h3>
+        Winning:
+      </h3>
+      <p>
+        If all 4 numbers are guessed correctly in the right positions 
+        (4 red tokens), the player wins. If player fails to guess the 
+        code within 8 turns, the game ends, and the secret code is revealed.
+      </p>
+    </dialog>
     <section class="flex">
       <div class="grid-container glow-text">
       </div>
