@@ -30,7 +30,9 @@ function getRandomNumber(min, max) {
 const rulesButton = select('.rules');
 const rulesModal = select('.game-rules');
 const resultsModal = select('.game-results');
-const resultText = select('h2');
+const resultMain = select('h2');
+const boldText = select('h3');
+const codeDisplay = select('.mastercode');
 const newGame = select('.new-game');
 const gridContainer = select('.grid-container');
 const collectButton = select('.collect-values-button');
@@ -116,7 +118,9 @@ function updateCheckboxColors(redTokens, whiteTokens) {
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
     resultsModal.showModal();
-    resultText.innerText = 'You guessed the code! The code was: ' + masterCode.join(', ');
+    resultMain.innerText = 'Congratulations!';
+    boldText.innerText = 'You guessed correctly';
+    codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
   }
 }
 
@@ -154,7 +158,9 @@ selectAll('.number-selector').forEach(selector => {
 listen('click', collectButton, () => {
   if (guessCount >= maxGuesses) { //  I think this may be redundant
     resultsModal.showModal();
-    resultText.innerText = 'Game Over! You\'ve used all your guesses. The code was: ' + masterCode.join(', ');
+    resultMain.innerText = 'Game Over!';
+    boldText.innerText = 'You\'ve used all your guesses.';
+    codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
     return;
   }
 
@@ -179,7 +185,9 @@ listen('click', collectButton, () => {
 
   if (guessCount >= maxGuesses) {
     resultsModal.showModal();
-    resultText.innerText = 'Game Over! You\'ve used all your guesses. The code was: ' + masterCode.join(', ');
+    resultMain.innerText = 'Game Over!';
+    boldText.innerText = 'You\'ve used all your guesses.';
+    codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
 
   }
 });
