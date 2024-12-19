@@ -25,8 +25,17 @@ function getRandomNumber(min, max) {
 }
 
 /*------------------------------------------------>
-Mastermind Game Logic
+
 <------------------------------------------------*/
+const rulesButton = select('.rules');
+const rulesModal = select('.game-rules');
+const resultsModal = select('.game-results');
+const newGame = select('.new-game');
+const gridContainer = select('.grid-container');
+const collectButton = select('.collect-values-button');
+const guessHistory = [];
+let guessCount = 0; // Tracks the number of guesses made
+const maxGuesses = 8; // Maximum guesses allowed
 
 // Generate a random master code
 function generateMasterCode(length = 4, min = 1, max = 6) {
@@ -64,11 +73,7 @@ function countTokens(code, guess) {
 
 <------------------------------------------------*/
 
-const gridContainer = select('.grid-container');
-const collectButton = select('.collect-values-button');
-const guessHistory = [];
-let guessCount = 0; // Tracks the number of guesses made
-const maxGuesses = 8; // Maximum guesses allowed
+
 
 function populateWithSpans(valuesArray) {
   gridContainer.innerHTML = ""; 
@@ -110,7 +115,7 @@ function updateCheckboxColors(redTokens, whiteTokens) {
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
     alert("You guessed the code! Congratulations!");
-    resetGame();
+    resultsModal.showModal();
   }
 }
 
@@ -148,6 +153,7 @@ selectAll('.number-selector').forEach(selector => {
 listen('click', collectButton, () => {
   if (guessCount >= maxGuesses) {
     alert("Game Over! You've reached the maximum number of guesses.");
+    resultsModal.showModal();
     return;
   }
 
@@ -172,14 +178,13 @@ listen('click', collectButton, () => {
 
   if (guessCount >= maxGuesses) {
     alert("Game Over! You've used all your guesses. The code was: " + masterCode.join(", "));
-    resetGame();
+    resultsModal.showModal();
   }
 });
 
 //  
 
-const rulesButton = select('.rules');
-const rulesModal = select('dialog');
+
 
 listen('click', rulesButton, () => {
   rulesModal.showModal();
@@ -191,4 +196,9 @@ listen('click', rulesModal, function(ev) {
     ev.clientX < rect.left || ev.clientX > rect.right) {
       rulesModal.close();
   }
+});
+
+listen('click', newGame, ()=> {
+  resultsModal.close();
+  resetGame();
 });

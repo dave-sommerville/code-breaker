@@ -1,9 +1,9 @@
 @charset "utf-8";
 /*
+- Text content
 
-- Change winning / losing display
-- One level of responsiveness 
-- Add game info
+- Clean up console logs
+- Return display to zero
 - Add timer 
 - Add local storage for top score 
 
@@ -40,7 +40,7 @@ body {
 	font-family: "Poppins", Arial, Helvetica, sans-serif;
   justify-content: center;
   align-items: center;
-  height: 140svh;
+  height: 100svh;
   margin: 0;
   background-color: #001;
 }
