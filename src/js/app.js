@@ -30,12 +30,13 @@ function getRandomNumber(min, max) {
 const rulesButton = select('.rules');
 const rulesModal = select('.game-rules');
 const resultsModal = select('.game-results');
+const resultText = select('h2');
 const newGame = select('.new-game');
 const gridContainer = select('.grid-container');
 const collectButton = select('.collect-values-button');
 const guessHistory = [];
-let guessCount = 0; // Tracks the number of guesses made
-const maxGuesses = 8; // Maximum guesses allowed
+let guessCount = 0; 
+const maxGuesses = 8; 
 
 // Generate a random master code
 function generateMasterCode(length = 4, min = 1, max = 6) {
@@ -114,8 +115,8 @@ function updateCheckboxColors(redTokens, whiteTokens) {
 
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
-    alert("You guessed the code! Congratulations!");
     resultsModal.showModal();
+    resultText.innerText = 'You guessed the code! The code was: ' + masterCode.join(', ');
   }
 }
 
@@ -151,9 +152,9 @@ selectAll('.number-selector').forEach(selector => {
 });
 
 listen('click', collectButton, () => {
-  if (guessCount >= maxGuesses) {
-    alert("Game Over! You've reached the maximum number of guesses.");
+  if (guessCount >= maxGuesses) { //  I think this may be redundant
     resultsModal.showModal();
+    resultText.innerText = 'Game Over! You\'ve used all your guesses. The code was: ' + masterCode.join(', ');
     return;
   }
 
@@ -177,8 +178,9 @@ listen('click', collectButton, () => {
   checkWinCondition(redTokens, masterCode.length);
 
   if (guessCount >= maxGuesses) {
-    alert("Game Over! You've used all your guesses. The code was: " + masterCode.join(", "));
     resultsModal.showModal();
+    resultText.innerText = 'Game Over! You\'ve used all your guesses. The code was: ' + masterCode.join(', ');
+
   }
 });
 
