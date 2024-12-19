@@ -186,9 +186,28 @@ h3 {
 }
 
 .new-game {
-  height: 50px;
-  width: 50px;
-  margin: 20px 0;
+  height: 40px;
+  width: 100px;
+  background-color: #001;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #0f0;
+  text-shadow: 
+  0 0 5px #0f0,
+  0 0 10px #0e0,
+  0 0 20px #0f0,
+  0 0 40px #0e0,
+  0 0 80px #4f4; 
+  animation: flicker 1.5s infinite alternate;
+  border: solid 1px #0f0;
+  box-shadow: 0 0 10px #0e0;
+  margin: 25px 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.new-game:hover {
+  box-shadow: 1px 1px 25px #0e0;
 }
 
 .checkbox-group {
