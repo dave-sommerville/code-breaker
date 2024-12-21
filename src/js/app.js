@@ -25,7 +25,7 @@ function getRandomNumber(min, max) {
 }
 
 /*------------------------------------------------>
-
+  Element Selectors 
 <------------------------------------------------*/
 const rulesButton = select('.rules');
 const rulesModal = select('.game-rules');
@@ -40,13 +40,19 @@ const guessHistory = [];
 let guessCount = 0; 
 const maxGuesses = 8; 
 
-// Generate a random master code
+/*------------------------------------------------>
+  Secret Master Code
+<------------------------------------------------*/
+
 function generateMasterCode(length = 4, min = 1, max = 6) {
   return Array.from({ length }, () => getRandomNumber(min, max));
 }
 
 let masterCode = generateMasterCode();
-console.log("Master Code:", masterCode); // Debugging purpose
+
+/*------------------------------------------------>
+  Token logic 
+<------------------------------------------------*/
 
 function countTokens(code, guess) {
   let redTokens = 0;
@@ -73,11 +79,8 @@ function countTokens(code, guess) {
 }
 
 /*------------------------------------------------>
-
+  Previous Guess Info 
 <------------------------------------------------*/
-
-
-
 function populateWithSpans(valuesArray) {
   gridContainer.innerHTML = ""; 
   valuesArray.forEach((value) => {
@@ -96,7 +99,7 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   for (let i = 0; i < 4; i++) {
     const checkbox = create('div');
     checkbox.classList.add('checkboxes');
-    checkbox.style.backgroundColor = '#234'; // Default color
+    checkbox.style.backgroundColor = '#234'; 
     checkboxGroup.appendChild(checkbox);
   }
 
@@ -105,11 +108,10 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
 
   let index = 0;
-
+  //  I should look into this more, I don't quite know what's up
   for (; index < redTokens; index++) {
     currentCheckboxes[index].style.backgroundColor = 'red';
   }
-
   for (let i = 0; i < whiteTokens; i++, index++) {
     currentCheckboxes[index].style.backgroundColor = 'white';
   }
@@ -126,7 +128,6 @@ function checkWinCondition(redTokens, codeLength) {
 
 function resetGame() {
   masterCode = generateMasterCode();
-  console.log("New Master Code:", masterCode); // Debugging purpose
 
   gridContainer.innerHTML = ""; 
   const checkboxContainer = select('.checkbox-container');
@@ -155,6 +156,8 @@ selectAll('.number-selector').forEach(selector => {
   });
 });
 
+//  This is a monstrosity, but I can fix later 
+
 listen('click', collectButton, () => {
   if (guessCount >= maxGuesses) { //  I think this may be redundant
     resultsModal.showModal();
@@ -171,7 +174,6 @@ listen('click', collectButton, () => {
     playerGuess.push(parseInt(display.textContent));
   });
 
-  console.log("Player Guess:", playerGuess); // Debugging purpose
 
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
 

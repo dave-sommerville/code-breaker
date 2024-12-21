@@ -1,14 +1,23 @@
 @charset "utf-8";
-/*
-- Text content
-- Clean up code (Oof)
+/*  WILL HAVE TO IMPORT LATER */
+/*------------------------------------------------>
+  Utility Classes
+<------------------------------------------------*/
+:root {
+  --app-t-shadow: 			
+    0 0 2px #0f0,
+    0 0 8px #0e0,
+    0 0 16px #0f0,
+    0 0 32px #0e0,
+    0 0 64px #4f4; 
+}
 
-- Clean up console logs
-- Return display to zero
-- Add timer 
-- Add local storage for top score 
-
-*/
+.glow-text {
+	font-size: 2rem;
+	color: #0f0;
+	text-shadow: var(--app-t-shadow);
+	animation: flicker 1.5s infinite alternate;
+}
 
 .block {
 	display: block;
@@ -22,6 +31,7 @@
 	display: flex;
 }
 .f-col {
+  display: flex;
 	flex-direction: column;
 }
 
@@ -36,6 +46,9 @@
 .hidden {
   display: none;
 }
+/*------------------------------------------------>
+  Body Structure 
+<------------------------------------------------*/
 
 body {
 	font-family: "Poppins", Arial, Helvetica, sans-serif;
@@ -66,6 +79,10 @@ h1 {
 			0 0 80px #4f4; 
 	animation: flicker 1.5s infinite alternate;
 }
+
+/*------------------------------------------------>
+  Gameplay Area
+<------------------------------------------------*/
 
 .code-selector, .grid-container {
   display: grid;
@@ -120,14 +137,35 @@ h1 {
   background-color: #001;
   border: none;
   cursor: pointer;
-	text-shadow: 
-			0 0 2px #0f0,
-			0 0 8px #0e0,
-			0 0 16px #0f0,
-			0 0 32px #0e0,
-			0 0 64px #4f4; 
+	text-shadow: var(--app-t-shadow);
 	animation: flicker 2s infinite alternate;
 }
+
+.box {
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+
+.checkboxes {
+  width: 100%;
+  height: 100%;
+  background-color: #486;
+}
+
+.checkbox-group {
+  width: 75px;
+  height: 50px;
+  margin: 20px;
+  display: grid;
+  grid-template: repeat(2, 1fr) / repeat(2, 1fr);
+  gap: 2px;
+}
+
+/*------------------------------------------------>
+  Modal Styles 
+<------------------------------------------------*/
 
 .rules { 
   height: 40px;
@@ -143,12 +181,7 @@ h1 {
 .info {
   color: #008200;
   font-size: 1.6rem;
-  text-shadow: 
-  0 0 2px #0f0,
-  0 0 8px #0e0,
-  0 0 16px #0f0,
-  0 0 32px #0e0,
-  0 0 64px #4f4; 
+  text-shadow: var(--app-t-shadow);
 animation: flicker 2s infinite alternate;
 
 }
@@ -160,12 +193,7 @@ dialog {
   margin: auto;
   background-color: #001;
   color: #0f0;
-  /* p {
-    height: 50px;
-    line-height: 50px;
-    font-size: 1.2rem;
-    color: #0f0;
-  } */
+
 }
 
 h2 {
@@ -193,12 +221,7 @@ h3 {
   cursor: pointer;
   font-weight: 500;
   color: #0f0;
-  text-shadow: 
-  0 0 5px #0f0,
-  0 0 10px #0e0,
-  0 0 20px #0f0,
-  0 0 40px #0e0,
-  0 0 80px #4f4; 
+  text-shadow: var(--app-t-shadow);
   animation: flicker 1.5s infinite alternate;
   border: solid 1px #0f0;
   box-shadow: 0 0 10px #0e0;
@@ -210,39 +233,10 @@ h3 {
   box-shadow: 1px 1px 25px #0e0;
 }
 
-.checkbox-group {
-  width: 75px;
-  height: 50px;
-  margin: 20px;
-  display: grid;
-  grid-template: repeat(2, 1fr) / repeat(2, 1fr);
-  gap: 2px;
-}
+/*------------------------------------------------>
+Animation
+<------------------------------------------------*/
 
-.box {
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  text-align: center;
-}
-
-.checkboxes {
-  width: 100%;
-  height: 100%;
-  background-color: #486;
-}
-
-.glow-text {
-	font-size: 2rem;
-	color: #0f0;
-	text-shadow: 
-			0 0 5px #0f0,
-			0 0 10px #0e0,
-			0 0 20px #0f0,
-			0 0 40px #0e0,
-			0 0 80px #4f4; 
-	animation: flicker 1.5s infinite alternate;
-}
 
 @keyframes flicker {
 	0%, 100% {
@@ -262,6 +256,11 @@ h3 {
 					0 0 40px #0f0;
 	}
 }
+
+/*------------------------------------------------>
+Media Queries 
+<------------------------------------------------*/
+
 
 @media (max-width: 768px) {
   h1 {
