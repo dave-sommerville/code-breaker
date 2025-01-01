@@ -67,7 +67,7 @@ main {
   position: relative;
 }
 
-h1 {
+h1, .timer {
   text-align: center;
   font-size: 4rem;
   color: #0f0;
@@ -162,6 +162,7 @@ h1 {
   grid-template: repeat(2, 1fr) / repeat(2, 1fr);
   gap: 2px;
 }
+
 
 /*------------------------------------------------>
   Modal Styles 
