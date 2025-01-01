@@ -108,7 +108,6 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
 
   let index = 0;
-  //  I should look into this more, I don't quite know what's up
   for (; index < redTokens; index++) {
     currentCheckboxes[index].style.backgroundColor = 'red';
   }
@@ -140,41 +139,30 @@ function resetGame() {
 Event Listeners and Input Management
 <------------------------------------------------*/
 
-selectAll('.number-selector').forEach(selector => {
-  const display = selector.querySelector('.number-display');
-  const upArrow = selector.querySelector('.arrow.up');
-  const downArrow = selector.querySelector('.arrow.down');
+function updateDisplay(display, increment) {
+  let current = parseInt(display.textContent);
+  display.textContent = increment 
+    ? (current === 6 ? 1 : current + 1) 
+    : (current === 1 ? 6 : current - 1);
+}
 
-  listen('click', upArrow, () => {
-    let current = parseInt(display.textContent);
-    display.textContent = current === 6 ? 1 : current + 1;
+function initializeNumberSelectors() {
+  selectAll('.number-selector').forEach(selector => {
+    const display = select('.number-display', selector);
+    const upArrow = select('.arrow.up', selector);
+    const downArrow = select('.arrow.down', selector);
+
+    listen('click', upArrow, () => updateDisplay(display, true));
+    listen('click', downArrow, () => updateDisplay(display, false));
   });
+}
 
-  listen('click', downArrow, () => {
-    let current = parseInt(display.textContent);
-    display.textContent = current === 1 ? 6 : current - 1;
-  });
-});
-
-//  This is a monstrosity, but I can fix later 
-
-listen('click', collectButton, () => {
-  if (guessCount >= maxGuesses) { //  I think this may be redundant
-    resultsModal.showModal();
-    resultMain.innerText = 'Game Over!';
-    boldText.innerText = 'You\'ve used all your guesses.';
-    codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
+function handleCollectButtonClick() {
+  if (guessCount >= maxGuesses) {
+    showGameOver();
     return;
   }
-
-  const playerGuess = [];
-
-  selectAll('.number-selector').forEach(selector => {
-    const display = selector.querySelector('.number-display');
-    playerGuess.push(parseInt(display.textContent));
-  });
-
-
+  const playerGuess = Array.from(selectAll('.number-display')).map(display => parseInt(display.textContent));
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
 
   updateCheckboxColors(redTokens, whiteTokens);
@@ -186,17 +174,27 @@ listen('click', collectButton, () => {
   checkWinCondition(redTokens, masterCode.length);
 
   if (guessCount >= maxGuesses) {
-    resultsModal.showModal();
-    resultMain.innerText = 'Game Over!';
-    boldText.innerText = 'You\'ve used all your guesses.';
-    codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-
+    showGameOver();
   }
-});
+}
 
-//  
+function showGameOver() {
+  resultsModal.showModal();
+  resultMain.innerText = 'Game Over!';
+  boldText.innerText = 'You\'ve used all your guesses.';
+  codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
+}
 
+function initializeGame() {
+  initializeNumberSelectors();
+  listen('click', collectButton, handleCollectButtonClick);
+}
 
+initializeGame();
+
+/*------------------------------------------------>
+Rules Modal
+<------------------------------------------------*/
 
 listen('click', rulesButton, () => {
   rulesModal.showModal();
