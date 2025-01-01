@@ -134,6 +134,7 @@ function resetGame() {
   checkboxContainer.innerHTML = ""; 
   guessHistory.length = 0; 
   guessCount = 0; 
+  startTimer();  
 }
 
 /*------------------------------------------------>
@@ -194,9 +195,45 @@ listen('click', collectButton, () => {
   }
 });
 
-//  
+/*-------------------------------------------------------------------------->
+	TIMER
+<--------------------------------------------------------------------------*/
+const timer = select('.timer');
+let maxTime = 60;  
+let startTime = new Date();  
+let timerInterval; 
 
+function updateTimer() {
+  const elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
+  const formattedTime = elapsedTime < 10 ? `0${elapsedTime}` : elapsedTime;
 
+  if (elapsedTime <= 0) {
+    timer.innerText = '00';
+  } else {
+    timer.innerText = formattedTime;
+  }
+}
+
+function startTimer() {
+  startTime = new Date();  
+  timer.innerText = '60'; 
+
+  timerInterval = setInterval(() => {
+
+    const elapsedTime = maxTime + Math.floor((new Date() - startTime) / 1000);
+
+    if (elapsedTime <= 0) {
+      clearInterval(timerInterval);  
+      updateTimer(); 
+    } else {
+      updateTimer();  
+    }
+  }, 1000);  
+}
+
+/*-------------------------------------------------------------------------->
+	Info 
+<--------------------------------------------------------------------------*/
 
 listen('click', rulesButton, () => {
   rulesModal.showModal();
