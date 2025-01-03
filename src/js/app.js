@@ -147,7 +147,13 @@ function resetGame() {
   guessHistory.length = 0; 
   guessCount = 0; 
   startTimer();  
+
+  // Reset all number displays to 1
+  selectAll('.number-display').forEach(display => {
+    display.textContent = '1';
+  });
 }
+
 
 /*------------------------------------------------>
 Event Listeners and Input Management
