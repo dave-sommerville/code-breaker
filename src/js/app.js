@@ -133,6 +133,9 @@ function checkWinCondition(redTokens, codeLength) {
     resultMain.innerText = 'Congratulations!';
     boldText.innerText = 'You guessed correctly';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
+    clearInterval(timerInterval);  
+    updateTimer();
+    calculateScore();
   }
 }
 
@@ -211,11 +214,10 @@ listen('click', collectButton, () => {
 const timer = select('.timer');
 let startTime = new Date();  
 let timerInterval; 
-const formattedTime = '';
 
 function updateTimer() {
   const elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
-  formattedTime = elapsedTime < 10 ? `0${elapsedTime}` : `${elapsedTime}`;
+  const formattedTime = elapsedTime < 10 ? `0${elapsedTime}` : elapsedTime;
 
   if (elapsedTime <= 0) {
     timer.innerText = '00';
@@ -235,7 +237,7 @@ function startTimer() {
 
     if (guessCount >= 8) {
       clearInterval(timerInterval);  
-      updateTimer(); 
+      updateTimer();
     } else {
       updateTimer();  
     }
@@ -259,20 +261,6 @@ function loadScoresFromLocalStorage() {
   return [];
 }
 
-function createScoreListItem(score) {
-  const li = create('li');
-  addClass(li, 'score-item'); 
-
-  const details = `
-      <span class="score-date">${score.date}</span> | 
-      <span class="score-hits">${score.hits}</span> | 
-      <span class="score-percentage">${score.percentage}%</span>
-  `;
-
-  li.innerHTML = details;
-
-  return li; 
-}
 
 function populateScoreList(scores) {
   scoresList.innerHTML = ''; 
@@ -293,7 +281,7 @@ function calculateScore() {
     date: date,
     //Will not be using hits, and also will have second sorting
     guesses: guessCount,
-    time: formattedTime
+    // time: formattedTime
     // percentage: percentage.toString().padStart(2, '0'),
   };
 
@@ -314,9 +302,9 @@ function calculateScore() {
     existingScores = existingScores.slice(0, 10);
   }
   saveScoresToLocalStorage(existingScores);
-  populateScoreList(existingScores);
+  // populateScoreList(existingScores);
+  console.log(existingScores);
 }
-
 
 resultsModal.showModal();
 resultMain.innerText = 'CODE BREAKER';
@@ -337,5 +325,6 @@ listen('click', rulesModal, function(ev) {
 listen('click', newGame, ()=> {
   resultsModal.close();
   resetGame();
+  console.log(masterCode);
 });
 
