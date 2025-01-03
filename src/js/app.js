@@ -118,7 +118,6 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
 
   let index = 0;
-  //  I should look into this more, I don't quite know what's up
   for (; index < redTokens; index++) {
     currentCheckboxes[index].style.backgroundColor = 'red';
   }
@@ -170,10 +169,8 @@ selectAll('.number-selector').forEach(selector => {
   });
 });
 
-//  This is a monstrosity, but I can fix later 
-
 listen('click', collectButton, () => {
-  if (guessCount >= maxGuesses) { //  I think this may be redundant
+  if (guessCount >= maxGuesses) {
     resultsModal.showModal();
     resultMain.innerText = 'Game Over!';
     boldText.innerText = 'You\'ve used all your guesses.';
@@ -187,7 +184,6 @@ listen('click', collectButton, () => {
     const display = selector.querySelector('.number-display');
     playerGuess.push(parseInt(display.textContent));
   });
-
 
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
 
@@ -204,12 +200,11 @@ listen('click', collectButton, () => {
     resultMain.innerText = 'Game Over!';
     boldText.innerText = 'You\'ve used all your guesses.';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-
   }
 });
 
 /*-------------------------------------------------------------------------->
-	TIMER
+  TIMER
 <--------------------------------------------------------------------------*/
 const timer = select('.timer');
 let startTime = new Date();  
@@ -244,67 +239,50 @@ function startTimer() {
   }, 1000);  
 }
 
+/*-------------------------------------------------------------------------->
+  SCORE MANAGEMENT 
+<--------------------------------------------------------------------------*/
 
+// Use a unique local storage key for this game to avoid conflicts
 function saveScoresToLocalStorage(scores) {
   const topScores = scores.slice(0, 10);
   const scoresJSON = JSON.stringify(topScores);
-  localStorage.setItem('scores', scoresJSON);
+  localStorage.setItem('codeBreakerScores', scoresJSON); // Updated key
 }
 
 function loadScoresFromLocalStorage() {
-  const scoresJSON = localStorage.getItem('scores');
+  const scoresJSON = localStorage.getItem('codeBreakerScores'); // Updated key
   if (scoresJSON) {
-    let scores = JSON.parse(scoresJSON);
-    scores = scores.filter(score => score.hits > 0).slice(0, 10);
-    return scores;
+    return JSON.parse(scoresJSON);
   }
   return [];
 }
-
-
-function populateScoreList(scores) {
-  scoresList.innerHTML = ''; 
-  scores.forEach((score, index) => {
-    const li = createScoreListItem(score);
-    li.style.animationDelay = `${index * 0.2}s`; 
-    li.classList.add('li-animation'); 
-    scoresList.appendChild(li);
-  });
-}
-/*-------------------------------------------------------------------------->
-	CALCULATE SCORE 
-<--------------------------------------------------------------------------*/
 
 function calculateScore() {
   const date = getDate();
   const newScore = {
     date: date,
-    //Will not be using hits, and also will have second sorting
     guesses: guessCount,
-    // time: formattedTime
-    // percentage: percentage.toString().padStart(2, '0'),
   };
 
   let existingScores = loadScoresFromLocalStorage();
 
-  existingScores = existingScores.filter(score => score.hits > 0);
+  // Add the new score and sort by guesses in ascending order
+  existingScores.push(newScore);
+  existingScores.sort((a, b) => a.guesses - b.guesses);
 
-  let insertIndex = existingScores.length;
-  for (let i = 0; i > existingScores.length; i++) {
-    if (guessCount < existingScores[i].guesses) {
-      insertIndex = i;
-      break;
-    }
-  }
-  existingScores.splice(insertIndex, 0, newScore); 
-
+  // Limit to top 10 scores
   if (existingScores.length > 10) {
     existingScores = existingScores.slice(0, 10);
   }
+
   saveScoresToLocalStorage(existingScores);
-  // populateScoreList(existingScores);
-  console.log(existingScores);
+  console.log(existingScores); // Debugging
 }
+
+/*-------------------------------------------------------------------------->
+  INITIALIZATION AND EVENT HANDLERS
+<--------------------------------------------------------------------------*/
 
 resultsModal.showModal();
 resultMain.innerText = 'CODE BREAKER';
@@ -327,4 +305,3 @@ listen('click', newGame, ()=> {
   resetGame();
   console.log(masterCode);
 });
-
