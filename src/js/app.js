@@ -37,9 +37,12 @@ function getDate() {
 /*------------------------------------------------>
   Element Selectors 
 <------------------------------------------------*/
-const rulesButton = select('.rules');
+const rulesButton = select('.info');
 const rulesModal = select('.game-rules');
 const resultsModal = select('.game-results');
+const scoresList = select('.high-scores-list');
+const scoresWrapper = select('.scores-wrapper')
+const viewScores = select('.scores-btn');
 const resultMain = select('h2');
 const boldText = select('h3');
 const codeDisplay = select('.mastercode');
@@ -286,6 +289,33 @@ function calculateScore() {
   console.log(existingScores); // Debugging
 }
 
+function populateScoreList(scores) {
+  scoresList.innerHTML = ''; 
+  scores.forEach((score, index) => {
+    const li = createScoreListItem(score);
+    // Andre, was this the idea behind the new way you mentioned?
+    li.style.animationDelay = `${index * 0.2}s`; 
+    li.classList.add('li-animation'); 
+    scoresList.appendChild(li);
+  });
+}
+
+function createScoreListItem(score) {
+  const li = create('li');
+  addClass(li, 'score-item'); 
+
+  const details = `
+      <span class="score-date">${score.date}</span> | 
+      <span class="score-hits">${score.hits}</span> | 
+      <span class="score-percentage">${score.percentage}%</span>
+  `;
+
+  li.innerHTML = details;
+
+  return li; 
+}
+
+
 /*-------------------------------------------------------------------------->
   INITIALIZATION AND EVENT HANDLERS
 <--------------------------------------------------------------------------*/
@@ -311,3 +341,16 @@ listen('click', newGame, ()=> {
   resetGame();
   console.log(masterCode);
 });
+
+listen('click', viewScores, () => {
+  scoresWrapper.showModal();
+});
+
+listen('click', scoresWrapper, function(ev) {
+  const rect = this.getBoundingClientRect();
+  if (ev.clientY < rect.top || ev.clientY > rect.bottom || 
+    ev.clientX < rect.left || ev.clientX > rect.right) {
+      scoresWrapper.close();
+  }
+});
+
