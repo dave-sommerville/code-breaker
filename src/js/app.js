@@ -24,6 +24,11 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function addClass(element, customClass) {
+  element.classList.add(customClass);
+  return element;
+}
+
 function getDate() {
   const options = {
     year: 'numeric',
@@ -306,8 +311,7 @@ function createScoreListItem(score) {
 
   const details = `
       <span class="score-date">${score.date}</span> | 
-      <span class="score-hits">${score.hits}</span> | 
-      <span class="score-percentage">${score.percentage}%</span>
+      <span class="score-hits">${score.guesses}</span> | 
   `;
 
   li.innerHTML = details;
@@ -344,6 +348,8 @@ listen('click', newGame, ()=> {
 
 listen('click', viewScores, () => {
   scoresWrapper.showModal();
+    const topScores = loadScoresFromLocalStorage();
+  populateScoreList(topScores);
 });
 
 listen('click', scoresWrapper, function(ev) {

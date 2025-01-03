@@ -2,6 +2,17 @@
 /*------------------------------------------------>
   Utility Classes
 <------------------------------------------------*/
+
+/*
+
+- Format highscores board 
+- Format viewScores button 
+- Add time element to highscores board 
+- Move utils into module 
+- Add background music / sounds effects 
+- Add footer to relocate user to portfolio 
+
+*/
 :root {
   --app-t-shadow: 			
     0 0 2px #0f0,
