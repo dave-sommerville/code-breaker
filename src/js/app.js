@@ -24,6 +24,16 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getDate() {
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit'
+  }
+
+  return new Date().toLocaleDateString('en-ca', options);
+}
+
 /*------------------------------------------------>
   Element Selectors 
 <------------------------------------------------*/
@@ -201,16 +211,18 @@ listen('click', collectButton, () => {
 const timer = select('.timer');
 let startTime = new Date();  
 let timerInterval; 
+const formattedTime = '';
 
 function updateTimer() {
   const elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
-  const formattedTime = elapsedTime < 10 ? `0${elapsedTime}` : elapsedTime;
+  formattedTime = elapsedTime < 10 ? `0${elapsedTime}` : `${elapsedTime}`;
 
   if (elapsedTime <= 0) {
     timer.innerText = '00';
   } else {
     timer.innerText = formattedTime;
   }
+  return formattedTime;
 }
 
 function startTimer() {
@@ -221,7 +233,7 @@ function startTimer() {
 
     const elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
 
-    if (elapsedTime <= 0) {
+    if (guessCount >= 8) {
       clearInterval(timerInterval);  
       updateTimer(); 
     } else {
@@ -230,17 +242,6 @@ function startTimer() {
   }, 1000);  
 }
 
-/*
-
-function getDate() {
-  const options = {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit'
-  }
-
-  return new Date().toLocaleDateString('en-ca', options);
-}
 
 function saveScoresToLocalStorage(scores) {
   const topScores = scores.slice(0, 10);
@@ -277,7 +278,6 @@ function populateScoreList(scores) {
   scoresList.innerHTML = ''; 
   scores.forEach((score, index) => {
     const li = createScoreListItem(score);
-    // Andre, was this the idea behind the new way you mentioned?
     li.style.animationDelay = `${index * 0.2}s`; 
     li.classList.add('li-animation'); 
     scoresList.appendChild(li);
@@ -285,14 +285,16 @@ function populateScoreList(scores) {
 }
 /*-------------------------------------------------------------------------->
 	CALCULATE SCORE 
-<--------------------------------------------------------------------------
+<--------------------------------------------------------------------------*/
 
 function calculateScore() {
   const date = getDate();
   const newScore = {
     date: date,
-    hits: hits.toString().padStart(2, '0'),
-    percentage: percentage.toString().padStart(2, '0'),
+    //Will not be using hits, and also will have second sorting
+    guesses: guessCount,
+    time: formattedTime
+    // percentage: percentage.toString().padStart(2, '0'),
   };
 
   let existingScores = loadScoresFromLocalStorage();
@@ -300,8 +302,8 @@ function calculateScore() {
   existingScores = existingScores.filter(score => score.hits > 0);
 
   let insertIndex = existingScores.length;
-  for (let i = 0; i < existingScores.length; i++) {
-    if (hits > existingScores[i].hits) {
+  for (let i = 0; i > existingScores.length; i++) {
+    if (guessCount < existingScores[i].guesses) {
       insertIndex = i;
       break;
     }
@@ -314,7 +316,6 @@ function calculateScore() {
   saveScoresToLocalStorage(existingScores);
   populateScoreList(existingScores);
 }
-*/ 
 
 
 resultsModal.showModal();
