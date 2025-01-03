@@ -199,7 +199,6 @@ listen('click', collectButton, () => {
 	TIMER
 <--------------------------------------------------------------------------*/
 const timer = select('.timer');
-let maxTime = 60;  
 let startTime = new Date();  
 let timerInterval; 
 
@@ -216,11 +215,11 @@ function updateTimer() {
 
 function startTimer() {
   startTime = new Date();  
-  timer.innerText = '60'; 
+  timer.innerText = '00'; 
 
   timerInterval = setInterval(() => {
 
-    const elapsedTime = maxTime + Math.floor((new Date() - startTime) / 1000);
+    const elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
 
     if (elapsedTime <= 0) {
       clearInterval(timerInterval);  
@@ -231,9 +230,96 @@ function startTimer() {
   }, 1000);  
 }
 
+/*
+
+function getDate() {
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit'
+  }
+
+  return new Date().toLocaleDateString('en-ca', options);
+}
+
+function saveScoresToLocalStorage(scores) {
+  const topScores = scores.slice(0, 10);
+  const scoresJSON = JSON.stringify(topScores);
+  localStorage.setItem('scores', scoresJSON);
+}
+
+function loadScoresFromLocalStorage() {
+  const scoresJSON = localStorage.getItem('scores');
+  if (scoresJSON) {
+    let scores = JSON.parse(scoresJSON);
+    scores = scores.filter(score => score.hits > 0).slice(0, 10);
+    return scores;
+  }
+  return [];
+}
+
+function createScoreListItem(score) {
+  const li = create('li');
+  addClass(li, 'score-item'); 
+
+  const details = `
+      <span class="score-date">${score.date}</span> | 
+      <span class="score-hits">${score.hits}</span> | 
+      <span class="score-percentage">${score.percentage}%</span>
+  `;
+
+  li.innerHTML = details;
+
+  return li; 
+}
+
+function populateScoreList(scores) {
+  scoresList.innerHTML = ''; 
+  scores.forEach((score, index) => {
+    const li = createScoreListItem(score);
+    // Andre, was this the idea behind the new way you mentioned?
+    li.style.animationDelay = `${index * 0.2}s`; 
+    li.classList.add('li-animation'); 
+    scoresList.appendChild(li);
+  });
+}
 /*-------------------------------------------------------------------------->
-	Info 
-<--------------------------------------------------------------------------*/
+	CALCULATE SCORE 
+<--------------------------------------------------------------------------
+
+function calculateScore() {
+  const date = getDate();
+  const newScore = {
+    date: date,
+    hits: hits.toString().padStart(2, '0'),
+    percentage: percentage.toString().padStart(2, '0'),
+  };
+
+  let existingScores = loadScoresFromLocalStorage();
+
+  existingScores = existingScores.filter(score => score.hits > 0);
+
+  let insertIndex = existingScores.length;
+  for (let i = 0; i < existingScores.length; i++) {
+    if (hits > existingScores[i].hits) {
+      insertIndex = i;
+      break;
+    }
+  }
+  existingScores.splice(insertIndex, 0, newScore); 
+
+  if (existingScores.length > 10) {
+    existingScores = existingScores.slice(0, 10);
+  }
+  saveScoresToLocalStorage(existingScores);
+  populateScoreList(existingScores);
+}
+*/ 
+
+
+resultsModal.showModal();
+resultMain.innerText = 'CODE BREAKER';
+boldText.innerText = 'Can you guess my code?';
 
 listen('click', rulesButton, () => {
   rulesModal.showModal();
@@ -251,3 +337,4 @@ listen('click', newGame, ()=> {
   resultsModal.close();
   resetGame();
 });
+
