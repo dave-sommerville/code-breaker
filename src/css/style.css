@@ -9,7 +9,7 @@
 - Positioning of timer 
 - All scoreboard animations 
 - Move utils into module 
-- Add background music / sounds effects 
+- Timer zero issue (will need if statements :P
 - Add footer to relocate user to portfolio 
 
 */
@@ -191,7 +191,7 @@ h1 {
   cursor: pointer;
 }
 
-.info, .scores-btn {
+.info, .scores-btn, .mute {
   color: #008200;
   font-size: 1.6rem;
   text-shadow: var(--app-t-shadow);

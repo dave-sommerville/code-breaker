@@ -54,6 +54,11 @@ const codeDisplay = select('.mastercode');
 const newGame = select('.new-game');
 const gridContainer = select('.grid-container');
 const collectButton = select('.collect-values-button');
+const muteButton = select('.mute');
+const guessSound = select('.sound-effect');
+const bgMusic = select('.background-music');
+const winnerSound = select('.winner-sound');
+const loserSound = select('.loser-sound');
 const guessHistory = [];
 let guessCount = 0; 
 const maxGuesses = 8; 
@@ -143,6 +148,7 @@ function checkWinCondition(redTokens, codeLength) {
     clearInterval(timerInterval);  
     updateTimer();
     calculateScore();
+    winnerSound.play();
   }
 }
 
@@ -184,7 +190,9 @@ selectAll('.number-selector').forEach(selector => {
 });
 
 listen('click', collectButton, () => {
+  guessSound.play();
   if (guessCount >= maxGuesses) {
+    loserSound.play();
     resultsModal.showModal();
     resultMain.innerText = 'Game Over!';
     boldText.innerText = 'You\'ve used all your guesses.';
@@ -210,11 +218,16 @@ listen('click', collectButton, () => {
   checkWinCondition(redTokens, masterCode.length);
 
   if (guessCount >= maxGuesses) {
+    loserSound.play();
     resultsModal.showModal();
     resultMain.innerText = 'Game Over!';
     boldText.innerText = 'You\'ve used all your guesses.';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
   }
+});
+
+listen('click', muteButton, () => {
+  bgMusic.muted = !backgroundMusic.muted; 
 });
 
 /*-------------------------------------------------------------------------->
@@ -348,6 +361,8 @@ listen('click', rulesModal, function(ev) {
 
 listen('click', newGame, ()=> {
   resultsModal.close();
+  bgMusic.currentTime = 0;  
+  bgMusic.play();
   resetGame();
   console.log(masterCode);
 });
