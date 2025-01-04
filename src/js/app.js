@@ -1,43 +1,14 @@
 'use strict';
 
-/*------------------------------------------------>
-Utility Functions
-<------------------------------------------------*/
-
-function select(selector, scope = document) {
-  return scope.querySelector(selector);
-}
-
-function selectAll(selector, scope = document) {
-  return scope.querySelectorAll(selector);
-}
-
-function listen(event, element, callback) {
-  return element.addEventListener(event, callback);
-}
-
-function create(element) {
-  return document.createElement(element);
-}
-
-function getRandomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function addClass(element, customClass) {
-  element.classList.add(customClass);
-  return element;
-}
-
-function getDate() {
-  const options = {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit'
-  }
-
-  return new Date().toLocaleDateString('en-ca', options);
-}
+import {
+  select, 
+  selectAll, 
+  listen, 
+  create, 
+  getRandomNumber, 
+  addClass, 
+  getDate
+} from './utils.js';
 
 /*------------------------------------------------>
   Element Selectors 
@@ -227,7 +198,7 @@ listen('click', collectButton, () => {
 });
 
 listen('click', muteButton, () => {
-  bgMusic.muted = !backgroundMusic.muted; 
+  bgMusic.muted = !bgMusic.muted; 
 });
 
 /*-------------------------------------------------------------------------->
