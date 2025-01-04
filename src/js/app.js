@@ -226,10 +226,11 @@ let timerInterval;
 
 function updateTimer() {
   const elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
-  const formattedTime = elapsedTime < 10 ? `0${elapsedTime}` : elapsedTime;
+  const formattedTime = 
+    elapsedTime < 10 ? `000${elapsedTime}` : `${elapsedTime}`;
 
   if (elapsedTime <= 0) {
-    timer.innerText = '00';
+    timer.innerText = '0000';
   } else {
     timer.innerText = formattedTime;
   }
@@ -238,7 +239,7 @@ function updateTimer() {
 
 function startTimer() {
   startTime = new Date();  
-  timer.innerText = '00'; 
+  timer.innerText = '0000'; 
 
   timerInterval = setInterval(() => {
 
@@ -257,7 +258,6 @@ function startTimer() {
   SCORE MANAGEMENT 
 <--------------------------------------------------------------------------*/
 
-// Use a unique local storage key for this game to avoid conflicts
 function saveScoresToLocalStorage(scores) {
   const topScores = scores.slice(0, 10);
   const scoresJSON = JSON.stringify(topScores);
@@ -274,8 +274,10 @@ function loadScoresFromLocalStorage() {
 
 function calculateScore() {
   const date = getDate();
+  const time = updateTimer();
   const newScore = {
     date: date,
+    time: time,
     guesses: guessCount,
   };
 
@@ -310,8 +312,12 @@ function createScoreListItem(score) {
   addClass(li, 'score-item'); 
 
   const details = `
-      <span class="score-date">${score.date}</span> | 
-      <span class="score-hits">${score.guesses}</span> | 
+      <span>${score.date}</span> | 
+      Code Broken in 
+      <span>${score.guesses}</span>
+      guesses, after 
+      <span>${score.time}</span> 
+      seconds
   `;
 
   li.innerHTML = details;

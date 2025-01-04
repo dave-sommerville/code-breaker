@@ -28,3 +28,9 @@ If you have an comments or suggestions, please don't hesitate to reach out :)
 
 ### Preview
 ![Webpage Preview](./src/img/scrnshot01.jpg)
+
+Music by <a href="https://pixabay.com/users/gioelefazzeri-16466931/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=95450">Gioele Fazzeri</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=95450">Pixabay</a>
+
+Sound Effect by <a href="https://pixabay.com/users/freesoundsxx-47251115/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=269718">FreeSoundsxx</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=269718">Pixabay</a>
+
+Sound Effect by <a href="https://pixabay.com/users/floraphonic-38928062/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=183948">floraphonic</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=183948">Pixabay</a>

@@ -5,9 +5,9 @@
 
 /*
 
-- Format highscores board 
-- Format viewScores button 
-- Add time element to highscores board 
+- Button usability 
+- Positioning of timer 
+- All scoreboard animations 
 - Move utils into module 
 - Add background music / sounds effects 
 - Add footer to relocate user to portfolio 
@@ -180,7 +180,7 @@ h1 {
 
 .rules { 
   height: 40px;
-  width: 100px;
+  width: 180px;
   text-align: center;
   line-height: 40px;
   justify-content: space-between;
@@ -191,7 +191,7 @@ h1 {
   cursor: pointer;
 }
 
-.info {
+.info, .scores-btn {
   color: #008200;
   font-size: 1.6rem;
   text-shadow: var(--app-t-shadow);
@@ -206,7 +206,7 @@ h1 {
 }
 
 dialog {
-  width: 600px;
+  width: 700px;
   height: fit-content;
   padding: 50px;
   margin: auto;
