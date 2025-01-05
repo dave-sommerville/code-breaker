@@ -207,11 +207,25 @@ listen('click', muteButton, () => {
 const timer = select('.timer');
 let startTime = new Date();  
 let timerInterval; 
+let formattedTime = '';
+let elapsedTime = 0;
+
+function decimelTracker() {
+  if (elapsedTime < 10) {
+    formattedTime = `000${elapsedTime}`
+  } else if (elapsedTime >= 10 && elapsedTime < 100) {
+    formattedTime = `00${elapsedTime}`
+  } else if (elapsedTime >= 100 && elapsedTime < 1000) {
+    formattedTime = `0${elapsedTime}`
+  } else {
+    formattedTime = `${elapsedTime}`
+  }
+  return formattedTime;
+}
 
 function updateTimer() {
-  const elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
-  const formattedTime = 
-    elapsedTime < 10 ? `000${elapsedTime}` : `${elapsedTime}`;
+  elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
+  decimelTracker();
 
   if (elapsedTime <= 0) {
     timer.innerText = '0000';
@@ -297,7 +311,7 @@ function createScoreListItem(score) {
 
   const details = `
       <span>${score.date}</span> | 
-      Code Broken in 
+      Solved in
       <span>${score.guesses}</span>
       guesses, after 
       <span>${score.time}</span> 

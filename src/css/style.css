@@ -2,14 +2,8 @@
 /*------------------------------------------------>
   Utility Classes
 <------------------------------------------------*/
-
 /*
-
-- Button usability 
-- Positioning of timer 
-- All scoreboard animations 
-- Timer zero issue (will need if statements :P
-
+- Code clean up 
 */
 :root {
   --app-t-shadow: 			
@@ -187,7 +181,6 @@ h3 {
 /*------------------------------------------------>
   Modal Styles 
 <------------------------------------------------*/
-
 .rules { 
   height: 40px;
   width: 180px;
@@ -198,7 +191,6 @@ h3 {
   position: fixed;
   bottom: 12svh;
   left: 20px;
-  cursor: pointer;
 }
 
 .info, .scores-btn, .mute {
@@ -206,6 +198,7 @@ h3 {
   font-size: 2rem;
   text-shadow: var(--app-t-shadow);
   animation: flicker 2s infinite alternate;
+  cursor: pointer;
 }
 
 .timer {
@@ -222,6 +215,25 @@ h3 {
   margin: auto;
   background-color: #001;
   color: #0f0;
+}
+
+/*------------------------------------------------>
+  Game Results 
+<------------------------------------------------*/
+.game-results {
+  width: 500px;
+  height: fit-content;
+  padding: 50px;
+  margin: auto;
+  background-color: #001;
+  color: #0f0;
+}
+
+.button-wrapper {
+  height: 60px;
+  max-width: 300px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .new-game {
@@ -244,22 +256,70 @@ h3 {
   box-shadow: 1px 1px 25px #0e0;
 }
 
-.game-results {
-  width: 500px;
+/*---------------------------------------------->
+  HIGH SCORES
+<----------------------------------------------*/
+.scores-wrapper {
   height: fit-content;
-  padding: 50px;
+  width: fit-content;
   margin: auto;
+  padding: 25px;
+  font-size: 1rem;
+  position: fixed;
   background-color: #001;
+  z-index: 2000;
+  transition: all 0.4s ease-in-out;
   color: #0f0;
+  animation: flicker 1.5s infinite alternate;
+
+  &::backdrop {
+    background-color: rgb(44 5 11 / 0.1);
+    backdrop-filter: blur(20px);
+    animation: anim 0.35s linear;  
+  }
+
+  h4 {
+    display: block;
+    text-align: center;
+    font-size: 1.6rem;
+    line-height: 50px;
+    color: var(--clr-dark);
+  }
+
+  img {
+    height: 45px;
+    width: auto;
+  }
 }
 
-.button-wrapper {
-  height: 60px;
-  max-width: 300px;
+.scores-wrapper:hover ~ .test {
+  cursor: pointer; 
+}
+
+.list-wrap {
+  width: 100%;
+  height: 250px;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
 }
 
+ul {
+  li {
+    list-style: none;
+    text-decoration: none;
+    line-height: 25px;
+  }
+}
+
+.high-scores-list {
+  height: 100%;
+  align-items: flex-start;
+}
+
+
+/*------------------------------------------------>
+  Brand Footer 
+<------------------------------------------------*/
 .website-link {
   max-width: 450px;
   height: 10svh;
@@ -283,12 +343,9 @@ h3 {
   }
 }
 
-
 /*------------------------------------------------>
 Animation
 <------------------------------------------------*/
-
-
 @keyframes flicker {
 	0%, 100% {
 			text-shadow: 
@@ -308,12 +365,21 @@ Animation
 	}
 }
 
+@keyframes anim {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  } to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
 /*------------------------------------------------>
 Media Queries 
 <------------------------------------------------*/
 
-
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   h1 {
     font-size: 2.6rem;
   }
@@ -324,6 +390,9 @@ Media Queries
 
   h3 {
     font-size: 1.2rem;
+  }
+  .scores-wrapper {
+    font-size: 0.8rem;
   }
 
   .number-selector {
