@@ -79,14 +79,27 @@ h1 {
   text-align: center;
   font-size: 4rem;
   color: #0f0;
-	text-shadow: 
-			0 0 5px #0f0,
-			0 0 10px #0e0,
-			0 0 20px #0f0,
-			0 0 40px #0e0,
-			0 0 80px #4f4; 
+	text-shadow: var(--app-t-shadow);
 	animation: flicker 1.5s infinite alternate;
 }
+
+h2 {
+  width: 100%;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  font-size: 2rem;
+  color: #0f0;
+}
+
+h3 {
+  width: 100%;
+  height: 70px;
+  line-height: 70px;
+  font-size: 1.6rem;
+  color: #0f0;
+}
+
 
 /*------------------------------------------------>
   Gameplay Area
@@ -171,7 +184,6 @@ h1 {
   gap: 2px;
 }
 
-
 /*------------------------------------------------>
   Modal Styles 
 <------------------------------------------------*/
@@ -184,14 +196,14 @@ h1 {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  bottom: 20px;
+  bottom: 12svh;
   left: 20px;
   cursor: pointer;
 }
 
 .info, .scores-btn, .mute {
   color: #008200;
-  font-size: 1.6rem;
+  font-size: 2rem;
   text-shadow: var(--app-t-shadow);
   animation: flicker 2s infinite alternate;
 }
@@ -203,30 +215,12 @@ h1 {
 	animation: flicker 1.5s infinite alternate;
 }
 
-dialog {
+.game-rules {
   width: 700px;
   height: fit-content;
   padding: 50px;
   margin: auto;
   background-color: #001;
-  color: #0f0;
-
-}
-
-h2 {
-  width: 100%;
-  height: 70px;
-  line-height: 70px;
-  text-align: center;
-  font-size: 2rem;
-  color: #0f0;
-}
-
-h3 {
-  width: 100%;
-  height: 70px;
-  line-height: 70px;
-  font-size: 1.6rem;
   color: #0f0;
 }
 
@@ -250,16 +244,24 @@ h3 {
   box-shadow: 1px 1px 25px #0e0;
 }
 
-h1 {
-  text-align: center;
-  font-size: 4rem;
+.game-results {
+  width: 500px;
+  height: fit-content;
+  padding: 50px;
+  margin: auto;
+  background-color: #001;
   color: #0f0;
-	text-shadow: var(--app-t-shadow);
-	animation: flicker 1.5s infinite alternate;
+}
+
+.button-wrapper {
+  height: 60px;
+  max-width: 300px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .website-link {
-  width: 450px;
+  max-width: 450px;
   height: 10svh;
   justify-content: space-between;
   align-items: center;
@@ -314,6 +316,14 @@ Media Queries
 @media (max-width: 768px) {
   h1 {
     font-size: 2.6rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
   }
 
   .number-selector {

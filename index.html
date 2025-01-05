@@ -55,7 +55,15 @@
       <p>
         <span class="mastercode"></span>
       </p>
-      <button class="new-game">New Game</button>
+      <div class="button-wrapper flex">
+        <button class="new-game">New Game</button>
+        <p class="info">
+          <i class="fa-solid fa-circle-info"></i>
+        </p>
+        <p class="scores-btn">
+          <i class="fa-solid fa-trophy"></i>
+        </p>
+    </div>
     </dialog>
     <dialog class="game-rules">
       <h3>Objective:</h3>
@@ -92,8 +100,6 @@
         code within 8 turns, the game ends, and the secret code is revealed.
       </p>
     </dialog>
-    <button class="view-scores"></button>
-
 		
     <!----------------SCORES WRAPPER ---------------------->
     
@@ -111,20 +117,12 @@
         </div>
       </div>
     </section>
-  
     <section>
       <div class="rules flex">
-        <p class="info">
-          <i class="fa-solid fa-circle-info"></i>
-        </p>
-
-        <p class="timer"></p>
-        <p class="scores-btn">
-          <i class="fa-solid fa-trophy"></i>
-        </p>
         <p class="mute">
           <i class="fa-solid fa-volume-off"></i>        
         </p>
+        <p class="timer"></p>
       </div>
     </section>
     <section>
