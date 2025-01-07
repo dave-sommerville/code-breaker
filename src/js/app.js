@@ -133,7 +133,6 @@ function resetGame() {
   guessCount = 0; 
   startTimer();  
 
-  // Reset all number displays to 1
   selectAll('.number-display').forEach(display => {
     display.textContent = '1';
   });
@@ -281,24 +280,20 @@ function calculateScore() {
 
   let existingScores = loadScoresFromLocalStorage();
 
-  // Add the new score and sort by guesses in ascending order
   existingScores.push(newScore);
   existingScores.sort((a, b) => a.guesses - b.guesses);
 
-  // Limit to top 10 scores
   if (existingScores.length > 10) {
     existingScores = existingScores.slice(0, 10);
   }
 
   saveScoresToLocalStorage(existingScores);
-  console.log(existingScores); // Debugging
 }
 
 function populateScoreList(scores) {
   scoresList.innerHTML = ''; 
   scores.forEach((score, index) => {
     const li = createScoreListItem(score);
-    // Andre, was this the idea behind the new way you mentioned?
     li.style.animationDelay = `${index * 0.2}s`; 
     li.classList.add('li-animation'); 
     scoresList.appendChild(li);
@@ -307,7 +302,6 @@ function populateScoreList(scores) {
 
 function createScoreListItem(score) {
   const li = create('li');
-  addClass(li, 'score-item'); 
 
   const details = `
       <span>${score.date}</span> | 
@@ -349,7 +343,6 @@ listen('click', newGame, ()=> {
   bgMusic.currentTime = 0;  
   bgMusic.play();
   resetGame();
-  console.log(masterCode);
 });
 
 listen('click', viewScores, () => {
