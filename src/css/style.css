@@ -324,26 +324,13 @@ ul {
 /*------------------------------------------------>
   Brand Footer 
 <------------------------------------------------*/
-.website-link {
-  max-width: 450px;
-  height: 10svh;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  margin: 0 auto;
-  text-decoration: none;
-
+footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
   img {
-    height: 45px;
-    width: auto;
-  }
-
-  p {
-    font-size: 2.2rem;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: 700;
-    color: #fefefe;
-
+    width: 200px;
+    filter: invert(1);
   }
 }
 
