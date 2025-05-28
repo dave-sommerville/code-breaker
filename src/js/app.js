@@ -32,7 +32,7 @@ const winnerSound = select('.winner-sound');
 const loserSound = select('.loser-sound');
 const guessHistory = [];
 let guessCount = 0; 
-const maxGuesses = 8; 
+const maxGuesses = 9; 
 
 /*------------------------------------------------>
   Secret Master Code
