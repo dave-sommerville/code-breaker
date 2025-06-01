@@ -60,7 +60,7 @@ body {
 
 main {
 	width: 100%;
-	height: 90svh;
+	height: min(100%, 1200px);
 	justify-content: flex-start;
 	align-items: center;
   position: relative;
@@ -190,7 +190,7 @@ h3 {
   left: 20px;
 }
 
-.info, .scores-btn, .mute {
+.info, .scores-btn, .mute, .quit {
   color: #008200;
   font-size: 2rem;
   text-shadow: var(--app-t-shadow);

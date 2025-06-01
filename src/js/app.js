@@ -32,8 +32,8 @@ const winnerSound = select('.winner-sound');
 const loserSound = select('.loser-sound');
 const guessHistory = [];
 let guessCount = 0; 
-const maxGuesses = 9; 
-
+const maxGuesses = 10; 
+const quitButton = select('.quit');
 /*------------------------------------------------>
   Secret Master Code
 <------------------------------------------------*/
@@ -161,14 +161,14 @@ selectAll('.number-selector').forEach(selector => {
 
 listen('click', collectButton, () => {
   guessSound.play();
-  if (guessCount >= maxGuesses) {
-    loserSound.play();
-    resultsModal.showModal();
-    resultMain.innerText = 'Game Over!';
-    boldText.innerText = 'You\'ve used all your guesses.';
-    codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-    return;
-  }
+  // if (guessCount >= maxGuesses) {
+  //   loserSound.play();
+  //   resultsModal.showModal();
+  //   resultMain.innerText = 'Game Over!';
+  //   boldText.innerText = 'You\'ve used all your guesses.';
+  //   codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
+  //   return;
+  // }
 
   const playerGuess = [];
 
@@ -189,12 +189,16 @@ listen('click', collectButton, () => {
 
   if (guessCount >= maxGuesses) {
     loserSound.play();
+    displayGameOverModal();
+  }
+});
+
+function displayGameOverModal() {
     resultsModal.showModal();
     resultMain.innerText = 'Game Over!';
     boldText.innerText = 'You\'ve used all your guesses.';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-  }
-});
+}
 
 listen('click', muteButton, () => {
   bgMusic.muted = !bgMusic.muted; 
@@ -358,4 +362,6 @@ listen('click', scoresWrapper, function(ev) {
       scoresWrapper.close();
   }
 });
-
+listen('click', quitButton, () => {
+  displayGameOverModal();
+});
