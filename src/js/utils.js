@@ -29,6 +29,13 @@ export function addClass(element, customClass) {
   return element;
 }
 
+export function removeClass(element, customClass) {
+  if(element.classList.contains(customClass)) {
+    element.classList.remove(customClass);
+    return element;
+  }
+}
+
 export function getDate() {
   const options = {
     year: 'numeric',

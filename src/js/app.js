@@ -7,12 +7,19 @@ import {
   create, 
   getRandomNumber, 
   addClass, 
+  removeClass,
   getDate
 } from './utils.js';
 
 /*------------------------------------------------>
   Element Selectors 
 <------------------------------------------------*/
+const nameScrn = select('.name-scrn');
+const nameInput = select('.name-input');
+const nameButton = select('.name-btn');
+const nameError = select('.name-error');
+const gameArea = select('.game-area');
+const titleImage = select('.title');
 const rulesButton = select('.info');
 const rulesModal = select('.game-rules');
 const resultsModal = select('.game-results');
@@ -34,6 +41,8 @@ const guessHistory = [];
 let guessCount = 0; 
 const maxGuesses = 10; 
 const quitButton = select('.quit');
+const checkboxContainer = select('.checkbox-container');
+
 /*------------------------------------------------>
   Secret Master Code
 <------------------------------------------------*/
@@ -75,6 +84,24 @@ function countTokens(code, guess) {
 /*------------------------------------------------>
   Previous Guess Info 
 <------------------------------------------------*/
+function launchNewGame() {
+
+  let playerName = nameInput.value.trim();
+  if(playerName.length < 3 || playerName.length > 6) {
+    nameError.textContent = 'Name must be 3 to 6 letters.';
+  } else {
+    nameError.textContent = '';
+    addClass(gameArea, "expanded");
+    addClass(nameScrn, "retracted");
+    addClass(titleImage, "in-play");
+    startGamePlay();
+  }
+}
+
+listen('click', nameButton, ()=>{
+  launchNewGame();
+});
+
 function populateWithSpans(valuesArray) {
   gridContainer.innerHTML = ""; 
   valuesArray.forEach((value) => {
@@ -124,15 +151,18 @@ function checkWinCondition(redTokens, codeLength) {
 }
 
 function resetGame() {
-  masterCode = generateMasterCode();
-
+  removeClass(gameArea, "expanded");
+  removeClass(nameScrn, "retracted");
+  removeClass(titleImage, "in-play");
   gridContainer.innerHTML = ""; 
-  const checkboxContainer = select('.checkbox-container');
   checkboxContainer.innerHTML = ""; 
   guessHistory.length = 0; 
   guessCount = 0; 
-  startTimer();  
+}
 
+function startGamePlay() {  
+  masterCode = generateMasterCode();
+  startTimer();  
   selectAll('.number-display').forEach(display => {
     display.textContent = '1';
   });
@@ -326,7 +356,6 @@ function createScoreListItem(score) {
   INITIALIZATION AND EVENT HANDLERS
 <--------------------------------------------------------------------------*/
 
-resultsModal.showModal();
 resultMain.innerText = 'CODE BREAKER';
 boldText.innerText = 'Can you guess my code?';
 

@@ -59,14 +59,12 @@ body {
   font-family: "Kode Mono", "JetBrains Mono", monospace;  
   justify-content: center;
   align-items: center;
-  height: 100svh;
   margin: 0;
   background-color: #001;
 }
 
 main {
 	width: 100%;
-	height: min(100%, 1200px);
 	justify-content: flex-start;
 	align-items: center;
   position: relative;
@@ -96,13 +94,33 @@ h3 {
   font-size: 1.6rem;
   color: var(--mitt-light-blue);
 }
-
-
+.title {
+  height: 500px;
+}
+.title.in-play {
+  height: 200px;
+}
 /*------------------------------------------------>
   Gameplay Area
 <------------------------------------------------*/
-
+.name-scrn {
+  overflow: hidden;
+  height: 400px;
+  transition: all 0.5s ease-in-out;
+  }
+.name-scrn.retracted {
+  height: 0;
+}
+.game-area {
+  overflow: hidden;
+  transition: all 0.7s ease-in-out;
+  height: 0;
+}
+.game-area.expanded {
+  height: 100px;
+}
 .code-selector, .grid-container {
+
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: auto;
