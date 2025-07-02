@@ -3,19 +3,25 @@
   Utility Classes
 <------------------------------------------------*/
 :root {
+  --mitt-light-blue: #74d2e8;
+  --mitt-reg-blue: #0e4174;
+  --mitt-green: #6cc24a;
+
+
   --app-t-shadow: 			
-    0 0 2px #0f0,
-    0 0 8px #0e0,
-    0 0 16px #0f0,
-    0 0 32px #0e0,
-    0 0 64px #4f4; 
+    0 0 2px var(--mitt-reg-blue),
+    0 0 8px var(--mitt-green)
 }
 
 .glow-text {
 	font-size: 2rem;
-	color: #0f0;
+	color: var(--mitt-light-blue);
 	text-shadow: var(--app-t-shadow);
 	animation: flicker 1.5s infinite alternate;
+}
+.title {
+  filter: drop-shadow(0 3px #0f02);
+  animation: titleFlicker 0.75s infinite alternate;
 }
 
 .block {
@@ -50,7 +56,7 @@
 <------------------------------------------------*/
 
 body {
-  font-family: "IBM Plex Mono", "JetBrains Mono", monospace;  
+  font-family: "Kode Mono", "JetBrains Mono", monospace;  
   justify-content: center;
   align-items: center;
   height: 100svh;
@@ -69,7 +75,7 @@ main {
 h1 {
   text-align: center;
   font-size: 4rem;
-  color: #0f0;
+  color: var(--mitt-light-blue);
 	text-shadow: var(--app-t-shadow);
 	animation: flicker 1.5s infinite alternate;
 }
@@ -80,7 +86,7 @@ h2 {
   line-height: 70px;
   text-align: center;
   font-size: 2rem;
-  color: #0f0;
+  color: var(--mitt-light-blue);
 }
 
 h3 {
@@ -88,7 +94,7 @@ h3 {
   height: 70px;
   line-height: 70px;
   font-size: 1.6rem;
-  color: #0f0;
+  color: var(--mitt-light-blue);
 }
 
 
@@ -111,7 +117,7 @@ h3 {
   justify-content: center;
   width: 50px;
   height: 110px;
-  border: 1px solid #0f0;
+  border: 1px solid var(--mitt-reg-blue);
   border-radius: 8px;
   background-color: #001;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -145,7 +151,7 @@ h3 {
   width: 75px;
   margin: 20px;
   font-size: 2.6rem;
-  color: #008200;
+  color: var(--mitt-reg-blue);
   background-color: #001;
   border: none;
   cursor: pointer;
@@ -191,7 +197,7 @@ h3 {
 }
 
 .info, .scores-btn, .mute, .quit {
-  color: #008200;
+  color: var(--mitt-reg-blue);
   font-size: 2rem;
   text-shadow: var(--app-t-shadow);
   animation: flicker 2s infinite alternate;
@@ -227,8 +233,9 @@ h3 {
   height: fit-content;
   padding: 50px;
   margin: auto;
+  border: solid 2px var(--mitt-reg-blue);
   background-color: #001;
-  color: #0f0;
+  color: var(--mitt-light-blue);
 }
 
 .button-wrapper {
@@ -247,17 +254,17 @@ h3 {
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
-  color: #0f0;
+  color: var(--mitt-light-blue);
   text-shadow: var(--app-t-shadow);
   animation: flicker 1.5s infinite alternate;
-  border: solid 1px #0f0;
-  box-shadow: 0 0 10px #0e0;
+  border: solid 1px var(--mitt-reg-blue);
+  box-shadow: 0 0 10px var(--mitt-green);
   margin: 25px 0;
   transition: all 0.3s ease-in-out;
 }
 
 .new-game:hover {
-  box-shadow: 1px 1px 25px #0e0;
+  box-shadow: 1px 1px 25px var(--mitt-green);
 }
 
 /*---------------------------------------------->
@@ -273,7 +280,7 @@ h3 {
   background-color: #001;
   z-index: 2000;
   transition: all 0.4s ease-in-out;
-  color: #0f0;
+  color: var(--mitt-light-blue);
   animation: flicker 1.5s infinite alternate;
 
   &::backdrop {
@@ -337,22 +344,31 @@ footer {
 /*------------------------------------------------>
 Animation
 <------------------------------------------------*/
+@keyframes titleFlicker {
+	0%, 100% {
+			filter: drop-shadow(0 0 10px var(--mitt-green)) opacity(1);
+	}
+	50% {
+			filter: drop-shadow(0 0 12px var(--mitt-green)) opacity(0.95);
+	}
+}
+
 @keyframes flicker {
 	0%, 100% {
 			text-shadow: 
-					0 0 3px #0f0,
-					0 0 7px #0f0,
-					0 0 15px #0f0,
-					0 0 30px #0f0,
-					0 0 60px #0f0;
+					0 0 3px var(--mitt-green),
+					0 0 7px var(--mitt-green),
+					0 0 15px var(--mitt-green),
+					0 0 30px var(--mitt-green),
+					0 0 60px var(--mitt-green);
 	}
 	50% {
 			text-shadow: 
-					0 0 2px #0f0,
-					0 0 5px #0f0,
-					0 0 10px #0f0,
-					0 0 20px #0f0,
-					0 0 40px #0f0;
+					0 0 2px var(--mitt-green),
+					0 0 5px var(--mitt-green),
+					0 0 10px var(--mitt-green),
+					0 0 20px var(--mitt-green),
+					0 0 40px var(--mitt-green);
 	}
 }
 
