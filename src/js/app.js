@@ -44,7 +44,7 @@ let guessCount = 0;
 const maxGuesses = 10; 
 const quitButton = select('.quit');
 const checkboxContainer = select('.checkbox-container');
-
+let playerName = '';
 /*------------------------------------------------>
   Secret Master Code
 <------------------------------------------------*/
@@ -88,7 +88,7 @@ const muteIcon = select('.mute-icon');
 <------------------------------------------------*/
 function launchNewGame() {
 
-  let playerName = nameInput.value.trim();
+  playerName = nameInput.value.trim();
   if(playerName.length < 3 || playerName.length > 6) {
     nameError.textContent = 'Name must be 3 to 6 letters.';
   } else {
@@ -162,6 +162,7 @@ function checkWinCondition(redTokens, codeLength) {
 }
 
 function resetGame() {
+  playerName = '';
   removeClass(gameArea, "expanded");
   removeClass(nameScrn, "retracted");
   removeClass(titleImage, "in-play");
@@ -325,6 +326,7 @@ function calculateScore() {
   const date = getDate();
   const time = updateTimer();
   const newScore = {
+    name: playerName,
     date: date,
     time: time,
     guesses: guessCount,
@@ -356,12 +358,11 @@ function createScoreListItem(score) {
   const li = create('li');
 
   const details = `
+      <span>${score.name}</span> |
       <span>${score.date}</span> | 
-      Solved in
-      <span>${score.guesses}</span>
-      guesses, after 
+      <span>${score.guesses}</span> |
       <span>${score.time}</span> 
-      seconds
+      sec
   `;
 
   li.innerHTML = details;
