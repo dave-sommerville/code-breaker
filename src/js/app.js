@@ -21,6 +21,8 @@ const nameError = select('.name-error');
 const gameArea = select('.game-area');
 const titleImage = select('.title');
 const rulesButton = select('.info');
+const rulesButtonTwo = select('.info-main');
+const buttonBox = select('.rules');
 const rulesModal = select('.game-rules');
 const resultsModal = select('.game-results');
 const scoresList = select('.high-scores-list');
@@ -80,7 +82,7 @@ function countTokens(code, guess) {
 
   return { redTokens, whiteTokens };
 }
-
+const muteIcon = select('.mute-icon');
 /*------------------------------------------------>
   Previous Guess Info 
 <------------------------------------------------*/
@@ -95,8 +97,12 @@ function launchNewGame() {
     addClass(nameScrn, "retracted");
     addClass(titleImage, "in-play");
     startGamePlay();
+    bgMusic.muted = false;
     bgMusic.currentTime = 0;  
     bgMusic.play();
+    removeClass(buttonBox, "hidden");
+    removeClass(timer, "hidden");
+    nameInput.value = '';
   }
 }
 
@@ -142,6 +148,8 @@ function updateCheckboxColors(redTokens, whiteTokens) {
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
     resultsModal.showModal();
+    addClass(buttonBox, "hidden");
+    addClass(timer, "hidden");
     bgMusic.muted = true;
     resultMain.innerText = 'Congratulations!';
     boldText.innerText = 'You guessed correctly';
@@ -166,6 +174,7 @@ function resetGame() {
 function startGamePlay() {  
   masterCode = generateMasterCode();
   startTimer();  
+  console.log(masterCode);
   selectAll('.number-display').forEach(display => {
     display.textContent = '1';
   });
@@ -229,6 +238,8 @@ listen('click', collectButton, () => {
 
 function displayGameOverModal() {
     resultsModal.showModal();
+    addClass(buttonBox, "hidden");
+    addClass(timer, "hidden");
     bgMusic.muted = true;
     resultMain.innerText = 'Game Over!';
     boldText.innerText = 'You\'ve used all your guesses.';
@@ -237,6 +248,8 @@ function displayGameOverModal() {
 
 listen('click', muteButton, () => {
   bgMusic.muted = !bgMusic.muted; 
+  muteIcon.classList.toggle("fa-volume-off");
+  muteIcon.classList.toggle("fa-volume-xmark");
 });
 
 /*-------------------------------------------------------------------------->
@@ -365,6 +378,9 @@ resultMain.innerText = 'CODE BREAKER';
 boldText.innerText = 'Can you guess my code?';
 
 listen('click', rulesButton, () => {
+  rulesModal.showModal();
+});
+listen('click', rulesButtonTwo, () => {
   rulesModal.showModal();
 });
 

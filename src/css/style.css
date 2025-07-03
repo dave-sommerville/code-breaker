@@ -108,7 +108,7 @@ h3 {
   overflow: hidden;
   height: 200px;
   transition: all 0.5s ease-in-out;
-  }
+}
 .name-scrn.retracted {
   height: 0;
 }
@@ -129,7 +129,7 @@ h3 {
 }
 .name-btn {
   width: 100px;
-  height: 80px;
+  height: 60px;
   color: var(--mitt-light-blue);
   background-color: var(--mitt-reg-blue);
   cursor: pointer;
@@ -230,8 +230,9 @@ h3 {
   Modal Styles 
 <------------------------------------------------*/
 .rules { 
-  height: 40px;
-  width: 180px;
+  height: 160px;
+  width: 40px;
+  margin-left: 20px;
   text-align: center;
   line-height: 40px;
   justify-content: space-between;
@@ -241,8 +242,11 @@ h3 {
   bottom: 12svh;
   left: 20px;
 }
+.rules.hidden {
+  display: none;
+}
 
-.info, .scores-btn, .mute, .quit {
+.info, .info-main, .scores-btn, .mute, .quit {
   color: var(--mitt-reg-blue);
   font-size: 2rem;
   text-shadow: var(--app-t-shadow);
@@ -250,21 +254,24 @@ h3 {
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 }
+.quit {
+  font-size: 1.6rem;
+}
 
-.info:hover, .scores-btn:hover, .mute:hover {
+.info:hover, .info-main:hover, .quit:hover, .scores-btn:hover, .mute:hover {
   transform: scale(1.05);
 }
 
-.mute {
-  position: absolute;
-  top: 100px;
-  z-index: 1000;
-}
+
+
 .timer {
   font-size: 2rem;
 	color: var(--mitt-light-blue);
 	text-shadow: var(--app-t-shadow);
 	animation: flicker 1.5s infinite alternate;
+}
+.timer.hidden {
+  display: none;
 }
 
 .game-rules {
@@ -441,22 +448,18 @@ Media Queries
   h1 {
     font-size: 2.4rem;
   }
-
   h2 {
     font-size: 1rem;
   }
-
   h3 {
     font-size: 0.7rem;
   }
-
   p {
     font-size: 0.7rem;
   }
   .scores-wrapper {
     font-size: 0.8rem;
   }
-
   .number-selector {
     width: 40px;
     height: 90px;
@@ -475,19 +478,28 @@ Media Queries
     width: 80px;
     font-size: 0.8rem;
   }
-  .info, .scores-btn, .mute {
+  .name-input {
+    height: 60px;
+  }
+  .name-btn {
+    height: 40px;
+  }
+  .info, .info-main, .quit, .scores-btn, .mute {
     font-size: 1.2rem;
   }
-
+  .quit {
+    font-weight: 600;
+  }
   .box {
     width: 40px;
     height: 40px;
     line-height: 40px;
   }
-
   .checkbox-group {
     width: 50px;
     height: 40px;
   }
-
+  .title {
+    height: 300px;
+  }
 }
