@@ -95,6 +95,8 @@ function launchNewGame() {
     addClass(nameScrn, "retracted");
     addClass(titleImage, "in-play");
     startGamePlay();
+    bgMusic.currentTime = 0;  
+    bgMusic.play();
   }
 }
 
@@ -140,6 +142,7 @@ function updateCheckboxColors(redTokens, whiteTokens) {
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
     resultsModal.showModal();
+    bgMusic.muted = true;
     resultMain.innerText = 'Congratulations!';
     boldText.innerText = 'You guessed correctly';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
@@ -219,12 +222,14 @@ listen('click', collectButton, () => {
 
   if (guessCount >= maxGuesses) {
     loserSound.play();
+    timer.innerText = '0000'; 
     displayGameOverModal();
   }
 });
 
 function displayGameOverModal() {
     resultsModal.showModal();
+    bgMusic.muted = true;
     resultMain.innerText = 'Game Over!';
     boldText.innerText = 'You\'ve used all your guesses.';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
@@ -373,8 +378,6 @@ listen('click', rulesModal, function(ev) {
 
 listen('click', newGame, ()=> {
   resultsModal.close();
-  bgMusic.currentTime = 0;  
-  bgMusic.play();
   resetGame();
 });
 

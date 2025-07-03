@@ -96,6 +96,7 @@ h3 {
 }
 .title {
   height: 500px;
+  transition: all 0.5s ease-in-out;
 }
 .title.in-play {
   height: 200px;
@@ -105,11 +106,37 @@ h3 {
 <------------------------------------------------*/
 .name-scrn {
   overflow: hidden;
-  height: 400px;
+  height: 200px;
   transition: all 0.5s ease-in-out;
   }
 .name-scrn.retracted {
   height: 0;
+}
+.name-error {
+  height: 80px;
+  color: var(--mitt-light-blue);
+  text-align: center;
+}
+.name-input {
+  margin-bottom: 20px;
+  padding-left: 20px;
+  height: 80px;
+  width: 200px;
+  font-size: 2rem;
+  background-color: var(--mitt-reg-blue);
+  color: var(--mitt-light-blue);
+  border: solid 2px var(--mitt-light-blue);
+}
+.name-btn {
+  width: 100px;
+  height: 80px;
+  color: var(--mitt-light-blue);
+  background-color: var(--mitt-reg-blue);
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+.name-btn:hover {
+  filter: brightness(1.1);
 }
 .game-area {
   overflow: hidden;
@@ -117,7 +144,7 @@ h3 {
   height: 0;
 }
 .game-area.expanded {
-  height: 100px;
+  height: 160px;
 }
 .code-selector, .grid-container {
 
@@ -210,6 +237,7 @@ h3 {
   justify-content: space-between;
   align-items: center;
   position: fixed;
+  z-index: 100;
   bottom: 12svh;
   left: 20px;
 }
@@ -227,9 +255,14 @@ h3 {
   transform: scale(1.05);
 }
 
+.mute {
+  position: absolute;
+  top: 100px;
+  z-index: 1000;
+}
 .timer {
   font-size: 2rem;
-	color: #0f0;
+	color: var(--mitt-light-blue);
 	text-shadow: var(--app-t-shadow);
 	animation: flicker 1.5s infinite alternate;
 }
@@ -240,7 +273,7 @@ h3 {
   padding: 50px;
   margin: auto;
   background-color: #001;
-  color: #0f0;
+  color: var(--mitt-light-blue);
 }
 
 /*------------------------------------------------>
