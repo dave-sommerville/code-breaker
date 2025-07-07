@@ -104,9 +104,16 @@ h3 {
 /*------------------------------------------------>
   Gameplay Area
 <------------------------------------------------*/
+h4 {
+  color: var(--mitt-light-blue);
+  font-size: 1.6rem;
+}
 .name-scrn {
   overflow: hidden;
   height: 200px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
   transition: all 0.5s ease-in-out;
 }
 .name-scrn.retracted {
@@ -382,7 +389,8 @@ ul {
 
 .high-scores-list {
   height: 100%;
-  align-items: flex-start;
+  width: 100%;
+  text-align: right;
 }
 
 
