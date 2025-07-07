@@ -14,40 +14,60 @@ import {
 /*------------------------------------------------>
   Element Selectors 
 <------------------------------------------------*/
+/* -- Intro Screen -- */
 const nameScrn = select('.name-scrn');
 const nameInput = select('.name-input');
 const nameButton = select('.name-btn');
 const nameError = select('.name-error');
+/* -- Screen Sizing -- */
+
 const gameArea = select('.game-area');
 const titleImage = select('.title');
-const rulesButton = select('.info');
-const rulesButtonTwo = select('.info-main');
-const buttonBox = select('.rules');
-const rulesModal = select('.game-rules');
+/* -- Game Area -- */
+
+const gridContainer = select('.grid-container');
+const collectButton = select('.collect-values-button');
+const checkboxContainer = select('.checkbox-container');
+const timer = select('.timer');
+const newGame = select('.new-game');
+/* -- Results Modal -- */
+
 const resultsModal = select('.game-results');
-const scoresList = select('.high-scores-list');
-const scoresWrapper = select('.scores-wrapper')
-const viewScores = select('.scores-btn');
 const resultMain = select('h2');
 const boldText = select('h3');
 const codeDisplay = select('.mastercode');
-const newGame = select('.new-game');
-const gridContainer = select('.grid-container');
-const collectButton = select('.collect-values-button');
+/* -- Control Box -- */
+
+const buttonBox = select('.rules');
+const rulesButton = select('.info');
+const rulesButtonTwo = select('.info-main');
+const rulesModal = select('.game-rules');
+const scoresList = select('.high-scores-list');
+const scoresWrapper = select('.scores-wrapper')
+const viewScores = select('.scores-btn');
 const muteButton = select('.mute');
+const muteIcon = select('.mute-icon');
+const quitButton = select('.quit');
+/* -- Audio -- */
+
 const guessSound = select('.sound-effect');
 const bgMusic = select('.background-music');
 const winnerSound = select('.winner-sound');
 const loserSound = select('.loser-sound');
+
+/*------------------------------------------------>
+  Initial Declarations
+<------------------------------------------------*/
+
+let startTime = new Date();  
+let timerInterval; 
+let formattedTime = '';
+let elapsedTime = 0;
+
 const guessHistory = [];
 let guessCount = 0; 
 const maxGuesses = 10; 
-const quitButton = select('.quit');
-const checkboxContainer = select('.checkbox-container');
 let playerName = '';
-/*------------------------------------------------>
-  Secret Master Code
-<------------------------------------------------*/
 
 function generateMasterCode(length = 4, min = 1, max = 6) {
   return Array.from({ length }, () => getRandomNumber(min, max));
@@ -72,43 +92,17 @@ function countTokens(code, guess) {
       guessCopy[index] = null;
     }
   });
-
   guessCopy.forEach((num) => {
     if (num !== null && codeCopy.includes(num)) {
       whiteTokens++;
       codeCopy[codeCopy.indexOf(num)] = null;
     }
   });
-
   return { redTokens, whiteTokens };
 }
-const muteIcon = select('.mute-icon');
 /*------------------------------------------------>
   Previous Guess Info 
 <------------------------------------------------*/
-function launchNewGame() {
-
-  playerName = nameInput.value.trim();
-  if(playerName.length < 3 || playerName.length > 6) {
-    nameError.textContent = 'Name must be 3 to 6 letters.';
-  } else {
-    nameError.textContent = '';
-    addClass(gameArea, "expanded");
-    addClass(nameScrn, "retracted");
-    addClass(titleImage, "in-play");
-    startGamePlay();
-    bgMusic.muted = false;
-    bgMusic.currentTime = 0;  
-    bgMusic.play();
-    removeClass(buttonBox, "hidden");
-    removeClass(timer, "hidden");
-    nameInput.value = '';
-  }
-}
-
-listen('click', nameButton, ()=>{
-  launchNewGame();
-});
 
 function populateWithSpans(valuesArray) {
   gridContainer.innerHTML = ""; 
@@ -124,18 +118,18 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   const checkboxContainer = select('.checkbox-container');
   const checkboxGroup = create('div');
   checkboxGroup.classList.add('checkbox-group');
-
+  
   for (let i = 0; i < 4; i++) {
     const checkbox = create('div');
     checkbox.classList.add('checkboxes');
     checkbox.style.backgroundColor = '#234'; 
     checkboxGroup.appendChild(checkbox);
   }
-
+  
   checkboxContainer.appendChild(checkboxGroup);
-
+  
   const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
-
+  
   let index = 0;
   for (; index < redTokens; index++) {
     currentCheckboxes[index].style.backgroundColor = 'red';
@@ -161,6 +155,29 @@ function checkWinCondition(redTokens, codeLength) {
   }
 }
 
+/*------------------------------------------------>
+  Gameplay mechanics
+<------------------------------------------------*/
+
+function launchNewGame() {
+  playerName = nameInput.value.trim();
+  if(playerName.length < 3 || playerName.length > 6) {
+    nameError.textContent = 'Name must be 3 to 6 letters.';
+  } else {
+    nameError.textContent = '';
+    addClass(gameArea, "expanded");
+    addClass(nameScrn, "retracted");
+    addClass(titleImage, "in-play");
+    startGamePlay();
+    bgMusic.muted = false;
+    bgMusic.currentTime = 0;  
+    bgMusic.play();
+    removeClass(buttonBox, "hidden");
+    removeClass(timer, "hidden");
+    nameInput.value = '';
+  }
+}
+
 function resetGame() {
   playerName = '';
   removeClass(gameArea, "expanded");
@@ -181,62 +198,6 @@ function startGamePlay() {
   });
 }
 
-
-/*------------------------------------------------>
-Event Listeners and Input Management
-<------------------------------------------------*/
-
-selectAll('.number-selector').forEach(selector => {
-  const display = selector.querySelector('.number-display');
-  const upArrow = selector.querySelector('.arrow.up');
-  const downArrow = selector.querySelector('.arrow.down');
-
-  listen('click', upArrow, () => {
-    let current = parseInt(display.textContent);
-    display.textContent = current === 6 ? 1 : current + 1;
-  });
-
-  listen('click', downArrow, () => {
-    let current = parseInt(display.textContent);
-    display.textContent = current === 1 ? 6 : current - 1;
-  });
-});
-
-listen('click', collectButton, () => {
-  guessSound.play();
-  // if (guessCount >= maxGuesses) {
-  //   loserSound.play();
-  //   resultsModal.showModal();
-  //   resultMain.innerText = 'Game Over!';
-  //   boldText.innerText = 'You\'ve used all your guesses.';
-  //   codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-  //   return;
-  // }
-
-  const playerGuess = [];
-
-  selectAll('.number-selector').forEach(selector => {
-    const display = selector.querySelector('.number-display');
-    playerGuess.push(parseInt(display.textContent));
-  });
-
-  const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
-
-  updateCheckboxColors(redTokens, whiteTokens);
-
-  guessHistory.push([...playerGuess]);
-  populateWithSpans(guessHistory.flat());
-  guessCount++;
-
-  checkWinCondition(redTokens, masterCode.length);
-
-  if (guessCount >= maxGuesses) {
-    loserSound.play();
-    timer.innerText = '0000'; 
-    displayGameOverModal();
-  }
-});
-
 function displayGameOverModal() {
     resultsModal.showModal();
     addClass(buttonBox, "hidden");
@@ -247,20 +208,11 @@ function displayGameOverModal() {
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
 }
 
-listen('click', muteButton, () => {
-  bgMusic.muted = !bgMusic.muted; 
-  muteIcon.classList.toggle("fa-volume-off");
-  muteIcon.classList.toggle("fa-volume-xmark");
-});
+
 
 /*-------------------------------------------------------------------------->
   TIMER
 <--------------------------------------------------------------------------*/
-const timer = select('.timer');
-let startTime = new Date();  
-let timerInterval; 
-let formattedTime = '';
-let elapsedTime = 0;
 
 function decimelTracker() {
   if (elapsedTime < 10) {
@@ -364,19 +316,64 @@ function createScoreListItem(score) {
       <span>${score.time}</span> 
       sec
   `;
-
   li.innerHTML = details;
-
   return li; 
 }
 
-
 /*-------------------------------------------------------------------------->
-  INITIALIZATION AND EVENT HANDLERS
+  Event Listeners
 <--------------------------------------------------------------------------*/
+/*  -- Gameplay --  */
 
 resultMain.innerText = 'CODE BREAKER';
 boldText.innerText = 'Can you guess my code?';
+
+selectAll('.number-selector').forEach(selector => {
+  const display = selector.querySelector('.number-display');
+  const upArrow = selector.querySelector('.arrow.up');
+  const downArrow = selector.querySelector('.arrow.down');
+
+  listen('click', upArrow, () => {
+    let current = parseInt(display.textContent);
+    display.textContent = current === 6 ? 1 : current + 1;
+  });
+
+  listen('click', downArrow, () => {
+    let current = parseInt(display.textContent);
+    display.textContent = current === 1 ? 6 : current - 1;
+  });
+});
+
+listen('click', collectButton, () => {
+  guessSound.play();
+  const playerGuess = [];
+  selectAll('.number-selector').forEach(selector => {
+    const display = selector.querySelector('.number-display');
+    playerGuess.push(parseInt(display.textContent));
+  });
+
+  const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
+  updateCheckboxColors(redTokens, whiteTokens);
+  guessHistory.push([...playerGuess]);
+  populateWithSpans(guessHistory.flat());
+  guessCount++;
+  checkWinCondition(redTokens, masterCode.length);
+  if (guessCount >= maxGuesses) {
+    loserSound.play();
+    timer.innerText = '0000'; 
+    displayGameOverModal();
+  }
+});
+listen('click', newGame, ()=> {
+  resultsModal.close();
+  resetGame();
+});
+
+listen('click', nameButton, ()=>{
+  launchNewGame();
+});
+
+/*  -- Modals --  */
 
 listen('click', rulesButton, () => {
   rulesModal.showModal();
@@ -393,11 +390,6 @@ listen('click', rulesModal, function(ev) {
   }
 });
 
-listen('click', newGame, ()=> {
-  resultsModal.close();
-  resetGame();
-});
-
 listen('click', viewScores, () => {
   scoresWrapper.showModal();
     const topScores = loadScoresFromLocalStorage();
@@ -411,6 +403,15 @@ listen('click', scoresWrapper, function(ev) {
       scoresWrapper.close();
   }
 });
+
+/*  -- Other --  */
+
 listen('click', quitButton, () => {
   displayGameOverModal();
+});
+
+listen('click', muteButton, () => {
+  bgMusic.muted = !bgMusic.muted; 
+  muteIcon.classList.toggle("fa-volume-off");
+  muteIcon.classList.toggle("fa-volume-xmark");
 });
