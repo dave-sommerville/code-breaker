@@ -41,16 +41,19 @@ const codeDisplay = select('.mastercode');
 const buttonBox = select('.rules');
 const rulesButton = select('.info');
 const rulesButtonTwo = select('.info-main');
+const rulesButtonThree = select('.info-intro');
 const rulesModal = select('.game-rules');
 const scoresList = select('.high-scores-list');
 const scoresWrapper = select('.scores-wrapper')
 const viewScores = select('.scores-btn');
+const viewScoresTwo = select('.scores-btn-intro');
 const muteButton = select('.mute');
 const muteIcon = select('.mute-icon');
 const quitButton = select('.quit');
 /* -- Audio -- */
 
 const guessSound = select('.sound-effect');
+guessSound.load();
 const bgMusic = select('.background-music');
 const winnerSound = select('.winner-sound');
 const loserSound = select('.loser-sound');
@@ -381,6 +384,9 @@ listen('click', rulesButton, () => {
 listen('click', rulesButtonTwo, () => {
   rulesModal.showModal();
 });
+listen('click', rulesButtonThree, () => {
+  rulesModal.showModal();
+});
 
 listen('click', rulesModal, function(ev) {
   const rect = this.getBoundingClientRect();
@@ -391,6 +397,12 @@ listen('click', rulesModal, function(ev) {
 });
 
 listen('click', viewScores, () => {
+  scoresWrapper.showModal();
+    const topScores = loadScoresFromLocalStorage();
+  populateScoreList(topScores);
+});
+
+listen('click', viewScoresTwo, () => {
   scoresWrapper.showModal();
     const topScores = loadScoresFromLocalStorage();
   populateScoreList(topScores);

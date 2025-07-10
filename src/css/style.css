@@ -101,6 +101,11 @@ h3 {
 .title.in-play {
   height: 200px;
 }
+.intro-btn-wrapper {
+  width: 200px;
+  margin: 50px 0;
+  justify-content: space-between;
+}
 /*------------------------------------------------>
   Gameplay Area
 <------------------------------------------------*/
@@ -110,7 +115,7 @@ h4 {
 }
 .name-scrn {
   overflow: hidden;
-  height: 200px;
+  height: 400px;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -253,7 +258,7 @@ h4 {
   display: none;
 }
 
-.info, .info-main, .scores-btn, .mute, .quit {
+.info, .info-main, .info-intro, .scores-btn, .scores-btn-intro, .mute, .quit {
   color: var(--mitt-reg-blue);
   font-size: 2rem;
   text-shadow: var(--app-t-shadow);
@@ -265,7 +270,7 @@ h4 {
   font-size: 1.6rem;
 }
 
-.info:hover, .info-main:hover, .quit:hover, .scores-btn:hover, .mute:hover {
+.info:hover, .info-main:hover, .info-intro:hover, .quit:hover, .scores-btn:hover, .scores-btn-intro:hover, .mute:hover {
   transform: scale(1.05);
 }
 
@@ -492,7 +497,7 @@ Media Queries
   .name-btn {
     height: 40px;
   }
-  .info, .info-main, .quit, .scores-btn, .mute {
+  .info, .info-main, .info-intro, .quit, .scores-btn, .scores-btn-intro, .mute {
     font-size: 1.2rem;
   }
   .quit {
