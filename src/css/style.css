@@ -68,6 +68,7 @@ main {
 	justify-content: flex-start;
 	align-items: center;
   position: relative;
+  padding-bottom: 50px;
 }
 
 h1 {
@@ -251,7 +252,7 @@ h4 {
   align-items: center;
   position: fixed;
   z-index: 100;
-  bottom: 12svh;
+  top: 10svh;
   left: 20px;
 }
 .rules.hidden {
