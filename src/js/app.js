@@ -125,7 +125,6 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   for (let i = 0; i < 4; i++) {
     const checkbox = create('div');
     checkbox.classList.add('checkboxes');
-    checkbox.classList.add("fail"); 
     checkboxGroup.appendChild(checkbox);
   }
   
@@ -359,21 +358,44 @@ listen('click', collectButton, () => {
   selectAll('.number-selector').forEach(selector => {
     const display = selector.querySelector('.number-display');
     playerGuess.push(parseInt(display.textContent));
-    console.log(playerGuess);
   });
+
+  // 1. Check for Duplicate Guess
+  const isDuplicate = guessHistory.some(pastGuess => {
+    // Check if the current playerGuess is identical to any pastGuess
+    return pastGuess.every((value, index) => value === playerGuess[index]);
+  });
+
+  if (isDuplicate) {
+    // 2. Alert the player and stop execution
+    alert("You have already guessed this combination! Try a new one.");
+    return; // Stop the function here
+  }
+
+  // If not a duplicate, continue with the game logic
+
+  // Adjust global variable to length of animations
   pauseAndResumeTimer();
+  
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
   updateCheckboxColors(redTokens, whiteTokens);
+  
+  // 3. Only push to history if it's a new guess
   guessHistory.push([...playerGuess]);
-  populateWithSpans(guessHistory.flat());
+  const reversedHistory = guessHistory.slice().reverse();
+
+  populateWithSpans(reversedHistory.flat());
+  
   guessCount++;
   checkWinCondition(redTokens, masterCode.length);
+  
   if (guessCount >= maxGuesses) {
     loserSound.play();
     timer.innerText = '0000'; 
     displayGameOverModal();
   }
 });
+
 listen('click', newGame, ()=> {
   resultsModal.close();
   resetGame();
