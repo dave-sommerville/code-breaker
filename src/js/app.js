@@ -66,7 +66,7 @@ let startTime = new Date();
 let timerInterval; 
 let formattedTime = '';
 let elapsedTime = 0;
-
+const transitionDurationMs = 500;
 const guessHistory = [];
 let guessCount = 0; 
 const maxGuesses = 10; 
@@ -125,20 +125,19 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   for (let i = 0; i < 4; i++) {
     const checkbox = create('div');
     checkbox.classList.add('checkboxes');
-    checkbox.style.backgroundColor = '#234'; 
+    checkbox.classList.add("fail"); 
     checkboxGroup.appendChild(checkbox);
   }
   
   checkboxContainer.appendChild(checkboxGroup);
-  
   const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
   
   let index = 0;
   for (; index < redTokens; index++) {
-    currentCheckboxes[index].style.backgroundColor = 'red';
+    currentCheckboxes[index].classList.add('red');
   }
   for (let i = 0; i < whiteTokens; i++, index++) {
-    currentCheckboxes[index].style.backgroundColor = 'white';
+    currentCheckboxes[index].classList.add('white');
   }
 }
 
@@ -152,7 +151,6 @@ function checkWinCondition(redTokens, codeLength) {
     boldText.innerText = 'You guessed correctly';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
     clearInterval(timerInterval);  
-    updateTimer();
     calculateScore();
     winnerSound.play();
   }
@@ -173,6 +171,10 @@ function launchNewGame() {
     addClass(titleImage, "in-play");
     startGamePlay();
     bgMusic.muted = false;
+      if (muteIcon.classList.contains("fa-volume-off")) {
+        muteIcon.classList.toggle("fa-volume-off");
+        muteIcon.classList.toggle("fa-volume-xmark");
+      }
     bgMusic.currentTime = 0;  
     bgMusic.play();
     removeClass(buttonBox, "hidden");
@@ -231,7 +233,6 @@ function decimelTracker() {
 }
 
 function updateTimer() {
-  elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
   decimelTracker();
 
   if (elapsedTime <= 0) {
@@ -243,20 +244,26 @@ function updateTimer() {
 }
 
 function startTimer() {
-  startTime = new Date();  
-  timer.innerText = '0000'; 
+  startTime = new Date() - elapsedTime * 1000;  
+  timer.innerText = formattedTime || '0000'; 
 
   timerInterval = setInterval(() => {
 
-    const elapsedTime = 0 + Math.floor((new Date() - startTime) / 1000);
+    elapsedTime = Math.floor((new Date() - startTime) / 1000);
 
     if (guessCount >= 8) {
       clearInterval(timerInterval);  
-      updateTimer();
+      timer.innerText = '0000';
     } else {
       updateTimer();  
     }
   }, 1000);  
+}
+function pauseAndResumeTimer() {
+  clearInterval(timerInterval);
+  setTimeout(() => {
+    startTimer();
+  }, transitionDurationMs)
 }
 
 /*-------------------------------------------------------------------------->
@@ -295,7 +302,6 @@ function calculateScore() {
   if (existingScores.length > 10) {
     existingScores = existingScores.slice(0, 10);
   }
-
   saveScoresToLocalStorage(existingScores);
 }
 
@@ -353,8 +359,9 @@ listen('click', collectButton, () => {
   selectAll('.number-selector').forEach(selector => {
     const display = selector.querySelector('.number-display');
     playerGuess.push(parseInt(display.textContent));
+    console.log(playerGuess);
   });
-
+  pauseAndResumeTimer();
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
   updateCheckboxColors(redTokens, whiteTokens);
   guessHistory.push([...playerGuess]);
