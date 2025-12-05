@@ -5,17 +5,16 @@
 
 /*
 Code Breaker Work
-- Fix mute error (if you start a new game when it's muted, the button appearance flips)
 - Add MITT Link
-- Decrease difficulty (potentially add multiple levels of difficulty, with three scoreboards)
-- Add a swear word regex
-- Review and clean code
-- Reverse the stacking order of guesses, maybe index them
-- Prevent the user from making a guess they already have
+- Decrease difficulty (potentially add two levels of difficulty, with two scoreboards)
+- Code Review and notation
 - Add submission animation
-- Add win/lose animation
-- Fix the ongoing timer issue/add timer pause when transitions are occurring
+  - When numbers display, they go through a scrambling function. 
+  - This gets used for the the "box" spans as well as the final reveals
+  - If it's a win, it should go to a winning screen before the scramble
+  - Add win/lose animation or display
 */
+
 :root {
   --mitt-light-blue: #74d2e8;
   --mitt-reg-blue: #0e4174;

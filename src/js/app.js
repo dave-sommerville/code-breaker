@@ -10,7 +10,7 @@ import {
   removeClass,
   getDate
 } from './utils.js';
-
+import { containsProfanity } from './profanity-filter.js';
 /*------------------------------------------------>
   Element Selectors 
 <------------------------------------------------*/
@@ -158,11 +158,23 @@ function checkWinCondition(redTokens, codeLength) {
 /*------------------------------------------------>
   Gameplay mechanics
 <------------------------------------------------*/
+function isValid(inputString) {
+    // Standard pattern for letters and numbers
+    let pattern = /^[a-zA-Z0-9-]+$/;
+
+    return pattern.test(inputString);
+}
+
 
 function launchNewGame() {
   playerName = nameInput.value.trim();
   if(playerName.length < 3 || playerName.length > 6) {
     nameError.textContent = 'Name must be 3 to 6 letters.';
+  } else if (!isValid(playerName)) {
+    nameError.textContent = 'No special characters';
+  } else if(containsProfanity(playerName)) {
+    nameError.textContent = 'No Profanity please';
+    nameInput.value = '';
   } else {
     nameError.textContent = '';
     addClass(gameArea, "expanded");
@@ -403,6 +415,15 @@ listen('click', newGame, ()=> {
 
 listen('click', nameButton, ()=>{
   launchNewGame();
+});
+
+listen('keydown', nameInput, (event) => {
+  // Check if the key pressed is the 'Enter' key
+  if (event.key === 'Enter') {
+    // Prevent the default action (which might be submitting a form and refreshing the page)
+    event.preventDefault();
+    launchNewGame();
+  }
 });
 
 /*  -- Modals --  */
