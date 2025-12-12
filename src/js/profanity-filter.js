@@ -40,12 +40,6 @@ const PROFANITY_REGEX = new RegExp(
 
 // --- 3. Exported Checker Function (Unchanged) ---
 
-/**
- * Checks if a string input contains any profanity.
- *
- * @param {string} input - The string to check.
- * @returns {boolean} - True if profanity is found, otherwise false.
- */
 export function containsProfanity(input) {
   if (typeof input !== 'string') {
     return false;

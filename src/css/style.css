@@ -8,22 +8,36 @@ Code Breaker Work
 - Add MITT Link
 - Decrease difficulty (potentially add two levels of difficulty, with two scoreboards)
 - Code Review and notation
-- Add submission animation
-  - When numbers display, they go through a scrambling function. 
-  - This gets used for the the "box" spans as well as the final reveals
-  - If it's a win, it should go to a winning screen before the scramble
-  - Add win/lose animation or display
-*/
+- Fix Timer :(
 
+- Change the stacking order of the token boxes
+- Move the buttons permentantly to the side
+  - Add difficulty button
+- Make the landing page all fit in a screen height
+- Decide on what to animate between guess
+- Make more dynamic winning/losing screens
+- Change error mesage from alert
+- Change arrow button selectors
+- Change error for no entry in name input
+- 
+*/
 :root {
   --mitt-light-blue: #74d2e8;
   --mitt-reg-blue: #0e4174;
   --mitt-green: #6cc24a;
-
-
   --app-t-shadow: 			
     0 0 2px var(--mitt-reg-blue),
     0 0 8px var(--mitt-green)
+}
+.animation::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  z-index: 1000;
+  width: 100svw;
+  height: 100svh;
+  background-color: #007bff;
+
 }
 .container {
 	width: min(100% - 30px, 1200px);
@@ -39,7 +53,6 @@ Code Breaker Work
   filter: drop-shadow(0 3px #0f02);
   animation: titleFlicker 0.75s infinite alternate;
 }
-
 .block {
 	display: block;
 }
@@ -49,9 +62,6 @@ Code Breaker Work
 .checkboxes.white {
   background-color: white;
 }
-
-
-
 .flex {
 	display: flex;
 }
@@ -59,15 +69,16 @@ Code Breaker Work
   display: flex;
 	flex-direction: column;
 }
-
+.pos-rel {
+  position: relative;
+  z-index: 0;
+}
 .circle {
 	border-radius: 50%;
 }
-
 .cursor-pointer {
 	cursor: pointer;
 }
-
 .hidden {
   display: none;
 }

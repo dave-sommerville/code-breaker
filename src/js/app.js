@@ -23,6 +23,7 @@ const nameError = select('.name-error');
 
 const gameArea = select('.game-area');
 const titleImage = select('.title');
+const main = select('main');
 /* -- Game Area -- */
 
 const gridContainer = select('.grid-container');
@@ -61,7 +62,24 @@ const loserSound = select('.loser-sound');
 /*------------------------------------------------>
   Initial Declarations
 <------------------------------------------------*/
-
+const randomCharacters = [
+  "!",
+  "@",
+  "#",
+  "$",
+  "%",
+  "^",
+  "&",
+  "*",
+  "~",
+  "?",
+  "A",
+  "B",
+  "C",
+  "0",
+  "1",
+  "2",
+];
 let startTime = new Date();  
 let timerInterval; 
 let formattedTime = '';
@@ -71,12 +89,8 @@ const guessHistory = [];
 let guessCount = 0; 
 const maxGuesses = 10; 
 let playerName = '';
-
-function generateMasterCode(length = 4, min = 1, max = 6) {
-  return Array.from({ length }, () => getRandomNumber(min, max));
-}
-
-let masterCode = generateMasterCode();
+let isEasyMode = true;
+let masterCode;
 
 /*------------------------------------------------>
   Token logic 
@@ -103,10 +117,10 @@ function countTokens(code, guess) {
   });
   return { redTokens, whiteTokens };
 }
+
 /*------------------------------------------------>
   Previous Guess Info 
 <------------------------------------------------*/
-
 function populateWithSpans(valuesArray) {
   gridContainer.innerHTML = ""; 
   valuesArray.forEach((value) => {
@@ -127,7 +141,6 @@ function updateCheckboxColors(redTokens, whiteTokens) {
     checkbox.classList.add('checkboxes');
     checkboxGroup.appendChild(checkbox);
   }
-  
   checkboxContainer.appendChild(checkboxGroup);
   const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
   
@@ -158,6 +171,11 @@ function checkWinCondition(redTokens, codeLength) {
 /*------------------------------------------------>
   Gameplay mechanics
 <------------------------------------------------*/
+
+function generateMasterCode(length, max ) {
+  return Array.from({ length }, () => getRandomNumber(1, max));
+}
+
 function isValid(inputString) {
     // Standard pattern for letters and numbers
     let pattern = /^[a-zA-Z0-9-]+$/;
@@ -165,11 +183,10 @@ function isValid(inputString) {
     return pattern.test(inputString);
 }
 
-
 function launchNewGame() {
   playerName = nameInput.value.trim();
-  if(playerName.length < 3 || playerName.length > 6) {
-    nameError.textContent = 'Name must be 3 to 6 letters.';
+  if(playerName.length > 6) {
+    nameError.textContent = '6 letters max';
   } else if (!isValid(playerName)) {
     nameError.textContent = 'No special characters';
   } else if(containsProfanity(playerName)) {
@@ -206,7 +223,11 @@ function resetGame() {
 }
 
 function startGamePlay() {  
-  masterCode = generateMasterCode();
+  if (isEasyMode) {
+    masterCode = generateMasterCode(4, 4);
+  } else {
+    masterCode = generateMasterCode(4, 6);
+  }
   startTimer();  
   console.log(masterCode);
   selectAll('.number-display').forEach(display => {
@@ -385,10 +406,13 @@ listen('click', collectButton, () => {
   }
 
   // If not a duplicate, continue with the game logic
-
   // Adjust global variable to length of animations
+
   pauseAndResumeTimer();
-  
+  main.classList.add("animation");
+  setTimeout(()=>{
+      main.classList.remove("animation");
+  }, 1000);
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
   updateCheckboxColors(redTokens, whiteTokens);
   
