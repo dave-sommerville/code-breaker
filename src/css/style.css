@@ -9,8 +9,9 @@ Code Breaker Work
 - Decrease difficulty (potentially add two levels of difficulty, with two scoreboards)
 - Code Review and notation
 - Fix Timer :(
-
-- Change the stacking order of the token boxes
+- Add play again feature
+- 
+- Make sure selectors change with mode changes
 - Move the buttons permentantly to the side
   - Add difficulty button
 - Make the landing page all fit in a screen height
@@ -83,7 +84,11 @@ Code Breaker Work
   display: none;
 }
 /*------------------------------------------------>
+
+
   Body Structure 
+
+
 <------------------------------------------------*/
 
 body {

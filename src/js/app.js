@@ -1,5 +1,24 @@
 'use strict';
+/*
+Today's Lesson is on 
 
+~*~*~*TECHNICAL DEBT*~*~*~ 
+
+So this is a game that I first created around a year ago. When I built it, I wasn't entirely sure of how to handle the events dynamically, so I had AI create a very monolithic structure for the arrow buttons and selectors. I cleaned it up with JS utilities and understood how it was functioning (and it was indeed... functioning), but then called it good enough. 
+
+Now coming back to it, with new knowledge of CSS effects and JS I can apply to it and... WHAT A PAIN
+I just want to make it a little fancier, but how to do that without bloating the code horribly!
+
+After a few hours of staring blankly at my screen (followed by a chilly bus ride obsessing over it), I have decided to refactor this baby. 
+
+Firstly, I'm gonna get all OOP on it. I see the player and guesses as objects now. This will make the code much cleaner, modular, and durable. 
+
+I will also make it so that the first guess displayed after the collect guess button is coded into the html. This will allow me to select it much more delebriately. The subsequent guesses can be populated dynamically with a triggered function. 
+I thought I'd try to maintain the old code to show the difference between the two approaches. I will likely clean up the notes in later commits though. 
+
+I'm fully aware that I'm probably going to overkill it with design now, but I'd sooner do that than return to the project next year and be unable to expand on functionality again. 
+
+*/
 import {
   select, 
   selectAll, 
@@ -95,7 +114,7 @@ let masterCode;
 /*------------------------------------------------>
   Token logic 
 <------------------------------------------------*/
-
+// This should be mostly ok
 function countTokens(code, guess) {
   let redTokens = 0;
   let whiteTokens = 0;
@@ -121,6 +140,7 @@ function countTokens(code, guess) {
 /*------------------------------------------------>
   Previous Guess Info 
 <------------------------------------------------*/
+/*
 function populateWithSpans(valuesArray) {
   gridContainer.innerHTML = ""; 
   valuesArray.forEach((value) => {
@@ -130,7 +150,10 @@ function populateWithSpans(valuesArray) {
     gridContainer.appendChild(span);
   });
 }
+  */
 
+
+/*
 function updateCheckboxColors(redTokens, whiteTokens) {
   const checkboxContainer = select('.checkbox-container');
   const checkboxGroup = create('div');
@@ -152,7 +175,7 @@ function updateCheckboxColors(redTokens, whiteTokens) {
     currentCheckboxes[index].classList.add('white');
   }
 }
-
+*/
 function checkWinCondition(redTokens, codeLength) {
   if (redTokens === codeLength) {
     resultsModal.showModal();
@@ -171,7 +194,7 @@ function checkWinCondition(redTokens, codeLength) {
 /*------------------------------------------------>
   Gameplay mechanics
 <------------------------------------------------*/
-
+// These gotta move 
 function generateMasterCode(length, max ) {
   return Array.from({ length }, () => getRandomNumber(1, max));
 }
@@ -182,7 +205,9 @@ function isValid(inputString) {
 
     return pattern.test(inputString);
 }
+// ^^
 
+// This should be mostly complete
 function launchNewGame() {
   playerName = nameInput.value.trim();
   if(playerName.length > 6) {
@@ -210,7 +235,7 @@ function launchNewGame() {
     nameInput.value = '';
   }
 }
-
+// This will change!!!!
 function resetGame() {
   playerName = '';
   removeClass(gameArea, "expanded");
@@ -250,7 +275,7 @@ function displayGameOverModal() {
 /*-------------------------------------------------------------------------->
   TIMER
 <--------------------------------------------------------------------------*/
-
+// Timer needs fixing, but is hopefully mostly complete
 function decimelTracker() {
   if (elapsedTime < 10) {
     formattedTime = `000${elapsedTime}`
@@ -301,7 +326,7 @@ function pauseAndResumeTimer() {
 /*-------------------------------------------------------------------------->
   SCORE MANAGEMENT 
 <--------------------------------------------------------------------------*/
-
+// Hoping to maintain most of the score management functions
 function saveScoresToLocalStorage(scores) {
   const topScores = scores.slice(0, 10);
   const scoresJSON = JSON.stringify(topScores);
@@ -368,7 +393,7 @@ function createScoreListItem(score) {
 
 resultMain.innerText = 'CODE BREAKER';
 boldText.innerText = 'Can you guess my code?';
-
+// This is working
 selectAll('.number-selector').forEach(selector => {
   const display = selector.querySelector('.number-display');
   const upArrow = selector.querySelector('.arrow.up');
@@ -392,10 +417,10 @@ listen('click', collectButton, () => {
     const display = selector.querySelector('.number-display');
     playerGuess.push(parseInt(display.textContent));
   });
-
-  // 1. Check for Duplicate Guess
+  /*
+  **WILL NEED A DUPLICATE CHECKING METHOD IN THE 
+  GUESS GLASS WITH A PRIVATE FIELD TRACKING THE GAME STATE
   const isDuplicate = guessHistory.some(pastGuess => {
-    // Check if the current playerGuess is identical to any pastGuess
     return pastGuess.every((value, index) => value === playerGuess[index]);
   });
 
@@ -405,23 +430,27 @@ listen('click', collectButton, () => {
     return; // Stop the function here
   }
 
-  // If not a duplicate, continue with the game logic
-  // Adjust global variable to length of animations
+  */
 
+
+  // Hoping to not impact the  timer functions too greatly
   pauseAndResumeTimer();
+  /*
+  ** lIKELY NOT NEEDED, BUT MAY ADD AN ANIMATION HERE
   main.classList.add("animation");
   setTimeout(()=>{
       main.classList.remove("animation");
   }, 1000);
+  */
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
+  // Tokens will be moved into the object
+  // The Checkbox colors will get populated by the object status
   updateCheckboxColors(redTokens, whiteTokens);
-  
-  // 3. Only push to history if it's a new guess
   guessHistory.push([...playerGuess]);
   const reversedHistory = guessHistory.slice().reverse();
-
+  // This will be renamed and the function changed
   populateWithSpans(reversedHistory.flat());
-  
+  // This will be in the player object
   guessCount++;
   checkWinCondition(redTokens, masterCode.length);
   
