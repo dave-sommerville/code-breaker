@@ -30,6 +30,8 @@ import {
   getDate
 } from './utils.js';
 import { containsProfanity } from './profanity-filter.js';
+import { Game } from './game.js';
+import { Guess } from './guess.js';
 /*------------------------------------------------>
   Element Selectors 
 <------------------------------------------------*/
@@ -99,14 +101,12 @@ const randomCharacters = [
   "1",
   "2",
 ];
-let startTime = new Date();  
-let timerInterval; 
-let formattedTime = '';
-let elapsedTime = 0;
+// let startTime = new Date();  
+// let timerInterval; 
+// let formattedTime = '';
+// let elapsedTime = 0;
+
 const transitionDurationMs = 500;
-const guessHistory = [];
-let guessCount = 0; 
-const maxGuesses = 10; 
 let playerName = '';
 let isEasyMode = true;
 let masterCode;
@@ -194,10 +194,7 @@ function checkWinCondition(redTokens, codeLength) {
 /*------------------------------------------------>
   Gameplay mechanics
 <------------------------------------------------*/
-// These gotta move 
-function generateMasterCode(length, max ) {
-  return Array.from({ length }, () => getRandomNumber(1, max));
-}
+// gotta move 
 
 function isValid(inputString) {
     // Standard pattern for letters and numbers
@@ -222,7 +219,7 @@ function launchNewGame() {
     addClass(gameArea, "expanded");
     addClass(nameScrn, "retracted");
     addClass(titleImage, "in-play");
-    startGamePlay();
+    startGamePlay(playerName);
     bgMusic.muted = false;
       if (muteIcon.classList.contains("fa-volume-off")) {
         muteIcon.classList.toggle("fa-volume-off");
@@ -243,22 +240,10 @@ function resetGame() {
   removeClass(titleImage, "in-play");
   gridContainer.innerHTML = ""; 
   checkboxContainer.innerHTML = ""; 
-  guessHistory.length = 0; 
-  guessCount = 0; 
+
 }
 
-function startGamePlay() {  
-  if (isEasyMode) {
-    masterCode = generateMasterCode(4, 4);
-  } else {
-    masterCode = generateMasterCode(4, 6);
-  }
-  startTimer();  
-  console.log(masterCode);
-  selectAll('.number-display').forEach(display => {
-    display.textContent = '1';
-  });
-}
+
 
 function displayGameOverModal() {
     resultsModal.showModal();
@@ -394,6 +379,66 @@ function createScoreListItem(score) {
 resultMain.innerText = 'CODE BREAKER';
 boldText.innerText = 'Can you guess my code?';
 // This is working
+
+// const arrowUpOne = select('arrow.up.one'); 
+// const arrowDownOne = select('arrow.down.one');
+
+// const arrowUpTwo = select('arrow.up.two'); 
+// const arrowDownTwo = select('arrow.down.two');
+
+// const arrowUpThree = select('arrow.up.three'); 
+// const arrowDownThree = select('arrow.down.three');
+
+// const arrowUpFour = select('arrow.up.four'); 
+// const arrowDownFour = select('arrow.down.four');
+
+
+
+function setupNumberSpinner(upArrow, downArrow, display, min = 1, max = 6) {
+  listen('click', upArrow, () => {
+    let current = parseInt(display.textContent);
+    display.textContent = current === max ? min : current + 1;
+  });
+
+  listen('click', downArrow, () => {
+    let current = parseInt(display.textContent);
+    display.textContent = current === min ? max : current - 1;
+  });
+}
+
+setupNumberSpinner(
+  select('.arrow.up.one'),
+  select('.arrow.down.one'),
+  select('.number-display.one')
+);
+
+setupNumberSpinner(
+  select('.arrow.up.two'),
+  select('.arrow.down.two'),
+  select('.number-display.two')
+);
+setupNumberSpinner(
+  select('.arrow.up.three'),
+  select('.arrow.down.three'),
+  select('.number-display.three')
+);
+
+setupNumberSpinner(
+  select('.arrow.up.four'),
+  select('.arrow.down.four'),
+  select('.number-display.four')
+);
+function collectValues() {
+  const numArr = [
+    select('number-display.one').textContent,
+    select('number-display.two').textContent,
+    select('number-display.three').textContent,
+    select('number-display.four').textContent
+  ];
+  return numArr;
+}
+
+/*
 selectAll('.number-selector').forEach(selector => {
   const display = selector.querySelector('.number-display');
   const upArrow = selector.querySelector('.arrow.up');
@@ -409,7 +454,45 @@ selectAll('.number-selector').forEach(selector => {
     display.textContent = current === 1 ? 6 : current - 1;
   });
 });
+*/
+function createGuessDisplays() {
+  
+}
 
+// NEED TO CHANGE THE MECHANICS!!
+function startGamePlay() {  
+  let game = new Game(playerName, isEasyMode);
+  console.log(game.masterCode);
+  gameLoop(game);
+}
+
+function gameLoop(game) {
+while(!game.isGameOver) {
+    listen('click', collectButton, () => {4
+      const guess = collectValues();
+      if (game.containsDuplicateGuess(guess)) {
+        alert("You have already guessed this combination! Try a new one.");
+        return; 
+      }
+      guessSound.play();
+      game.guesses(guess);
+      // Populate first element with animation
+      // Dynamically add other elements
+      if(game.isGameOver) {
+        if (game.isGameWon) {
+          alert("You Win!");
+          // Add Scores
+          resetGame();
+        } else {
+          alert("You Lose!");
+          resetGame();
+        }
+      }
+    });
+  }
+}
+
+/*
 listen('click', collectButton, () => {
   guessSound.play();
   const playerGuess = [];
@@ -417,31 +500,29 @@ listen('click', collectButton, () => {
     const display = selector.querySelector('.number-display');
     playerGuess.push(parseInt(display.textContent));
   });
-  /*
-  **WILL NEED A DUPLICATE CHECKING METHOD IN THE 
-  GUESS GLASS WITH A PRIVATE FIELD TRACKING THE GAME STATE
+
+
+  //WILL NEED A DUPLICATE CHECKING METHOD IN THE 
+  //GUESS GLASS WITH A PRIVATE FIELD TRACKING THE GAME STATE
   const isDuplicate = guessHistory.some(pastGuess => {
     return pastGuess.every((value, index) => value === playerGuess[index]);
   });
 
   if (isDuplicate) {
-    // 2. Alert the player and stop execution
     alert("You have already guessed this combination! Try a new one.");
-    return; // Stop the function here
+    return; 
   }
-
-  */
 
 
   // Hoping to not impact the  timer functions too greatly
   pauseAndResumeTimer();
-  /*
-  ** lIKELY NOT NEEDED, BUT MAY ADD AN ANIMATION HERE
+  
+  // lIKELY NOT NEEDED, BUT MAY ADD AN ANIMATION HERE
   main.classList.add("animation");
   setTimeout(()=>{
       main.classList.remove("animation");
   }, 1000);
-  */
+  
   const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
   // Tokens will be moved into the object
   // The Checkbox colors will get populated by the object status
@@ -460,7 +541,7 @@ listen('click', collectButton, () => {
     displayGameOverModal();
   }
 });
-
+*/
 listen('click', newGame, ()=> {
   resultsModal.close();
   resetGame();
