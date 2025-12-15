@@ -195,7 +195,7 @@ h4 {
 .game-area.expanded {
   height: 160px;
 }
-.code-selector, .grid-container {
+.code-selector, .grid-container, .top-guess {
 
   display: grid;
   grid-template-columns: repeat(4, 1fr);

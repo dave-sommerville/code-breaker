@@ -1,3 +1,5 @@
+import {Guess} from '../js/guess.js';
+
 export class Game {
   #name = "";
   #maxGuesses = 10;
@@ -15,21 +17,11 @@ export class Game {
   ){
     this.#name = name;
     this.#masterCode = this.generateMasterCode();
+    this.#guesses = [];
     if (easyMode) {
       this.#maxGuesses = 10;
     } else {
       this.#maxGuesses = 8;
-    }
-  }
-  set guesses(guess) {
-    this.#guesses.push(guess);
-    this.#guessCount++;
-    if(guess.redTokens === 4) {
-      this.#gameIsWon = true;
-      this.#gameOver = true;
-    }
-    if (this.#guessCount >= this.#maxGuesses) {
-      this.#gameOver = true;
     }
   }
   set score(score) {
@@ -56,12 +48,28 @@ export class Game {
   get masterCode() {
     return this.#masterCode;
   }
+
   generateMasterCode() {
     return Array.from({ length: 4 }, () =>
       Math.floor(Math.random() * this.#maxDigit) + 1
     );
   }
-containsDuplicateGuess(guess) {
+  submitGuess(playerGuess) {    
+    const guessResult = new Guess(playerGuess, this.#masterCode);
+    
+    this.#guesses.push(guessResult);
+    this.#guessCount++;
+
+    if(guessResult.redTokens === 4) {
+      this.#gameIsWon = true;
+      this.#gameOver = true;
+    }
+    
+    if (this.#guessCount >= this.#maxGuesses) {
+      this.#gameOver = true;
+    }
+  }
+  containsDuplicateGuess(guess) {
     for (let i = 0; i < this.#guesses.length; i++) {
       const current = this.#guesses[i];
       let match = true;

@@ -101,41 +101,17 @@ const randomCharacters = [
   "1",
   "2",
 ];
-// let startTime = new Date();  
-// let timerInterval; 
-// let formattedTime = '';
-// let elapsedTime = 0;
+let startTime = new Date();  
+let timerInterval; 
+let formattedTime = '';
+let elapsedTime = 0;
 
 const transitionDurationMs = 500;
 let playerName = '';
 let isEasyMode = true;
 let masterCode;
 
-/*------------------------------------------------>
-  Token logic 
-<------------------------------------------------*/
-// This should be mostly ok
-function countTokens(code, guess) {
-  let redTokens = 0;
-  let whiteTokens = 0;
-  const codeCopy = [...code];
-  const guessCopy = [...guess];
 
-  guessCopy.forEach((num, index) => {
-    if (num === codeCopy[index]) {
-      redTokens++;
-      codeCopy[index] = null;
-      guessCopy[index] = null;
-    }
-  });
-  guessCopy.forEach((num) => {
-    if (num !== null && codeCopy.includes(num)) {
-      whiteTokens++;
-      codeCopy[codeCopy.indexOf(num)] = null;
-    }
-  });
-  return { redTokens, whiteTokens };
-}
 
 /*------------------------------------------------>
   Previous Guess Info 
@@ -176,20 +152,21 @@ function updateCheckboxColors(redTokens, whiteTokens) {
   }
 }
 */
-function checkWinCondition(redTokens, codeLength) {
-  if (redTokens === codeLength) {
-    resultsModal.showModal();
-    addClass(buttonBox, "hidden");
-    addClass(timer, "hidden");
-    bgMusic.muted = true;
-    resultMain.innerText = 'Congratulations!';
-    boldText.innerText = 'You guessed correctly';
-    codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-    clearInterval(timerInterval);  
-    calculateScore();
-    winnerSound.play();
-  }
-}
+
+// function checkWinCondition(redTokens, codeLength) {
+//   if (redTokens === codeLength) {
+//     resultsModal.showModal();
+//     addClass(buttonBox, "hidden");
+//     addClass(timer, "hidden");
+//     bgMusic.muted = true;
+//     resultMain.innerText = 'Congratulations!';
+//     boldText.innerText = 'You guessed correctly';
+//     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
+//     clearInterval(timerInterval);  
+//     calculateScore();
+//     winnerSound.play();
+//   }
+// }
 
 /*------------------------------------------------>
   Gameplay mechanics
@@ -292,21 +269,17 @@ function startTimer() {
   timerInterval = setInterval(() => {
 
     elapsedTime = Math.floor((new Date() - startTime) / 1000);
-
-    if (guessCount >= 8) {
-      clearInterval(timerInterval);  
-      timer.innerText = '0000';
-    } else {
-      updateTimer();  
-    }
+    updateTimer();  
   }, 1000);  
 }
-function pauseAndResumeTimer() {
+function pauseAndResumeTimer(pauseDuration) {
   clearInterval(timerInterval);
   setTimeout(() => {
     startTimer();
-  }, transitionDurationMs)
+  }, pauseDuration)
 }
+
+
 
 /*-------------------------------------------------------------------------->
   SCORE MANAGEMENT 
@@ -378,21 +351,6 @@ function createScoreListItem(score) {
 
 resultMain.innerText = 'CODE BREAKER';
 boldText.innerText = 'Can you guess my code?';
-// This is working
-
-// const arrowUpOne = select('arrow.up.one'); 
-// const arrowDownOne = select('arrow.down.one');
-
-// const arrowUpTwo = select('arrow.up.two'); 
-// const arrowDownTwo = select('arrow.down.two');
-
-// const arrowUpThree = select('arrow.up.three'); 
-// const arrowDownThree = select('arrow.down.three');
-
-// const arrowUpFour = select('arrow.up.four'); 
-// const arrowDownFour = select('arrow.down.four');
-
-
 
 function setupNumberSpinner(upArrow, downArrow, display, min = 1, max = 6) {
   listen('click', upArrow, () => {
@@ -428,15 +386,22 @@ setupNumberSpinner(
   select('.arrow.down.four'),
   select('.number-display.four')
 );
+
 function collectValues() {
-  const numArr = [
-    select('number-display.one').textContent,
-    select('number-display.two').textContent,
-    select('number-display.three').textContent,
-    select('number-display.four').textContent
-  ];
+  const numDisOne = select('.number-display.one');
+  const numDisTwo = select('.number-display.two');
+  const numDisThree = select('.number-display.three');
+  const numDisFour = select('.number-display.four');
+
+  let num0 = parseInt(numDisOne.textContent, 10);
+  let num1 = parseInt(numDisTwo.textContent, 10);
+  let num2 = parseInt(numDisThree.textContent, 10);
+  let num3 = parseInt(numDisFour.textContent, 10);
+  const numArr = [num0, num1, num2, num3];
   return numArr;
 }
+
+
 
 /*
 selectAll('.number-selector').forEach(selector => {
@@ -455,42 +420,90 @@ selectAll('.number-selector').forEach(selector => {
   });
 });
 */
-function createGuessDisplays() {
-  
+
+const topGuessOne = select('.top-0');
+const topGuessTwo = select('.top-1');
+const topGuessThree = select('.top-2');
+const topGuessFour = select('.top-3');
+const topCheckOne = select('.box-0');
+const topCheckTwo = select('.box-1');
+const topCheckThree = select('.box-2');
+const topCheckFour = select('.box-3');
+
+
+function createGuessDisplays(game) {
+  if (game.guesses.length > 2) {
+  for(let i = game.guesses.length - 2; i > 0; i--) {
+    gridContainer.innerHTML = '';
+    createGuessElement(game);
+  }
+ }
 }
+function createGuessElement(game) {
+  let valuesArray = guess.digits;
+  let redTokens = guess.redTokens;
+  let whiteTokens = quess.whiteTokens;
+  valuesArray.forEach((value) => {
+    const span = create("span");
+    span.textContent = value;
+    span.classList.add("box");
+    gridContainer.appendChild(span);
+  });
+  const checkboxGroup = create('div');
+  checkboxGroup.classList.add('checkbox-group');
+  
+  for (let i = 0; i < 4; i++) {
+    const checkbox = create('div');
+    checkbox.classList.add('checkboxes');
+    checkboxGroup.appendChild(checkbox);
+  }
+  checkboxContainer.appendChild(checkboxGroup);
+  const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
+  
+  let index = 0;
+  for (; index < redTokens; index++) {
+    currentCheckboxes[index].classList.add('red');
+  }
+  for (let i = 0; i < whiteTokens; i++, index++) {
+    currentCheckboxes[index].classList.add('white');
+  }
+
+}
+function animateGuess() {
+
+}
+let currentGame;
 
 // NEED TO CHANGE THE MECHANICS!!
 function startGamePlay() {  
-  let game = new Game(playerName, isEasyMode);
-  console.log(game.masterCode);
-  gameLoop(game);
+  currentGame = new Game(playerName, isEasyMode);
+  console.log(currentGame)
+  console.log(currentGame);
+  console.log(currentGame.masterCode);
+  startTimer();
 }
 
-function gameLoop(game) {
-while(!game.isGameOver) {
-    listen('click', collectButton, () => {4
-      const guess = collectValues();
-      if (game.containsDuplicateGuess(guess)) {
-        alert("You have already guessed this combination! Try a new one.");
-        return; 
-      }
-      guessSound.play();
-      game.guesses(guess);
-      // Populate first element with animation
-      // Dynamically add other elements
-      if(game.isGameOver) {
-        if (game.isGameWon) {
-          alert("You Win!");
-          // Add Scores
-          resetGame();
-        } else {
-          alert("You Lose!");
-          resetGame();
-        }
-      }
-    });
+listen('click', collectButton, () => {4
+  const guess = collectValues();
+  if (currentGame.containsDuplicateGuess(guess)) {
+    alert("You have already guessed this combination! Try a new one.");
+    return; 
   }
-}
+  guessSound.play();
+  currentGame.submitGuess(guess);
+  // Populate first element with animation
+  createGuessDisplays(currentGame);
+  if(currentGame.isGameOver) {
+    if (currentGame.isGameWon) {
+      alert("You Win!");
+      // Add Scores
+      resetGame();
+    } else {
+      alert("You Lose!");
+      resetGame();
+    }
+  }
+});
 
 /*
 listen('click', collectButton, () => {

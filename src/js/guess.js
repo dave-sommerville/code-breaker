@@ -18,6 +18,9 @@ export class Guess {
   get whiteTokens() {
     return this.#whiteTokens;
   }
+  get digits() {
+    return this.#digits;
+  }
   countTokens(code, guess) {
     let redTokens = 0;
     let whiteTokens = 0;
