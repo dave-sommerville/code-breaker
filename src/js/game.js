@@ -69,16 +69,17 @@ export class Game {
   }
   containsDuplicateGuess(guess) {
     for (let i = 0; i < this.#guesses.length; i++) {
-      const current = this.#guesses[i];
+      const currentDigits = this.#guesses[i].digits;
       let match = true;
 
       for (let j = 0; j < guess.length; j++) {
-        if (current[j] !== guess[j]) {
+        if (currentDigits[j] !== guess[j]) {
           match = false;
           break;
         }
       }
-      if (match) return true;
+      if (match)
+        return true;
     }
     return false;
   }
