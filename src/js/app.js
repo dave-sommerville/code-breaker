@@ -430,19 +430,44 @@ const topCheckTwo = select('.box-1');
 const topCheckThree = select('.box-2');
 const topCheckFour = select('.box-3');
 
+function updateLatestGuessDisplay(guess) {
+  // Update the numbers
+  const topDisplays = [topGuessOne, topGuessTwo, topGuessThree, topGuessFour];
+  guess.digits.forEach((digit, i) => {
+    topDisplays[i].textContent = digit;
+  });
+
+  // Update the feedback (checkmarks/tokens)
+  const topChecks = [topCheckOne, topCheckTwo, topCheckThree, topCheckFour];
+  // Reset colors first
+  topChecks.forEach(check => check.classList.remove('red', 'white'));
+  
+  let checkIndex = 0;
+  for (let i = 0; i < guess.redTokens; i++) {
+    topChecks[checkIndex++].classList.add('red');
+  }
+  for (let i = 0; i < guess.whiteTokens; i++) {
+    topChecks[checkIndex++].classList.add('white');
+  }
+}
 
 function createGuessDisplays(game) {
-  if (game.guesses.length > 2) {
-  for(let i = game.guesses.length - 2; i > 0; i--) {
-    gridContainer.innerHTML = '';
-    createGuessElement(game);
+  // 1. Clear the containers ONCE before the loop starts
+  gridContainer.innerHTML = '';
+  checkboxContainer.innerHTML = '';
+
+  // 2. We want everything EXCEPT the last element (the most recent)
+  // If the latest is at the end, we loop from (length - 2) down to 0
+  if (game.guesses.length >= 2) {
+    for (let i = game.guesses.length - 2; i >= 0; i--) {
+      createGuessElement(game.guesses[i]);
+    }
   }
- }
 }
-function createGuessElement(game) {
+function createGuessElement(guess) {
   let valuesArray = guess.digits;
   let redTokens = guess.redTokens;
-  let whiteTokens = quess.whiteTokens;
+  let whiteTokens = guess.whiteTokens;
   valuesArray.forEach((value) => {
     const span = create("span");
     span.textContent = value;
@@ -478,12 +503,12 @@ let currentGame;
 function startGamePlay() {  
   currentGame = new Game(playerName, isEasyMode);
   console.log(currentGame)
-  console.log(currentGame);
   console.log(currentGame.masterCode);
   startTimer();
 }
 
-listen('click', collectButton, () => {4
+listen('click', collectButton, () => {
+  console.log("Collected")
   const guess = collectValues();
   if (currentGame.containsDuplicateGuess(guess)) {
     alert("You have already guessed this combination! Try a new one.");
@@ -491,7 +516,8 @@ listen('click', collectButton, () => {4
   }
   guessSound.play();
   currentGame.submitGuess(guess);
-  // Populate first element with animation
+  const latestGuess = currentGame.guesses[currentGame.guesses.length - 1];
+  updateLatestGuessDisplay(latestGuess);
   createGuessDisplays(currentGame);
   if(currentGame.isGameOver) {
     if (currentGame.isGameWon) {

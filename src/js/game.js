@@ -54,17 +54,15 @@ export class Game {
       Math.floor(Math.random() * this.#maxDigit) + 1
     );
   }
-  submitGuess(playerGuess) {    
+  submitGuess(playerGuess) {
     const guessResult = new Guess(playerGuess, this.#masterCode);
-    
+    console.log(guessResult)
     this.#guesses.push(guessResult);
     this.#guessCount++;
-
     if(guessResult.redTokens === 4) {
       this.#gameIsWon = true;
       this.#gameOver = true;
     }
-    
     if (this.#guessCount >= this.#maxGuesses) {
       this.#gameOver = true;
     }
