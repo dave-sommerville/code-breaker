@@ -102,7 +102,7 @@ const randomCharacters = [
   "2",
 ];
 let startTime = new Date();  
-let timerInterval; 
+let timerInterval = null; 
 let formattedTime = '';
 let elapsedTime = 0;
 
@@ -110,63 +110,6 @@ const transitionDurationMs = 500;
 let playerName = '';
 let isEasyMode = true;
 let masterCode;
-
-
-
-/*------------------------------------------------>
-  Previous Guess Info 
-<------------------------------------------------*/
-/*
-function populateWithSpans(valuesArray) {
-  gridContainer.innerHTML = ""; 
-  valuesArray.forEach((value) => {
-    const span = create("span");
-    span.textContent = value;
-    span.classList.add("box");
-    gridContainer.appendChild(span);
-  });
-}
-  */
-
-
-/*
-function updateCheckboxColors(redTokens, whiteTokens) {
-  const checkboxContainer = select('.checkbox-container');
-  const checkboxGroup = create('div');
-  checkboxGroup.classList.add('checkbox-group');
-  
-  for (let i = 0; i < 4; i++) {
-    const checkbox = create('div');
-    checkbox.classList.add('checkboxes');
-    checkboxGroup.appendChild(checkbox);
-  }
-  checkboxContainer.appendChild(checkboxGroup);
-  const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
-  
-  let index = 0;
-  for (; index < redTokens; index++) {
-    currentCheckboxes[index].classList.add('red');
-  }
-  for (let i = 0; i < whiteTokens; i++, index++) {
-    currentCheckboxes[index].classList.add('white');
-  }
-}
-*/
-
-// function checkWinCondition(redTokens, codeLength) {
-//   if (redTokens === codeLength) {
-//     resultsModal.showModal();
-//     addClass(buttonBox, "hidden");
-//     addClass(timer, "hidden");
-//     bgMusic.muted = true;
-//     resultMain.innerText = 'Congratulations!';
-//     boldText.innerText = 'You guessed correctly';
-//     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-//     clearInterval(timerInterval);  
-//     calculateScore();
-//     winnerSound.play();
-//   }
-// }
 
 /*------------------------------------------------>
   Gameplay mechanics
@@ -184,7 +127,9 @@ function isValid(inputString) {
 // This should be mostly complete
 function launchNewGame() {
   playerName = nameInput.value.trim();
-  if(playerName.length > 6) {
+  if(playerName.length <= 0) {
+    nameError.textContent = 'Please enter a name';
+  } else if(playerName.length > 6) {
     nameError.textContent = '6 letters max';
   } else if (!isValid(playerName)) {
     nameError.textContent = 'No special characters';
@@ -209,6 +154,7 @@ function launchNewGame() {
     nameInput.value = '';
   }
 }
+
 // This will change!!!!
 function resetGame() {
   playerName = '';
@@ -217,7 +163,7 @@ function resetGame() {
   removeClass(titleImage, "in-play");
   gridContainer.innerHTML = ""; 
   checkboxContainer.innerHTML = ""; 
-
+  resetTimer();
 }
 
 
@@ -237,50 +183,47 @@ function displayGameOverModal() {
 /*-------------------------------------------------------------------------->
   TIMER
 <--------------------------------------------------------------------------*/
-// Timer needs fixing, but is hopefully mostly complete
-function decimelTracker() {
-  if (elapsedTime < 10) {
-    formattedTime = `000${elapsedTime}`
-  } else if (elapsedTime >= 10 && elapsedTime < 100) {
-    formattedTime = `00${elapsedTime}`
-  } else if (elapsedTime >= 100 && elapsedTime < 1000) {
-    formattedTime = `0${elapsedTime}`
-  } else {
-    formattedTime = `${elapsedTime}`
-  }
-  return formattedTime;
-}
-
-function updateTimer() {
-  decimelTracker();
-
-  if (elapsedTime <= 0) {
-    timer.innerText = '0000';
-  } else {
-    timer.innerText = formattedTime;
-  }
+function updateTimerDisplay() {
+  // .padStart(4, '0') is the modern way to do your decimelTracker logic
+  const formattedTime = String(elapsedTime).padStart(4, '0');
+  timer.innerText = formattedTime;
   return formattedTime;
 }
 
 function startTimer() {
-  startTime = new Date() - elapsedTime * 1000;  
-  timer.innerText = formattedTime || '0000'; 
+  // Safety: Always clear an existing interval before starting a new one
+  if (timerInterval) clearInterval(timerInterval);
 
   timerInterval = setInterval(() => {
-
-    elapsedTime = Math.floor((new Date() - startTime) / 1000);
-    updateTimer();  
-  }, 1000);  
+    elapsedTime++;
+    updateTimerDisplay();
+  }, 1000);
 }
-function pauseAndResumeTimer(pauseDuration) {
+
+function stopTimer() {
   clearInterval(timerInterval);
-  setTimeout(() => {
-    startTimer();
-  }, pauseDuration)
+  timerInterval = null;
 }
 
+function resetTimer() {
+  stopTimer();
+  elapsedTime = 0;
+  updateTimerDisplay();
+}
 
-
+/**
+ * Pauses the timer for a specific duration (e.g., for a CSS transition)
+ * then automatically resumes.
+ */
+function pauseTimer(ms) {
+  stopTimer(); 
+  setTimeout(() => {
+    // Only resume if the game isn't over
+    if (!currentGame.isGameOver) {
+      startTimer();
+    }
+  }, ms);
+}
 /*-------------------------------------------------------------------------->
   SCORE MANAGEMENT 
 <--------------------------------------------------------------------------*/
@@ -401,26 +344,6 @@ function collectValues() {
   return numArr;
 }
 
-
-
-/*
-selectAll('.number-selector').forEach(selector => {
-  const display = selector.querySelector('.number-display');
-  const upArrow = selector.querySelector('.arrow.up');
-  const downArrow = selector.querySelector('.arrow.down');
-
-  listen('click', upArrow, () => {
-    let current = parseInt(display.textContent);
-    display.textContent = current === 6 ? 1 : current + 1;
-  });
-
-  listen('click', downArrow, () => {
-    let current = parseInt(display.textContent);
-    display.textContent = current === 1 ? 6 : current - 1;
-  });
-});
-*/
-
 const topGuessOne = select('.top-0');
 const topGuessTwo = select('.top-1');
 const topGuessThree = select('.top-2');
@@ -514,6 +437,7 @@ listen('click', collectButton, () => {
     alert("You have already guessed this combination! Try a new one.");
     return; 
   }
+  pauseTimer(1000);
   guessSound.play();
   currentGame.submitGuess(guess);
   const latestGuess = currentGame.guesses[currentGame.guesses.length - 1];
@@ -531,56 +455,6 @@ listen('click', collectButton, () => {
   }
 });
 
-/*
-listen('click', collectButton, () => {
-  guessSound.play();
-  const playerGuess = [];
-  selectAll('.number-selector').forEach(selector => {
-    const display = selector.querySelector('.number-display');
-    playerGuess.push(parseInt(display.textContent));
-  });
-
-
-  //WILL NEED A DUPLICATE CHECKING METHOD IN THE 
-  //GUESS GLASS WITH A PRIVATE FIELD TRACKING THE GAME STATE
-  const isDuplicate = guessHistory.some(pastGuess => {
-    return pastGuess.every((value, index) => value === playerGuess[index]);
-  });
-
-  if (isDuplicate) {
-    alert("You have already guessed this combination! Try a new one.");
-    return; 
-  }
-
-
-  // Hoping to not impact the  timer functions too greatly
-  pauseAndResumeTimer();
-  
-  // lIKELY NOT NEEDED, BUT MAY ADD AN ANIMATION HERE
-  main.classList.add("animation");
-  setTimeout(()=>{
-      main.classList.remove("animation");
-  }, 1000);
-  
-  const { redTokens, whiteTokens } = countTokens(masterCode, playerGuess);
-  // Tokens will be moved into the object
-  // The Checkbox colors will get populated by the object status
-  updateCheckboxColors(redTokens, whiteTokens);
-  guessHistory.push([...playerGuess]);
-  const reversedHistory = guessHistory.slice().reverse();
-  // This will be renamed and the function changed
-  populateWithSpans(reversedHistory.flat());
-  // This will be in the player object
-  guessCount++;
-  checkWinCondition(redTokens, masterCode.length);
-  
-  if (guessCount >= maxGuesses) {
-    loserSound.play();
-    timer.innerText = '0000'; 
-    displayGameOverModal();
-  }
-});
-*/
 listen('click', newGame, ()=> {
   resultsModal.close();
   resetGame();

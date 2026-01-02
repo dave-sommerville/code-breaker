@@ -5,12 +5,14 @@
 
 /*
 Code Breaker Work
+- Fix game reset
+- Fix scoreboard object handling
 - Add MITT Link
-- Decrease difficulty (potentially add two levels of difficulty, with two scoreboards)
+- Two levels of difficulty with two scoreboards
 - Code Review and notation
-- Fix Timer :(
+- Disable collect button for timer pause
 - Add play again feature
-- 
+
 - Make sure selectors change with mode changes
 - Move the buttons permentantly to the side
   - Add difficulty button
@@ -18,9 +20,7 @@ Code Breaker Work
 - Decide on what to animate between guess
 - Make more dynamic winning/losing screens
 - Change error mesage from alert
-- Change arrow button selectors
-- Change error for no entry in name input
-- 
+
 */
 :root {
   --mitt-light-blue: #74d2e8;
@@ -228,6 +228,8 @@ h4 {
   cursor: pointer;
   font-size: 20px;
   user-select: none;
+  width: 40px;
+  text-align: center;
 }
 .arrow:active {
   color: #007bff;
