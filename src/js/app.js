@@ -42,19 +42,15 @@ const nameInput = select('.name-input');
 const nameButton = select('.name-btn');
 const nameError = select('.name-error');
 /* -- Screen Sizing -- */
-
 const gameArea = select('.game-area');
 const titleImage = select('.title');
-const main = select('main');
 /* -- Game Area -- */
-
 const gridContainer = select('.grid-container');
 const collectButton = select('.collect-values-button');
 const checkboxContainer = select('.checkbox-container');
 const timer = select('.timer');
 const newGame = select('.new-game');
 /* -- Results Modal -- */
-
 const resultsModal = select('.game-results');
 const resultMain = select('h2');
 const boldText = select('h3');
@@ -195,6 +191,7 @@ function resetTimer() {
   stopTimer();
   elapsedTime = 0;
   updateTimerDisplay();
+  addClass(timer, "");
 }
 
 function pauseTimer(ms) {
@@ -417,10 +414,10 @@ function startGamePlay() {
 }
 
 listen('click', collectButton, () => {
-  console.log("Collected")
+  nameError.textContent = '';
   const guess = collectValues();
   if (currentGame.containsDuplicateGuess(guess)) {
-    alert("You have already guessed this combination! Try a new one.");
+    nameError.textContent = 'You already guessed that, try again';
     return; 
   }
   pauseTimer(1000);

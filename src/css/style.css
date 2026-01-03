@@ -6,15 +6,11 @@
 /*
 Code Breaker Work
 - Fix game reset
-- Fix scoreboard object handling
 - Add MITT Link
 - Two levels of difficulty with two scoreboards
 - Code Review and notation
 - Disable collect button for timer pause
 - Add play again feature
-- Move the buttons permentantly to the side
-  - Add difficulty button
-- Make the landing page all fit in a screen height
 - Decide on what to animate between guess
 - Make more dynamic winning/losing screens
 - Change error mesage from alert
@@ -48,10 +44,7 @@ Code Breaker Work
 	text-shadow: var(--app-t-shadow);
 	animation: flicker 1.5s infinite alternate;
 }
-.title {
-  filter: drop-shadow(0 3px #0f02);
-  animation: titleFlicker 0.75s infinite alternate;
-}
+
 .block {
 	display: block;
 }
@@ -99,6 +92,7 @@ body {
 
 main {
 	width: 100%;
+  min-height: 100svh;
 	justify-content: flex-start;
 	align-items: center;
   position: relative;
@@ -130,12 +124,17 @@ h3 {
   color: var(--mitt-light-blue);
 }
 .title {
-  height: 500px;
+  margin-top: 25px;
+  width: 60svw;
+  max-width: 800px;
+  filter: drop-shadow(0 3px #0f02);
+  animation: titleFlicker 0.75s infinite alternate;
   transition: all 0.5s ease-in-out;
 }
 .title.in-play {
-  height: 200px;
+  width: 80svw;
 }
+
 .intro-btn-wrapper {
   width: 200px;
   margin: 50px 0;
@@ -147,10 +146,11 @@ h3 {
 h4 {
   color: var(--mitt-light-blue);
   font-size: 1.6rem;
+  margin: 20px 0;
 }
 .name-scrn {
   overflow: hidden;
-  height: 400px;
+  height: 300px;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -160,7 +160,7 @@ h4 {
   height: 0;
 }
 .name-error {
-  height: 80px;
+  height: 50px;
   color: var(--mitt-light-blue);
   text-align: center;
 }
