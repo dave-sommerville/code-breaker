@@ -2,19 +2,25 @@
 /*------------------------------------------------>
   Utility Classes
 <------------------------------------------------*/
-
 /*
 Code Breaker Work
-- Fix game reset
-- Add MITT Link
-- Two levels of difficulty with two scoreboards
-- Code Review and notation
-- Disable collect button for timer pause
-- Add play again feature
-- Decide on what to animate between guess
-- Make more dynamic winning/losing screens
-- Change error mesage from alert
-
+- Easy Hard Mode
+  - Add display options to scoreboard
+  - Create CSS transition upon click
+  - Ensure game mode reflects the display
+- End of game
+  - Fix game reset
+  - Add play again option to modal
+- Animations
+  - Latest Guess: Scramble for 500ms before revealing
+  - Add delay to guess population
+  - Winning Animation
+  - Losing Animation
+  - Giving up (Probably can just return to the menu)
+- Misc
+  - Add MITT Link
+  - Disable collect button for timer pause
+  - Code Review and notation
 */
 :root {
   --mitt-light-blue: #74d2e8;
@@ -133,6 +139,22 @@ h3 {
 }
 .title.in-play {
   width: 80svw;
+}
+.mode {
+  width: 100px;
+  height: 60px;
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+}
+.mode img {
+  width:100px;
+  position: absolute;
+  right: -100px;
+  z-index: 500;
+}
+.mode img.active {
+  right: 0
 }
 
 .intro-btn-wrapper {

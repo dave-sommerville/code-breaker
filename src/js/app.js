@@ -70,19 +70,23 @@ guessSound.load();
 const bgMusic = select('.background-music');
 const winnerSound = select('.winner-sound');
 const loserSound = select('.loser-sound');
-
-const SCORE_KEYS = {
-  easy: 'easyModeScores',
-  hard: 'hardModeScores'
-};
-
-function getScoreKey(game) {
-  return game.isEasyMode ? SCORE_KEYS.easy : SCORE_KEYS.hard;
-}
-
+/* -- Top Guess Display -- */
+const topGuessDisplay = select('.top-guess-display');
+const topGuessOne = select('.top-0');
+const topGuessTwo = select('.top-1');
+const topGuessThree = select('.top-2');
+const topGuessFour = select('.top-3');
+const topCheckOne = select('.box-0');
+const topCheckTwo = select('.box-1');
+const topCheckThree = select('.box-2');
+const topCheckFour = select('.box-3');
 
 /*------------------------------------------------>
-  Initial Declarations
+
+
+Initial Declarations
+
+
 <------------------------------------------------*/
 const randomCharacters = [
   "!",
@@ -107,8 +111,20 @@ let elapsedTime = 0;
 let playerName = '';
 let isEasyMode = true;
 let selectorMax = 4;
+let currentGame;
+const SCORE_KEYS = {
+  easy: 'easyModeScores',
+  hard: 'hardModeScores'
+};
+function getScoreKey(game) {
+  return game.isEasyMode ? SCORE_KEYS.easy : SCORE_KEYS.hard;
+}
 /*------------------------------------------------>
-  Gameplay mechanics
+
+
+  Game Initialization
+
+  
 <------------------------------------------------*/
 function launchNewGame() {
   playerName = nameInput.value.trim();
@@ -142,8 +158,21 @@ function launchNewGame() {
     nameInput.value = '';
   }
 }
+function startGamePlay() {  
+  currentGame = new Game(playerName, isEasyMode);
+  console.log(currentGame.masterCode);
+  if (!currentGame.isEasyMode) {
+    selectorMax = 6;
+  } else {
+    selectorMax = 4;
+  }
+  startTimer();
+}
+/*------------------------------------------------>
 
-// This will change!!!!
+  Game Resolution
+
+<------------------------------------------------*/
 function resetGame() {
   playerName = '';
   removeClass(gameArea, "expanded");
@@ -153,7 +182,6 @@ function resetGame() {
   checkboxContainer.innerHTML = ""; 
   resetTimer();
 }
-
 function displayGameOverModal() {
     resultsModal.showModal();
     bgMusic.muted = true;
@@ -161,10 +189,112 @@ function displayGameOverModal() {
     boldText.innerText = 'You\'ve used all your guesses.';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
 }
+/*------------------------------------------------>
 
-/*-------------------------------------------------------------------------->
-  TIMER
-<--------------------------------------------------------------------------*/
+  Guess Collection
+
+<------------------------------------------------*/
+function collectValues() {
+  const numDisOne = select('.number-display.one');
+  const numDisTwo = select('.number-display.two');
+  const numDisThree = select('.number-display.three');
+  const numDisFour = select('.number-display.four');
+  
+  let num0 = parseInt(numDisOne.textContent, 10);
+  let num1 = parseInt(numDisTwo.textContent, 10);
+  let num2 = parseInt(numDisThree.textContent, 10);
+  let num3 = parseInt(numDisFour.textContent, 10);
+  const numArr = [num0, num1, num2, num3];
+  return numArr;
+}
+function collectGuess(){
+  nameError.textContent = '';
+  addClass(topGuessDisplay, "hidden");
+  const guess = collectValues();
+  if (currentGame.containsDuplicateGuess(guess)) {
+    nameError.textContent = 'You already guessed that, try again';
+    return; 
+  }
+  pauseTimer(1000);
+  guessSound.play();
+  currentGame.submitGuess(guess);
+  const latestGuess = currentGame.guesses[currentGame.guesses.length - 1];
+  updateLatestGuessDisplay(latestGuess);
+  createGuessDisplays(currentGame);
+  if(currentGame.isGameOver) {
+    if (currentGame.isGameWon) {
+      calculateScore(currentGame);
+      alert("You Win!");
+      resetGame();
+    } else {
+      alert("You Lose!");
+      resetGame();
+    }
+  }
+}
+/*------------------------------------------------>
+
+  Guess Displays
+
+<------------------------------------------------*/
+function updateLatestGuessDisplay(guess) {
+  removeClass(topGuessDisplay, "hidden");
+  const topDisplays = [topGuessOne, topGuessTwo, topGuessThree, topGuessFour];
+  guess.digits.forEach((digit, i) => {
+    topDisplays[i].textContent = digit;
+  });
+  const topChecks = [topCheckOne, topCheckTwo, topCheckThree, topCheckFour];
+  topChecks.forEach(check => check.classList.remove('red', 'white'));
+  let checkIndex = 0;
+  for (let i = 0; i < guess.redTokens; i++) {
+    topChecks[checkIndex++].classList.add('red');
+  }
+  for (let i = 0; i < guess.whiteTokens; i++) {
+    topChecks[checkIndex++].classList.add('white');
+  }
+}
+function createGuessDisplays(game) {
+  gridContainer.innerHTML = '';
+  checkboxContainer.innerHTML = '';
+  // From 2 to intentionally skip the latest guess 
+  if (game.guesses.length >= 2) {
+    for (let i = game.guesses.length - 2; i >= 0; i--) {
+      createGuessElement(game.guesses[i]);
+    }
+  }
+}
+function createGuessElement(guess) {
+  let valuesArray = guess.digits;
+  let redTokens = guess.redTokens;
+  let whiteTokens = guess.whiteTokens;
+  valuesArray.forEach((value) => {
+    const span = create("span");
+    span.textContent = value;
+    span.classList.add("box");
+    gridContainer.appendChild(span);
+  });
+  const checkboxGroup = create('div');
+  checkboxGroup.classList.add('checkbox-group');
+  for (let i = 0; i < 4; i++) {
+    const checkbox = create('div');
+    checkbox.classList.add('checkboxes');
+    checkboxGroup.appendChild(checkbox);
+  }
+  checkboxContainer.appendChild(checkboxGroup);
+  const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
+  let index = 0;
+  for (; index < redTokens; index++) {
+    currentCheckboxes[index].classList.add('red');
+  }
+  for (let i = 0; i < whiteTokens; i++, index++) {
+    currentCheckboxes[index].classList.add('white');
+  }
+}
+/*------------------------------------------------>
+
+  Timer
+
+<------------------------------------------------*/
 function updateTimerDisplay() {
   // .padStart(4, '0') is the modern way to do your decimelTracker logic
   const formattedTime = String(elapsedTime).padStart(4, '0');
@@ -202,22 +332,10 @@ function pauseTimer(ms) {
   }, ms);
 }
 /*-------------------------------------------------------------------------->
-  SCORE MANAGEMENT 
+  
+  Score Management
+
 <--------------------------------------------------------------------------*/
-function saveScoresToLocalStorage(scores, listName) {
-  const topScores = scores.slice(0, 10);
-  const scoresJSON = JSON.stringify(topScores);
-  localStorage.setItem(listName, scoresJSON);
-}
-
-function loadScoresFromLocalStorage(listName) {
-  const scoresJSON = localStorage.getItem(listName); 
-  if (scoresJSON) {
-    return JSON.parse(scoresJSON);
-  }
-  return [];
-}
-
 function calculateScoreObj(game){
   const date = getDate();
   const newScore = {
@@ -231,14 +349,13 @@ function calculateScoreObj(game){
 function calculateScore(game) {
   let newScore = calculateScoreObj(game);
   let scoresList = loadScoresFromLocalStorage(getScoreKey(currentGame));
-    scoresList.push(newScore);
-    scoresList.sort((a, b) => a.guesses - b.guesses);
-    if (scoresList.length > 10) {
-      scoresList = scoresList.slice(0, 10);
-    }
-    saveScoresToLocalStorage(scoresList, getScoreKey(currentGame));
+  scoresList.push(newScore);
+  scoresList.sort((a, b) => a.guesses - b.guesses);
+  if (scoresList.length > 10) {
+    scoresList = scoresList.slice(0, 10);
+  }
+  saveScoresToLocalStorage(scoresList, getScoreKey(currentGame));
 }
-
 function populateScoreList(scores) {
   scoresList.innerHTML = ''; 
   scores.forEach((score, index) => {
@@ -248,28 +365,38 @@ function populateScoreList(scores) {
     scoresList.appendChild(li);
   });
 }
-
 function createScoreListItem(score) {
   const li = create('li');
-
   const details = `
-      <span>${score.name}</span> |
-      <span>${score.date}</span> | 
-      <span>${score.guesses}</span> |
-      <span>${score.time}</span> 
-      sec
+  <span>${score.name}</span> |
+  <span>${score.date}</span> | 
+  <span>${score.guesses}</span> |
+  <span>${score.time}</span> 
+  sec
   `;
   li.innerHTML = details;
   return li; 
 }
-
+//  Local Storage Management
+function saveScoresToLocalStorage(scores, listName) {
+  const topScores = scores.slice(0, 10);
+  const scoresJSON = JSON.stringify(topScores);
+  localStorage.setItem(listName, scoresJSON);
+}
+function loadScoresFromLocalStorage(listName) {
+  const scoresJSON = localStorage.getItem(listName); 
+  if (scoresJSON) {
+    return JSON.parse(scoresJSON);
+  }
+  return [];
+}
 /*-------------------------------------------------------------------------->
-  Event Listeners
-<--------------------------------------------------------------------------*/
-/*  -- Gameplay --  */
-resultMain.innerText = 'CODE BREAKER';
-boldText.innerText = 'Can you guess my code?';
 
+
+  Event Listeners
+
+
+<--------------------------------------------------------------------------*/
 function setupNumberSpinner(upArrow, downArrow, display) {
   if (isEasyMode) {
     selectorMax = 4;
@@ -280,7 +407,6 @@ function setupNumberSpinner(upArrow, downArrow, display) {
     let current = parseInt(display.textContent);
     display.textContent = current === selectorMax ? 1 : current + 1;
   });
-
   listen('click', downArrow, () => {
     let current = parseInt(display.textContent);
     display.textContent = current === 1 ? selectorMax : current - 1;
@@ -292,7 +418,6 @@ setupNumberSpinner(
   select('.arrow.down.one'),
   select('.number-display.one')
 );
-
 setupNumberSpinner(
   select('.arrow.up.two'),
   select('.arrow.down.two'),
@@ -303,166 +428,33 @@ setupNumberSpinner(
   select('.arrow.down.three'),
   select('.number-display.three')
 );
-
 setupNumberSpinner(
   select('.arrow.up.four'),
   select('.arrow.down.four'),
   select('.number-display.four')
 );
 
-function collectValues() {
-  const numDisOne = select('.number-display.one');
-  const numDisTwo = select('.number-display.two');
-  const numDisThree = select('.number-display.three');
-  const numDisFour = select('.number-display.four');
-
-  let num0 = parseInt(numDisOne.textContent, 10);
-  let num1 = parseInt(numDisTwo.textContent, 10);
-  let num2 = parseInt(numDisThree.textContent, 10);
-  let num3 = parseInt(numDisFour.textContent, 10);
-  const numArr = [num0, num1, num2, num3];
-  return numArr;
-}
-
-const topGuessDisplay = select('.top-guess-display');
-const topGuessOne = select('.top-0');
-const topGuessTwo = select('.top-1');
-const topGuessThree = select('.top-2');
-const topGuessFour = select('.top-3');
-const topCheckOne = select('.box-0');
-const topCheckTwo = select('.box-1');
-const topCheckThree = select('.box-2');
-const topCheckFour = select('.box-3');
-
-function updateLatestGuessDisplay(guess) {
-  // Update the numbers
-  removeClass(topGuessDisplay, "hidden");
-  const topDisplays = [topGuessOne, topGuessTwo, topGuessThree, topGuessFour];
-  guess.digits.forEach((digit, i) => {
-    topDisplays[i].textContent = digit;
-  });
-
-  // Update the feedback (checkmarks/tokens)
-  const topChecks = [topCheckOne, topCheckTwo, topCheckThree, topCheckFour];
-  // Reset colors first
-  topChecks.forEach(check => check.classList.remove('red', 'white'));
-  
-  let checkIndex = 0;
-  for (let i = 0; i < guess.redTokens; i++) {
-    topChecks[checkIndex++].classList.add('red');
-  }
-  for (let i = 0; i < guess.whiteTokens; i++) {
-    topChecks[checkIndex++].classList.add('white');
-  }
-}
-
-function createGuessDisplays(game) {
-  gridContainer.innerHTML = '';
-  checkboxContainer.innerHTML = '';
-  // From 2 to intentionally skip the latest guess 
-  if (game.guesses.length >= 2) {
-    for (let i = game.guesses.length - 2; i >= 0; i--) {
-      createGuessElement(game.guesses[i]);
-    }
-  }
-}
-function createGuessElement(guess) {
-  let valuesArray = guess.digits;
-  let redTokens = guess.redTokens;
-  let whiteTokens = guess.whiteTokens;
-  valuesArray.forEach((value) => {
-    const span = create("span");
-    span.textContent = value;
-    span.classList.add("box");
-    gridContainer.appendChild(span);
-  });
-  const checkboxGroup = create('div');
-  checkboxGroup.classList.add('checkbox-group');
-  
-  for (let i = 0; i < 4; i++) {
-    const checkbox = create('div');
-    checkbox.classList.add('checkboxes');
-    checkboxGroup.appendChild(checkbox);
-  }
-  checkboxContainer.appendChild(checkboxGroup);
-  const currentCheckboxes = selectAll('.checkboxes', checkboxGroup);
-  
-  let index = 0;
-  for (; index < redTokens; index++) {
-    currentCheckboxes[index].classList.add('red');
-  }
-  for (let i = 0; i < whiteTokens; i++, index++) {
-    currentCheckboxes[index].classList.add('white');
-  }
-
-}
-function animateGuess() {
-
-}
-let currentGame;
-
-function startGamePlay() {  
-  currentGame = new Game(playerName, isEasyMode);
-  console.log(currentGame.masterCode);
-  if (!currentGame.isEasyMode) {
-    selectorMax = 6;
-  } else {
-    selectorMax = 4;
-  }
-  startTimer();
-}
-
 listen('click', collectButton, () => {
-  nameError.textContent = '';
-  addClass(topGuessDisplay, "hidden");
-  const guess = collectValues();
-  if (currentGame.containsDuplicateGuess(guess)) {
-    nameError.textContent = 'You already guessed that, try again';
-    return; 
-  }
-  pauseTimer(1000);
-  guessSound.play();
-  currentGame.submitGuess(guess);
-  const latestGuess = currentGame.guesses[currentGame.guesses.length - 1];
-  updateLatestGuessDisplay(latestGuess);
-  createGuessDisplays(currentGame);
-  if(currentGame.isGameOver) {
-    if (currentGame.isGameWon) {
-      calculateScore(currentGame);
-      alert("You Win!");
-      resetGame();
-    } else {
-      alert("You Lose!");
-      resetGame();
-    }
-  }
+  collectGuess();
 });
-
 listen('click', newGame, ()=> {
   resultsModal.close();
   resetGame();
 });
-
 listen('click', nameButton, ()=>{
   launchNewGame();
 });
-
 listen('keydown', nameInput, (event) => {
-  // Check if the key pressed is the 'Enter' key
   if (event.key === 'Enter') {
-    // Prevent the default action (which might be submitting a form and refreshing the page)
     event.preventDefault();
     launchNewGame();
   }
 });
 
 /*  -- Modals --  */
-
 listen('click', rulesButton, () => {
   rulesModal.showModal();
 });
-
-
 
 listen('click', rulesModal, function(ev) {
   const rect = this.getBoundingClientRect();
@@ -477,8 +469,6 @@ listen('click', viewScores, () => {
     const topScores = loadScoresFromLocalStorage(getScoreKey(currentGame));
   populateScoreList(topScores);
 });
-
-
 listen('click', scoresWrapper, function(ev) {
   const rect = this.getBoundingClientRect();
   if (ev.clientY < rect.top || ev.clientY > rect.bottom || 
@@ -488,11 +478,9 @@ listen('click', scoresWrapper, function(ev) {
 });
 
 /*  -- Other --  */
-
 listen('click', quitButton, () => {
   displayGameOverModal();
 });
-
 listen('click', muteButton, () => {
   bgMusic.muted = !bgMusic.muted; 
   muteIcon.classList.toggle("fa-volume-off");
