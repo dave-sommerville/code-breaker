@@ -10,6 +10,7 @@ export class Game {
   #gameOver = false;
   #masterCode = [];
   #gameIsWon = false;
+  #isEasyMode = true;
 
   constructor(
     name,
@@ -22,10 +23,17 @@ export class Game {
       this.#maxGuesses = 10;
     } else {
       this.#maxGuesses = 8;
+      this.#isEasyMode = false;
     }
   }
   set score(score) {
     this.#score = score;
+  }
+  set isGameOver(status) {
+    this.#gameOver = status;
+  }
+  set gameIsWon(status){
+    this.#gameIsWon = status;
   }
   get name() {
     return this.#name;
@@ -48,7 +56,9 @@ export class Game {
   get masterCode() {
     return this.#masterCode;
   }
-
+  get isEasyMode() {
+    return this.#isEasyMode;
+  }
   generateMasterCode() {
     return Array.from({ length: 4 }, () =>
       Math.floor(Math.random() * this.#maxDigit) + 1

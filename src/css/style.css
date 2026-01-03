@@ -12,8 +12,6 @@ Code Breaker Work
 - Code Review and notation
 - Disable collect button for timer pause
 - Add play again feature
-
-- Make sure selectors change with mode changes
 - Move the buttons permentantly to the side
   - Add difficulty button
 - Make the landing page all fit in a screen height
@@ -281,7 +279,7 @@ h4 {
   Modal Styles 
 <------------------------------------------------*/
 .rules { 
-  height: 160px;
+  height: 260px;
   width: 40px;
   margin-left: 20px;
   text-align: center;
@@ -297,7 +295,7 @@ h4 {
   display: none;
 }
 
-.info, .info-main, .info-intro, .scores-btn, .scores-btn-intro, .mute, .quit {
+.info, .info-main, .scores-btn, .scores-btn-intro, .mute, .quit, .menu-open {
   color: var(--mitt-reg-blue);
   font-size: 2rem;
   text-shadow: var(--app-t-shadow);
@@ -305,15 +303,10 @@ h4 {
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 }
-.quit {
-  font-size: 1.6rem;
-}
 
 .info:hover, .info-main:hover, .info-intro:hover, .quit:hover, .scores-btn:hover, .scores-btn-intro:hover, .mute:hover {
   transform: scale(1.05);
 }
-
-
 
 .timer {
   font-size: 2rem;
@@ -321,6 +314,7 @@ h4 {
 	text-shadow: var(--app-t-shadow);
 	animation: flicker 1.5s infinite alternate;
 }
+
 .timer.hidden {
   display: none;
 }

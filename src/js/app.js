@@ -27,7 +27,8 @@ import {
   getRandomNumber, 
   addClass, 
   removeClass,
-  getDate
+  getDate,
+  isAlphaNum
 } from './utils.js';
 import { containsProfanity } from './profanity-filter.js';
 import { Game } from './game.js';
@@ -59,11 +60,9 @@ const resultMain = select('h2');
 const boldText = select('h3');
 const codeDisplay = select('.mastercode');
 /* -- Control Box -- */
-
 const buttonBox = select('.rules');
 const rulesButton = select('.info');
 const rulesButtonTwo = select('.info-main');
-const rulesButtonThree = select('.info-intro');
 const rulesModal = select('.game-rules');
 const scoresList = select('.high-scores-list');
 const scoresWrapper = select('.scores-wrapper')
@@ -73,12 +72,21 @@ const muteButton = select('.mute');
 const muteIcon = select('.mute-icon');
 const quitButton = select('.quit');
 /* -- Audio -- */
-
 const guessSound = select('.sound-effect');
 guessSound.load();
 const bgMusic = select('.background-music');
 const winnerSound = select('.winner-sound');
 const loserSound = select('.loser-sound');
+
+const SCORE_KEYS = {
+  easy: 'easyModeScores',
+  hard: 'hardModeScores'
+};
+
+function getScoreKey(game) {
+  return game.isEasyMode ? SCORE_KEYS.easy : SCORE_KEYS.hard;
+}
+
 
 /*------------------------------------------------>
   Initial Declarations
@@ -101,37 +109,21 @@ const randomCharacters = [
   "1",
   "2",
 ];
-let startTime = new Date();  
 let timerInterval = null; 
-let formattedTime = '';
 let elapsedTime = 0;
-
-const transitionDurationMs = 500;
 let playerName = '';
 let isEasyMode = true;
-let masterCode;
-
+let selectorMax = 4;
 /*------------------------------------------------>
   Gameplay mechanics
 <------------------------------------------------*/
-// gotta move 
-
-function isValid(inputString) {
-    // Standard pattern for letters and numbers
-    let pattern = /^[a-zA-Z0-9-]+$/;
-
-    return pattern.test(inputString);
-}
-// ^^
-
-// This should be mostly complete
 function launchNewGame() {
   playerName = nameInput.value.trim();
   if(playerName.length <= 0) {
     nameError.textContent = 'Please enter a name';
   } else if(playerName.length > 6) {
     nameError.textContent = '6 letters max';
-  } else if (!isValid(playerName)) {
+  } else if (!isAlphaNum(playerName)) {
     nameError.textContent = 'No special characters';
   } else if(containsProfanity(playerName)) {
     nameError.textContent = 'No Profanity please';
@@ -166,8 +158,6 @@ function resetGame() {
   resetTimer();
 }
 
-
-
 function displayGameOverModal() {
     resultsModal.showModal();
     addClass(buttonBox, "hidden");
@@ -177,8 +167,6 @@ function displayGameOverModal() {
     boldText.innerText = 'You\'ve used all your guesses.';
     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
 }
-
-
 
 /*-------------------------------------------------------------------------->
   TIMER
@@ -191,9 +179,7 @@ function updateTimerDisplay() {
 }
 
 function startTimer() {
-  // Safety: Always clear an existing interval before starting a new one
   if (timerInterval) clearInterval(timerInterval);
-
   timerInterval = setInterval(() => {
     elapsedTime++;
     updateTimerDisplay();
@@ -211,10 +197,6 @@ function resetTimer() {
   updateTimerDisplay();
 }
 
-/**
- * Pauses the timer for a specific duration (e.g., for a CSS transition)
- * then automatically resumes.
- */
 function pauseTimer(ms) {
   stopTimer(); 
   setTimeout(() => {
@@ -227,40 +209,39 @@ function pauseTimer(ms) {
 /*-------------------------------------------------------------------------->
   SCORE MANAGEMENT 
 <--------------------------------------------------------------------------*/
-// Hoping to maintain most of the score management functions
-function saveScoresToLocalStorage(scores) {
+function saveScoresToLocalStorage(scores, listName) {
   const topScores = scores.slice(0, 10);
   const scoresJSON = JSON.stringify(topScores);
-  localStorage.setItem('codeBreakerScores', scoresJSON); // Updated key
+  localStorage.setItem(listName, scoresJSON);
 }
 
-function loadScoresFromLocalStorage() {
-  const scoresJSON = localStorage.getItem('codeBreakerScores'); // Updated key
+function loadScoresFromLocalStorage(listName) {
+  const scoresJSON = localStorage.getItem(listName); 
   if (scoresJSON) {
     return JSON.parse(scoresJSON);
   }
   return [];
 }
 
-function calculateScore() {
+function calculateScoreObj(game){
   const date = getDate();
-  const time = updateTimer();
   const newScore = {
-    name: playerName,
+    name: game.name,
     date: date,
-    time: time,
-    guesses: guessCount,
+    time: elapsedTime,
+    guesses: game.guessCount
   };
-
-  let existingScores = loadScoresFromLocalStorage();
-
-  existingScores.push(newScore);
-  existingScores.sort((a, b) => a.guesses - b.guesses);
-
-  if (existingScores.length > 10) {
-    existingScores = existingScores.slice(0, 10);
-  }
-  saveScoresToLocalStorage(existingScores);
+  return newScore;
+}
+function calculateScore(game) {
+  let newScore = calculateScoreObj(game);
+  let scoresList = loadScoresFromLocalStorage(getScoreKey(currentGame));
+    scoresList.push(newScore);
+    scoresList.sort((a, b) => a.guesses - b.guesses);
+    if (scoresList.length > 10) {
+      scoresList = scoresList.slice(0, 10);
+    }
+    saveScoresToLocalStorage(scoresList, getScoreKey(currentGame));
 }
 
 function populateScoreList(scores) {
@@ -291,19 +272,23 @@ function createScoreListItem(score) {
   Event Listeners
 <--------------------------------------------------------------------------*/
 /*  -- Gameplay --  */
-
 resultMain.innerText = 'CODE BREAKER';
 boldText.innerText = 'Can you guess my code?';
 
-function setupNumberSpinner(upArrow, downArrow, display, min = 1, max = 6) {
+function setupNumberSpinner(upArrow, downArrow, display) {
+  if (isEasyMode) {
+    selectorMax = 4;
+  } else {
+    selectorMax = 6;
+  }
   listen('click', upArrow, () => {
     let current = parseInt(display.textContent);
-    display.textContent = current === max ? min : current + 1;
+    display.textContent = current === selectorMax ? 1 : current + 1;
   });
 
   listen('click', downArrow, () => {
     let current = parseInt(display.textContent);
-    display.textContent = current === min ? max : current - 1;
+    display.textContent = current === 1 ? selectorMax : current - 1;
   });
 }
 
@@ -375,12 +360,9 @@ function updateLatestGuessDisplay(guess) {
 }
 
 function createGuessDisplays(game) {
-  // 1. Clear the containers ONCE before the loop starts
   gridContainer.innerHTML = '';
   checkboxContainer.innerHTML = '';
-
-  // 2. We want everything EXCEPT the last element (the most recent)
-  // If the latest is at the end, we loop from (length - 2) down to 0
+  // From 2 to intentionally skip the latest guess 
   if (game.guesses.length >= 2) {
     for (let i = game.guesses.length - 2; i >= 0; i--) {
       createGuessElement(game.guesses[i]);
@@ -422,11 +404,15 @@ function animateGuess() {
 }
 let currentGame;
 
-// NEED TO CHANGE THE MECHANICS!!
 function startGamePlay() {  
   currentGame = new Game(playerName, isEasyMode);
   console.log(currentGame)
   console.log(currentGame.masterCode);
+  if (!currentGame.isEasyMode) {
+    selectorMax = 6;
+  } else {
+    selectorMax = 4;
+  }
   startTimer();
 }
 
@@ -445,8 +431,8 @@ listen('click', collectButton, () => {
   createGuessDisplays(currentGame);
   if(currentGame.isGameOver) {
     if (currentGame.isGameWon) {
+      calculateScore(currentGame);
       alert("You Win!");
-      // Add Scores
       resetGame();
     } else {
       alert("You Lose!");
@@ -481,9 +467,7 @@ listen('click', rulesButton, () => {
 listen('click', rulesButtonTwo, () => {
   rulesModal.showModal();
 });
-listen('click', rulesButtonThree, () => {
-  rulesModal.showModal();
-});
+
 
 listen('click', rulesModal, function(ev) {
   const rect = this.getBoundingClientRect();
@@ -495,13 +479,13 @@ listen('click', rulesModal, function(ev) {
 
 listen('click', viewScores, () => {
   scoresWrapper.showModal();
-    const topScores = loadScoresFromLocalStorage();
+    const topScores = loadScoresFromLocalStorage(getScoreKey(currentGame));
   populateScoreList(topScores);
 });
 
 listen('click', viewScoresTwo, () => {
   scoresWrapper.showModal();
-    const topScores = loadScoresFromLocalStorage();
+    const topScores = loadScoresFromLocalStorage(getScoreKey(currentGame));
   populateScoreList(topScores);
 });
 

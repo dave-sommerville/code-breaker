@@ -45,3 +45,9 @@ export function getDate() {
 
   return new Date().toLocaleDateString('en-ca', options);
 }
+export function isAlphaNum(inputString) {
+    // Standard pattern for letters and numbers
+    let pattern = /^[a-zA-Z0-9-]+$/;
+
+    return pattern.test(inputString);
+}
