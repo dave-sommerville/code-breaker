@@ -56,14 +56,11 @@ const resultMain = select('h2');
 const boldText = select('h3');
 const codeDisplay = select('.mastercode');
 /* -- Control Box -- */
-const buttonBox = select('.rules');
 const rulesButton = select('.info');
-const rulesButtonTwo = select('.info-main');
 const rulesModal = select('.game-rules');
 const scoresList = select('.high-scores-list');
 const scoresWrapper = select('.scores-wrapper')
 const viewScores = select('.scores-btn');
-const viewScoresTwo = select('.scores-btn-intro');
 const muteButton = select('.mute');
 const muteIcon = select('.mute-icon');
 const quitButton = select('.quit');
@@ -129,15 +126,18 @@ function launchNewGame() {
     addClass(gameArea, "expanded");
     addClass(nameScrn, "retracted");
     addClass(titleImage, "in-play");
+    addClass(rulesButton, "hidden");
+    addClass(viewScores, "hidden");
+    removeClass(muteButton, "hidden");
+    removeClass(quitButton, "hidden");
     startGamePlay(playerName);
-    bgMusic.muted = false;
-      if (muteIcon.classList.contains("fa-volume-off")) {
-        muteIcon.classList.toggle("fa-volume-off");
-        muteIcon.classList.toggle("fa-volume-xmark");
-      }
-    bgMusic.currentTime = 0;  
-    bgMusic.play();
-    removeClass(buttonBox, "hidden");
+    // bgMusic.muted = false;
+    //   if (muteIcon.classList.contains("fa-volume-off")) {
+    //     muteIcon.classList.toggle("fa-volume-off");
+    //     muteIcon.classList.toggle("fa-volume-xmark");
+    //   }
+    // bgMusic.currentTime = 0;  
+    // bgMusic.play();
     removeClass(timer, "hidden");
     nameInput.value = '';
   }
@@ -156,8 +156,6 @@ function resetGame() {
 
 function displayGameOverModal() {
     resultsModal.showModal();
-    addClass(buttonBox, "hidden");
-    addClass(timer, "hidden");
     bgMusic.muted = true;
     resultMain.innerText = 'Game Over!';
     boldText.innerText = 'You\'ve used all your guesses.';
@@ -191,7 +189,7 @@ function resetTimer() {
   stopTimer();
   elapsedTime = 0;
   updateTimerDisplay();
-  addClass(timer, "");
+  addClass(timer, "hidden");
 }
 
 function pauseTimer(ms) {
@@ -326,6 +324,7 @@ function collectValues() {
   return numArr;
 }
 
+const topGuessDisplay = select('.top-guess-display');
 const topGuessOne = select('.top-0');
 const topGuessTwo = select('.top-1');
 const topGuessThree = select('.top-2');
@@ -337,6 +336,7 @@ const topCheckFour = select('.box-3');
 
 function updateLatestGuessDisplay(guess) {
   // Update the numbers
+  removeClass(topGuessDisplay, "hidden");
   const topDisplays = [topGuessOne, topGuessTwo, topGuessThree, topGuessFour];
   guess.digits.forEach((digit, i) => {
     topDisplays[i].textContent = digit;
@@ -403,7 +403,6 @@ let currentGame;
 
 function startGamePlay() {  
   currentGame = new Game(playerName, isEasyMode);
-  console.log(currentGame)
   console.log(currentGame.masterCode);
   if (!currentGame.isEasyMode) {
     selectorMax = 6;
@@ -415,6 +414,7 @@ function startGamePlay() {
 
 listen('click', collectButton, () => {
   nameError.textContent = '';
+  addClass(topGuessDisplay, "hidden");
   const guess = collectValues();
   if (currentGame.containsDuplicateGuess(guess)) {
     nameError.textContent = 'You already guessed that, try again';
@@ -461,9 +461,7 @@ listen('keydown', nameInput, (event) => {
 listen('click', rulesButton, () => {
   rulesModal.showModal();
 });
-listen('click', rulesButtonTwo, () => {
-  rulesModal.showModal();
-});
+
 
 
 listen('click', rulesModal, function(ev) {
@@ -480,11 +478,6 @@ listen('click', viewScores, () => {
   populateScoreList(topScores);
 });
 
-listen('click', viewScoresTwo, () => {
-  scoresWrapper.showModal();
-    const topScores = loadScoresFromLocalStorage(getScoreKey(currentGame));
-  populateScoreList(topScores);
-});
 
 listen('click', scoresWrapper, function(ev) {
   const rect = this.getBoundingClientRect();
