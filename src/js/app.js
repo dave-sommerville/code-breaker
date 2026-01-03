@@ -1,24 +1,4 @@
 'use strict';
-/*
-Today's Lesson is on 
-
-~*~*~*TECHNICAL DEBT*~*~*~ 
-
-So this is a game that I first created around a year ago. When I built it, I wasn't entirely sure of how to handle the events dynamically, so I had AI create a very monolithic structure for the arrow buttons and selectors. I cleaned it up with JS utilities and understood how it was functioning (and it was indeed... functioning), but then called it good enough. 
-
-Now coming back to it, with new knowledge of CSS effects and JS I can apply to it and... WHAT A PAIN
-I just want to make it a little fancier, but how to do that without bloating the code horribly!
-
-After a few hours of staring blankly at my screen (followed by a chilly bus ride obsessing over it), I have decided to refactor this baby. 
-
-Firstly, I'm gonna get all OOP on it. I see the player and guesses as objects now. This will make the code much cleaner, modular, and durable. 
-
-I will also make it so that the first guess displayed after the collect guess button is coded into the html. This will allow me to select it much more delebriately. The subsequent guesses can be populated dynamically with a triggered function. 
-I thought I'd try to maintain the old code to show the difference between the two approaches. I will likely clean up the notes in later commits though. 
-
-I'm fully aware that I'm probably going to overkill it with design now, but I'd sooner do that than return to the project next year and be unable to expand on functionality again. 
-
-*/
 import {
   select, 
   selectAll, 
@@ -44,6 +24,7 @@ const nameError = select('.name-error');
 /* -- Screen Sizing -- */
 const gameArea = select('.game-area');
 const titleImage = select('.title');
+const modeButton = select('.mode');
 /* -- Game Area -- */
 const gridContainer = select('.grid-container');
 const collectButton = select('.collect-values-button');
@@ -124,7 +105,7 @@ function getScoreKey(game) {
 
   Game Initialization
 
-  
+
 <------------------------------------------------*/
 function launchNewGame() {
   playerName = nameInput.value.trim();
@@ -397,6 +378,12 @@ function loadScoresFromLocalStorage(listName) {
 
 
 <--------------------------------------------------------------------------*/
+listen('click', modeButton, () => {
+  if (!currentGame) {
+    modeButton.classList.toggle('hard-mode');
+    isEasyMode = !isEasyMode;
+  }
+});
 function setupNumberSpinner(upArrow, downArrow, display) {
   if (isEasyMode) {
     selectorMax = 4;
