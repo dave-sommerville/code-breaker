@@ -31,11 +31,6 @@ const collectButton = select('.collect-values-button');
 const checkboxContainer = select('.checkbox-container');
 const timer = select('.timer');
 const newGame = select('.new-game');
-/* -- Results Modal -- */
-const resultsModal = select('.game-results');
-const resultMain = select('h2');
-const boldText = select('h3');
-const codeDisplay = select('.mastercode');
 /* -- Control Box -- */
 const rulesButton = select('.info');
 const rulesModal = select('.game-rules');
@@ -62,6 +57,11 @@ const topCheckOne = select('.box-0');
 const topCheckTwo = select('.box-1');
 const topCheckThree = select('.box-2');
 const topCheckFour = select('.box-3');
+
+const endScreen = select('#endScreen');
+const endTitle = select('#endTitle');
+const endMessage = select('#endMessage');
+const endButton = select('#endButton');
 
 /*------------------------------------------------>
 
@@ -162,17 +162,23 @@ function resetGame() {
   removeClass(gameArea, "expanded");
   removeClass(nameScrn, "retracted");
   removeClass(titleImage, "in-play");
+  removeClass(rulesButton, "hidden");
+  removeClass(viewScores, "hidden");
+  addClass(muteButton, "hidden");
+  addClass(quitButton, "hidden");
+  addClass(topGuessDisplay, "hidden");
   gridContainer.innerHTML = ""; 
   checkboxContainer.innerHTML = ""; 
   resetTimer();
+  currentGame = null;
 }
-function displayGameOverModal() {
-    resultsModal.showModal();
-    bgMusic.muted = true;
-    resultMain.innerText = 'Game Over!';
-    boldText.innerText = 'You\'ve used all your guesses.';
-    codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-}
+// function displayGameOverModal() {
+//     resultsModal.showModal();
+//     bgMusic.muted = true;
+//     resultMain.innerText = 'Game Over!';
+//     boldText.innerText = 'You\'ve used all your guesses.';
+//     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
+// }
 /*------------------------------------------------>
 
   Guess Collection
@@ -210,10 +216,10 @@ async function collectGuess() {
     if (currentGame.isGameWon) {
       calculateScore(currentGame);
       // Display Winning Modal
-      alert("You Win!");
+      showWinScreen();
       resetGame();
     } else {
-      alert("You Lose!");
+      showLoseScreen();
       resetGame();
     }
   }
@@ -302,6 +308,23 @@ function createGuessElement(guess) {
     currentCheckboxes[index].classList.add('white');
   }
 }
+
+function showWinScreen() {
+  endScreen.className = "end-screen win";
+  endTitle.textContent = "Code Broken";
+  endMessage.textContent = "You cracked the system and escaped.";
+}
+
+function showLoseScreen() {
+  endScreen.className = "end-screen lose";
+  endTitle.textContent = "Access Denied";
+  endMessage.textContent = "The system locked you out.";
+}
+
+function hideEndScreen() {
+  endScreen.className = "end-screen hidden";
+}
+
 /*------------------------------------------------>
 
   Timer
@@ -467,10 +490,10 @@ setupNumberSpinner(
 listen('click', collectButton, () => {
   collectGuess();
 });
-listen('click', newGame, ()=> {
-  resultsModal.close();
-  resetGame();
-});
+// listen('click', newGame, ()=> {
+//   // Close the Ending Modal
+//   resetGame();
+// });
 listen('click', nameButton, ()=>{
   launchNewGame();
 });
@@ -514,7 +537,7 @@ listen('click', scoresWrapper, function(ev) {
 
 /*  -- Other --  */
 listen('click', quitButton, () => {
-  displayGameOverModal();
+  resetGame();
 });
 listen('click', muteButton, () => {
   bgMusic.muted = !bgMusic.muted; 

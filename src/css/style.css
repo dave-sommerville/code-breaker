@@ -4,23 +4,19 @@
 <------------------------------------------------*/
 /*
 Code Breaker Work
-- Fix visiblity classes
-  - Top Guesses don't disappear from a win/lose
-  - Icons aren't changing back
-  - Might want to use a utility function
 - Fix formatting of modals/control buttons
-- Add check for player's placing in top ten (might be a pain)
-- End of game
-  - Fix game reset
+  - Readd info to playing screen
+  - End of game
+  - Winning Modal
+  - Losing Modal
   - Add play again option to modal
-- Animations
-  - Add delay to guess population
-  - Winning Animation
-  - Losing Animation
-  - Giving up (Probably can just return to the menu)
+
 - Misc
+  - Add check for player's placing in top ten (might be a pain)
+  - Add delay to guess population
   - Add MITT Link
   - Disable collect button for timer pause
+  - Add info button back to play screen (pause if in play)
 */
 :root {
   --mitt-light-blue: #74d2e8;
@@ -474,18 +470,123 @@ ul {
 }
 
 
-/*------------------------------------------------>
-  Brand Footer 
-<------------------------------------------------*/
-footer {
-  width: 100%;
+/* Base layout */
+.end-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
   display: flex;
+  align-items: center;
   justify-content: center;
-  img {
-    width: 200px;
-    filter: invert(1);
+  background: radial-gradient(circle at center, #111 0%, #000 70%);
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* Hide when inactive */
+.end-screen.hidden {
+  display: none;
+}
+
+/* Content box */
+.end-content {
+  text-align: center;
+  padding: 3rem 4rem;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+/* Text */
+.end-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.end-content p {
+  font-size: 1.25rem;
+  opacity: 0.9;
+}
+
+/* Button */
+.end-content button {
+  margin-top: 2rem;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: #fff;
+  color: #000;
+}
+
+/* ---------------- WIN STATE ---------------- */
+
+.end-screen.win {
+  background: radial-gradient(circle at center, #1dff8b 0%, #003b1f 70%);
+}
+
+.end-screen.win .end-content {
+  animation: winPop 1s ease-out;
+  box-shadow:
+    0 0 40px rgba(0, 255, 140, 0.6),
+    0 0 120px rgba(0, 255, 140, 0.3);
+}
+
+@keyframes winPop {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
   }
 }
+
+/* Soft pulsing glow */
+.end-screen.win::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: radial-gradient(circle, rgba(0,255,140,0.25), transparent 60%);
+  animation: winPulse 3s infinite;
+}
+
+@keyframes winPulse {
+  0% { transform: scale(0.9); opacity: 0.4; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(0.9); opacity: 0.4; }
+}
+
+/* ---------------- LOSE STATE ---------------- */
+
+.end-screen.lose {
+  background: radial-gradient(circle at center, #7a0000 0%, #000 70%);
+  filter: grayscale(20%);
+}
+
+.end-screen.lose .end-content {
+  animation: loseShake 0.6s ease-in-out;
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.4);
+}
+
+@keyframes loseShake {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-10px); }
+  40%  { transform: translateX(10px); }
+  60%  { transform: translateX(-6px); }
+  80%  { transform: translateX(6px); }
+  100% { transform: translateX(0); }
+}
+
 
 /*------------------------------------------------>
 Animation
