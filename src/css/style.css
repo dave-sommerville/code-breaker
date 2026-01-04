@@ -4,16 +4,12 @@
 <------------------------------------------------*/
 /*
 Code Breaker Work
-- Fix formatting of modals/control buttons
-  - Readd info to playing screen
-  - End of game
-  - Winning Modal
-  - Losing Modal
-  - Add play again option to modal
-
-- Misc
+  - Add new game option to ending screen
+    - Add play again option
+  - Fix pause function on win
   - Add check for player's placing in top ten (might be a pain)
   - Add delay to guess population
+  - Fix control button display (responsive too)
   - Add MITT Link
   - Disable collect button for timer pause
   - Add info button back to play screen (pause if in play)

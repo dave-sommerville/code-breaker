@@ -51,6 +51,9 @@ export function isAlphaNum(inputString) {
 
     return pattern.test(inputString);
 }
+export function randomDigit() {
+  Math.floor(Math.random() * 10);
+}
 export function randomFromArray(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }

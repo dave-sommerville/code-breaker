@@ -4,7 +4,6 @@ import {
   selectAll, 
   listen, 
   create, 
-  getRandomNumber, 
   addClass, 
   removeClass,
   getDate,
@@ -115,7 +114,6 @@ function launchNewGame() {
     addClass(gameArea, "expanded");
     addClass(nameScrn, "retracted");
     addClass(titleImage, "in-play");
-    addClass(rulesButton, "hidden");
     addClass(viewScores, "hidden");
     removeClass(muteButton, "hidden");
     removeClass(quitButton, "hidden");
@@ -151,7 +149,6 @@ function resetGame() {
   removeClass(gameArea, "expanded");
   removeClass(nameScrn, "retracted");
   removeClass(titleImage, "in-play");
-  removeClass(rulesButton, "hidden");
   removeClass(viewScores, "hidden");
   addClass(muteButton, "hidden");
   addClass(quitButton, "hidden");
@@ -221,7 +218,6 @@ function updateLatestGuessDisplay(guess) {
     const shuffleDuration = 800;
     const shuffleInterval = 60;
     // Change this to use other characters than numbers
-    const randomDigit = () => Math.floor(Math.random() * 10);
     const randomCheckClass = () => {
       const options = ["red", "white", null];
       return options[Math.floor(Math.random() * options.length)];
@@ -229,7 +225,7 @@ function updateLatestGuessDisplay(guess) {
     topChecks.forEach(c => c.classList.remove("red", "white"));
     const intervalId = setInterval(() => {
       topDisplays.forEach(display => {
-        display.textContent = randomDigit();
+        display.textContent = randomFromArray(randomCharacters);
       });
       topChecks.forEach(check => {
         check.classList.remove("red", "white");
@@ -493,6 +489,7 @@ listen('keydown', nameInput, (event) => {
 /*  -- Modals --  */
 listen('click', rulesButton, () => {
   rulesModal.showModal();
+  stopTimer();
 });
 
 listen('click', rulesModal, function(ev) {
@@ -500,6 +497,7 @@ listen('click', rulesModal, function(ev) {
   if (ev.clientY < rect.top || ev.clientY > rect.bottom || 
     ev.clientX < rect.left || ev.clientX > rect.right) {
       rulesModal.close();
+      startTimer();
   }
 });
 
