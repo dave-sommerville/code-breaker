@@ -26,16 +26,7 @@ Code Breaker Work
     0 0 2px var(--mitt-reg-blue),
     0 0 8px var(--mitt-green);
   --app-transition:  all 0.5s ease-in-out;
-}
-.animation::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  z-index: 1000;
-  width: 100svw;
-  height: 100svh;
-  background-color: #007bff;
-
+  --app-border-rad: 8px;
 }
 .container {
 	width: min(100% - 30px, 1200px);
@@ -248,7 +239,6 @@ h4 {
   width: 50px;
   height: 110px;
   border: 1px solid var(--mitt-reg-blue);
-  border-radius: 8px;
   background-color: #001;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -468,8 +458,6 @@ ul {
   width: 100%;
   text-align: right;
 }
-
-
 /* Base layout */
 .end-screen {
   position: fixed;
@@ -493,7 +481,6 @@ ul {
 .end-content {
   text-align: center;
   padding: 3rem 4rem;
-  border-radius: 1rem;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(6px);
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
@@ -517,7 +504,6 @@ ul {
   margin-top: 2rem;
   padding: 0.75rem 2rem;
   font-size: 1rem;
-  border-radius: 999px;
   border: none;
   cursor: pointer;
   background: #fff;
@@ -556,7 +542,7 @@ ul {
   content: "";
   position: absolute;
   inset: -50%;
-  background: radial-gradient(circle, rgba(0,255,140,0.25), transparent 60%);
+  background: radial-gradient(circle, var(--mitt-green), transparent 60%);
   animation: winPulse 3s infinite;
 }
 

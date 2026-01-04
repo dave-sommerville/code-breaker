@@ -8,7 +8,9 @@ import {
   addClass, 
   removeClass,
   getDate,
-  isAlphaNum
+  isAlphaNum,
+  typeText,
+  randomFromArray
 } from './utils.js';
 import { containsProfanity } from './profanity-filter.js';
 import { Game } from './game.js';
@@ -71,22 +73,9 @@ Initial Declarations
 
 <------------------------------------------------*/
 const randomCharacters = [
-  "!",
-  "@",
-  "#",
-  "$",
-  "%",
-  "^",
-  "&",
-  "*",
-  "~",
-  "?",
-  "A",
-  "B",
-  "C",
-  "0",
-  "1",
-  "2",
+  "!", "@", "#", "$", "%", 
+  "^", "&", "*", "~", "?", 
+  "8", "4", "5", "0", "1", 
 ];
 let timerInterval = null; 
 let elapsedTime = 0;
@@ -172,13 +161,6 @@ function resetGame() {
   resetTimer();
   currentGame = null;
 }
-// function displayGameOverModal() {
-//     resultsModal.showModal();
-//     bgMusic.muted = true;
-//     resultMain.innerText = 'Game Over!';
-//     boldText.innerText = 'You\'ve used all your guesses.';
-//     codeDisplay.innerText = 'The code was: ' + masterCode.join(', ');
-// }
 /*------------------------------------------------>
 
   Guess Collection
@@ -211,18 +193,19 @@ async function collectGuess() {
   const latestGuess = currentGame.guesses[currentGame.guesses.length - 1];
   await updateLatestGuessDisplay(latestGuess);
   createGuessDisplays(currentGame);
+  gameOverCheck(currentGame);
 
-  if (currentGame.isGameOver) {
-    if (currentGame.isGameWon) {
-      calculateScore(currentGame);
-      // Display Winning Modal
-      showWinScreen();
-      resetGame();
-    } else {
-      showLoseScreen();
-      resetGame();
-    }
-  }
+  // if (currentGame.isGameOver) {
+  //   if (currentGame.isGameWon) {
+  //     calculateScore(currentGame);
+  //     // Display Winning Modal
+  //     showWinScreen();
+  //     resetGame();
+  //   } else {
+  //     showLoseScreen();
+  //     resetGame();
+  //   }
+  // }
 }
 /*------------------------------------------------>
 
@@ -308,21 +291,24 @@ function createGuessElement(guess) {
     currentCheckboxes[index].classList.add('white');
   }
 }
+function gameOverCheck(game) {
+  if (game.isGameOver) {
+    removeClass(endScreen, "hidden");
+    if(game.isGameWon) {
+      calculateScore(game);
+      addClass(endScreen, "win");
+      typeText(endTitle, "CODE BROKEN");
+      typeText(endMessage, "YOU WIN");
+      resetGame();
+    } else {
+      calculateScore(game);
+      addClass(endScreen, "lose");
+      typeText(endTitle, "CODE SECURE");
+      typeText(endMessage, "YOU FAILED");
+      resetGame();
+    }
 
-function showWinScreen() {
-  endScreen.className = "end-screen win";
-  endTitle.textContent = "Code Broken";
-  endMessage.textContent = "You cracked the system and escaped.";
-}
-
-function showLoseScreen() {
-  endScreen.className = "end-screen lose";
-  endTitle.textContent = "Access Denied";
-  endMessage.textContent = "The system locked you out.";
-}
-
-function hideEndScreen() {
-  endScreen.className = "end-screen hidden";
+  }
 }
 
 /*------------------------------------------------>
