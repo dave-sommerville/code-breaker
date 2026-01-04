@@ -4,14 +4,16 @@
 <------------------------------------------------*/
 /*
 Code Breaker Work
-- Easy Hard Mode
-  - Add display options to scoreboard
-  - Ensure game mode reflects the display
+- Fix visiblity classes
+  - Top Guesses don't disappear from a win/lose
+  - Icons aren't changing back
+  - Might want to use a utility function
+- Fix formatting of modals/control buttons
+- Add check for player's placing in top ten (might be a pain)
 - End of game
   - Fix game reset
   - Add play again option to modal
 - Animations
-  - Latest Guess: Scramble for 500ms before revealing
   - Add delay to guess population
   - Winning Animation
   - Losing Animation
@@ -172,6 +174,13 @@ h3 {
   width: 200px;
   margin: 50px 0;
   justify-content: space-between;
+}
+.mode.scores {
+  width: 60px;
+  height: 40px;
+}
+.mode.scores img {
+  width: 60px;
 }
 /*------------------------------------------------>
   Gameplay Area

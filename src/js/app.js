@@ -39,6 +39,7 @@ const codeDisplay = select('.mastercode');
 /* -- Control Box -- */
 const rulesButton = select('.info');
 const rulesModal = select('.game-rules');
+const scoreModeButton = select('.scores.mode');
 const scoresList = select('.high-scores-list');
 const scoresWrapper = select('.scores-wrapper')
 const viewScores = select('.scores-btn');
@@ -100,6 +101,8 @@ const SCORE_KEYS = {
 function getScoreKey(game) {
   return game.isEasyMode ? SCORE_KEYS.easy : SCORE_KEYS.hard;
 }
+let scoreModeEasy = true;
+
 /*------------------------------------------------>
 
 
@@ -188,23 +191,25 @@ function collectValues() {
   const numArr = [num0, num1, num2, num3];
   return numArr;
 }
-function collectGuess(){
+async function collectGuess() {
   nameError.textContent = '';
   addClass(topGuessDisplay, "hidden");
   const guess = collectValues();
   if (currentGame.containsDuplicateGuess(guess)) {
     nameError.textContent = 'You already guessed that, try again';
-    return; 
+    return;
   }
   pauseTimer(1000);
   guessSound.play();
   currentGame.submitGuess(guess);
   const latestGuess = currentGame.guesses[currentGame.guesses.length - 1];
-  updateLatestGuessDisplay(latestGuess);
+  await updateLatestGuessDisplay(latestGuess);
   createGuessDisplays(currentGame);
-  if(currentGame.isGameOver) {
+
+  if (currentGame.isGameOver) {
     if (currentGame.isGameWon) {
       calculateScore(currentGame);
+      // Display Winning Modal
       alert("You Win!");
       resetGame();
     } else {
@@ -219,20 +224,46 @@ function collectGuess(){
 
 <------------------------------------------------*/
 function updateLatestGuessDisplay(guess) {
-  removeClass(topGuessDisplay, "hidden");
-  const topDisplays = [topGuessOne, topGuessTwo, topGuessThree, topGuessFour];
-  guess.digits.forEach((digit, i) => {
-    topDisplays[i].textContent = digit;
+  return new Promise(resolve => {
+    removeClass(topGuessDisplay, "hidden");
+    const topDisplays = [topGuessOne, topGuessTwo, topGuessThree, topGuessFour];
+    const topChecks = [topCheckOne, topCheckTwo, topCheckThree, topCheckFour];
+    // Move these 
+    const shuffleDuration = 800;
+    const shuffleInterval = 60;
+    // Change this to use other characters than numbers
+    const randomDigit = () => Math.floor(Math.random() * 10);
+    const randomCheckClass = () => {
+      const options = ["red", "white", null];
+      return options[Math.floor(Math.random() * options.length)];
+    };
+    topChecks.forEach(c => c.classList.remove("red", "white"));
+    const intervalId = setInterval(() => {
+      topDisplays.forEach(display => {
+        display.textContent = randomDigit();
+      });
+      topChecks.forEach(check => {
+        check.classList.remove("red", "white");
+        const cls = randomCheckClass();
+        if (cls) check.classList.add(cls);
+      });
+    }, shuffleInterval);
+    setTimeout(() => {
+      clearInterval(intervalId);
+      guess.digits.forEach((digit, i) => {
+        topDisplays[i].textContent = digit;
+      });
+      topChecks.forEach(check => check.classList.remove("red", "white"));
+      let checkIndex = 0;
+      for (let i = 0; i < guess.redTokens; i++) {
+        topChecks[checkIndex++].classList.add("red");
+      }
+      for (let i = 0; i < guess.whiteTokens; i++) {
+        topChecks[checkIndex++].classList.add("white");
+      }
+      resolve();
+    }, shuffleDuration);
   });
-  const topChecks = [topCheckOne, topCheckTwo, topCheckThree, topCheckFour];
-  topChecks.forEach(check => check.classList.remove('red', 'white'));
-  let checkIndex = 0;
-  for (let i = 0; i < guess.redTokens; i++) {
-    topChecks[checkIndex++].classList.add('red');
-  }
-  for (let i = 0; i < guess.whiteTokens; i++) {
-    topChecks[checkIndex++].classList.add('white');
-  }
 }
 function createGuessDisplays(game) {
   gridContainer.innerHTML = '';
@@ -337,15 +368,6 @@ function calculateScore(game) {
   }
   saveScoresToLocalStorage(scoresList, getScoreKey(currentGame));
 }
-function populateScoreList(scores) {
-  scoresList.innerHTML = ''; 
-  scores.forEach((score, index) => {
-    const li = createScoreListItem(score);
-    li.style.animationDelay = `${index * 0.2}s`; 
-    li.classList.add('li-animation'); 
-    scoresList.appendChild(li);
-  });
-}
 function createScoreListItem(score) {
   const li = create('li');
   const details = `
@@ -358,6 +380,27 @@ function createScoreListItem(score) {
   li.innerHTML = details;
   return li; 
 }
+
+function populateScoreList(scores) {
+  scoresList.innerHTML = ''; 
+  scores.forEach((score, index) => {
+    const li = createScoreListItem(score);
+    li.style.animationDelay = `${index * 0.2}s`; 
+    li.classList.add('li-animation'); 
+    scoresList.appendChild(li);
+  });
+}
+
+function populateScoresByDifficulty() {
+  if(scoreModeEasy) {
+    const topScores = loadScoresFromLocalStorage(SCORE_KEYS.easy);
+    populateScoreList(topScores);
+  } else {
+    const topScores = loadScoresFromLocalStorage(SCORE_KEYS.hard);
+    populateScoreList(topScores);
+  }
+}
+
 //  Local Storage Management
 function saveScoresToLocalStorage(scores, listName) {
   const topScores = scores.slice(0, 10);
@@ -451,10 +494,15 @@ listen('click', rulesModal, function(ev) {
   }
 });
 
+listen('click', scoreModeButton, () => {
+  scoreModeButton.classList.toggle('hard-mode');
+  scoreModeEasy = !scoreModeEasy;
+  populateScoresByDifficulty();
+});
+
 listen('click', viewScores, () => {
   scoresWrapper.showModal();
-    const topScores = loadScoresFromLocalStorage(getScoreKey(currentGame));
-  populateScoreList(topScores);
+  populateScoresByDifficulty();
 });
 listen('click', scoresWrapper, function(ev) {
   const rect = this.getBoundingClientRect();
