@@ -13,6 +13,8 @@ Code Breaker Work
   - Add MITT Link
   - Populate final guess before displaying the answer
   - Disable collect button for timer pause
+  - You already guessed that clears the HTML
+  - Update instructions for the different difficulties
 */
 :root {
   --mitt-light-blue: #74d2e8;

@@ -57,7 +57,7 @@ export function randomDigit() {
 export function randomFromArray(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
-export async function typeText(element, text, speed = 30) {
+export async function typeText(element, text, speed = 60) {
   element.textContent = "";
   for (let i = 0; i < text.length; i++) {
     element.textContent += text[i];

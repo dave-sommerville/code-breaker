@@ -32,6 +32,7 @@ const collectButton = select('.collect-values-button');
 const checkboxContainer = select('.checkbox-container');
 const timer = select('.timer');
 const newGame = select('.new-game');
+const replayGame = select('.play-again');
 /* -- Control Box -- */
 const rulesButton = select('.info');
 const rulesModal = select('.game-rules');
@@ -61,7 +62,9 @@ const topCheckFour = select('.box-3');
 
 const endScreen = select('#endScreen');
 const endTitle = select('#endTitle');
-const endMessage = select('#endMessage');
+const endMessageOne = select('.end-message-one');
+const endMessageTwo = select('.end-message-two');
+const endMessageThree = select('.end-message-three');
 
 /*------------------------------------------------>
 
@@ -136,6 +139,8 @@ function startGamePlay() {
   } else {
     selectorMax = 4;
   }
+  resetTimer();
+  removeClass(timer, "hidden");
   startTimer();
 }
 /*------------------------------------------------>
@@ -191,17 +196,6 @@ async function collectGuess() {
   createGuessDisplays(currentGame);
   gameOverCheck(currentGame);
 }
-  // if (currentGame.isGameOver) {
-  //   if (currentGame.isGameWon) {
-  //     calculateScore(currentGame);
-  //     // Display Winning Modal
-  //     showWinScreen();
-  //     resetGame();
-  //   } else {
-  //     showLoseScreen();
-  //     resetGame();
-  //   }
-  // }
 /*------------------------------------------------>
 
   Guess Displays
@@ -285,20 +279,22 @@ function createGuessElement(guess) {
     currentCheckboxes[index].classList.add('white');
   }
 }
-function gameOverCheck(game) {
+async function gameOverCheck(game) {
   if (game.isGameOver) {
     removeClass(endScreen, "hidden");
     if(game.isGameWon) {
-      calculateScore(game);
       addClass(endScreen, "win");
       typeText(endTitle, "CODE BROKEN");
-      typeText(endMessage, "YOU WIN");
-      resetGame();
+      await typeText(endMessageOne, `CONGRATULATIONS ${game.name}: YOU WIN`);
+      await typeText(endMessageTwo, `FINAL CODE: ${game.masterCode.join('-')}`);
+      if (calculateScore(game)) {
+        await typeText(endMessageThree, "YOU GOT A NEW TOP SCORE!");
+      }
     } else {
       addClass(endScreen, "lose");
       typeText(endTitle, "CODE SECURE");
-      typeText(endMessage, "YOU FAILED");
-      resetGame();
+      await typeText(endMessageOne, `SORRY YOU FAILED ${game.name}: YOU FAILED`);
+      await typeText(endMessageTwo, `FINAL CODE: ${game.masterCode.join('-')}`);
     }
 
   }
@@ -369,6 +365,7 @@ function calculateScore(game) {
     scoresList = scoresList.slice(0, 10);
   }
   saveScoresToLocalStorage(scoresList, getScoreKey(currentGame));
+  return scoresList.includes(newScore);
 }
 function createScoreListItem(score) {
   const li = create('li');
@@ -470,8 +467,15 @@ listen('click', collectButton, () => {
   collectGuess();
 });
 
+listen('click', replayGame, ()=> {
+  startGamePlay(playerName, isEasyMode);
+  addClass(endScreen, "hidden");
+  removeClass(endScreen, "win");
+  removeClass(endScreen, "lose");
+});
+
 listen('click', newGame, ()=> {
-  console.log("Clicked");
+  resetGame();
   addClass(endScreen, "hidden");
   removeClass(endScreen, "win");
   removeClass(endScreen, "lose");
