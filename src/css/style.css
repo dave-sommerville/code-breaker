@@ -4,12 +4,8 @@
 <------------------------------------------------*/
 /*
 Code Breaker Work
-  - Fix control button display (responsive too)
   - Add MITT Link
-  - Update instructions for the different difficulties
   - High Score mode switch needs style improvement
-  - Mode display on mobile/in-play
-  - Add clip path to input/divs
   - End screen formatting
 */
 
@@ -228,7 +224,7 @@ h4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: auto;
-  gap: 20px;
+  gap: 10px;
   margin: 20px;   
 }
 
@@ -237,7 +233,7 @@ h4 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 50px;
+  width: 60px;
   height: 110px;
   border: 1px solid var(--mitt-reg-blue);
   background-color: #001;
@@ -246,7 +242,7 @@ h4 {
 }
 
 .number-display {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   margin: 8px 0;
 }
@@ -308,17 +304,16 @@ h4 {
   Modal Styles 
 <------------------------------------------------*/
 .controls { 
-  height: 260px;
+  height: 200px;
   width: 40px;
-  margin-left: 20px;
   text-align: center;
   line-height: 40px;
   justify-content: space-between;
   align-items: center;
   position: fixed;
   z-index: 100;
-  top: 10svh;
-  left: 20px;
+  bottom: 10svh;
+  left: 10px;
 }
 .rules.hidden {
   display: none;
@@ -378,7 +373,7 @@ h4 {
   margin: 10px 0;
 }
 
-.new-game {
+.new-game, .play-again {
   height: 40px;
   width: 100px;
   background-color: #001;
@@ -395,7 +390,7 @@ h4 {
   transition: all 0.3s ease-in-out;
 }
 
-.new-game:hover {
+.new-game:hover, .play-again:hover {
   box-shadow: 1px 1px 25px var(--mitt-green);
 }
 
@@ -481,7 +476,7 @@ ul {
 /* Content box */
 .end-content {
   text-align: center;
-  padding: 3rem 4rem;
+  padding: 25px;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(6px);
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
@@ -489,7 +484,9 @@ ul {
   animation-fill-mode: both;
   z-index: 1000;
 }
-
+.end-message-one, .end-message-two, .end-message-three {
+  height: 50px;
+}
 /* Text */
 .end-content h1 {
   font-size: 3rem;
@@ -501,16 +498,7 @@ ul {
   opacity: 0.9;
 }
 
-/* Button */
-.end-content button {
-  margin-top: 2rem;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  background: #fff;
-  color: #000;
-}
+
 
 /* ---------------- WIN STATE ---------------- */
 
@@ -638,11 +626,11 @@ Media Queries
     font-size: 0.8rem;
   }
   .number-selector {
-    width: 40px;
-    height: 90px;
+    width: 30px;
+    height: 80px;
   }
   .number-display {
-    font-size: 18px;
+    font-size: 15px;
     margin: 4px 0;
   }
   .collect-values-button {
@@ -656,10 +644,18 @@ Media Queries
     font-size: 0.8rem;
   }
   .name-input {
-    height: 60px;
+    height: 40px;
+    width: 120px;
   }
   .name-btn {
-    height: 40px;
+    height: 30px;
+    width: 70px;
+  }
+  .glow-text {
+    font-size: 15px;
+  }
+  .controls {
+    height: 160px;
   }
   .info, .info-main, .info-intro, .quit, .scores-btn, .scores-btn-intro, .mute {
     font-size: 1.2rem;
@@ -668,7 +664,7 @@ Media Queries
     font-weight: 600;
   }
   .box {
-    width: 40px;
+    width: 20px;
     height: 40px;
     line-height: 40px;
   }
