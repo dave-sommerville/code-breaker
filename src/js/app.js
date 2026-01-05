@@ -62,7 +62,6 @@ const topCheckFour = select('.box-3');
 const endScreen = select('#endScreen');
 const endTitle = select('#endTitle');
 const endMessage = select('#endMessage');
-const endButton = select('#endButton');
 
 /*------------------------------------------------>
 
@@ -191,7 +190,7 @@ async function collectGuess() {
   await updateLatestGuessDisplay(latestGuess);
   createGuessDisplays(currentGame);
   gameOverCheck(currentGame);
-
+}
   // if (currentGame.isGameOver) {
   //   if (currentGame.isGameWon) {
   //     calculateScore(currentGame);
@@ -203,7 +202,6 @@ async function collectGuess() {
   //     resetGame();
   //   }
   // }
-}
 /*------------------------------------------------>
 
   Guess Displays
@@ -297,7 +295,6 @@ function gameOverCheck(game) {
       typeText(endMessage, "YOU WIN");
       resetGame();
     } else {
-      calculateScore(game);
       addClass(endScreen, "lose");
       typeText(endTitle, "CODE SECURE");
       typeText(endMessage, "YOU FAILED");
@@ -343,7 +340,7 @@ function pauseTimer(ms) {
   stopTimer(); 
   setTimeout(() => {
     // Only resume if the game isn't over
-    if (!currentGame.isGameOver) {
+    if (currentGame && !currentGame.isGameOver) {
       startTimer();
     }
   }, ms);
@@ -472,10 +469,14 @@ setupNumberSpinner(
 listen('click', collectButton, () => {
   collectGuess();
 });
-// listen('click', newGame, ()=> {
-//   // Close the Ending Modal
-//   resetGame();
-// });
+
+listen('click', newGame, ()=> {
+  console.log("Clicked");
+  addClass(endScreen, "hidden");
+  removeClass(endScreen, "win");
+  removeClass(endScreen, "lose");
+});
+
 listen('click', nameButton, ()=>{
   launchNewGame();
 });

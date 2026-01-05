@@ -11,8 +11,8 @@ Code Breaker Work
   - Add delay to guess population
   - Fix control button display (responsive too)
   - Add MITT Link
+  - Populate final guess before displaying the answer
   - Disable collect button for timer pause
-  - Add info button back to play screen (pause if in play)
 */
 :root {
   --mitt-light-blue: #74d2e8;
@@ -458,7 +458,7 @@ ul {
 .end-screen {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -482,6 +482,7 @@ ul {
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
   animation-duration: 1s;
   animation-fill-mode: both;
+  z-index: 1000;
 }
 
 /* Text */
