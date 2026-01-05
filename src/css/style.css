@@ -4,18 +4,15 @@
 <------------------------------------------------*/
 /*
 Code Breaker Work
-  - Add new game option to ending screen
-    - Add play again option
-  - Fix pause function on win
-  - Add check for player's placing in top ten (might be a pain)
-  - Add delay to guess population
   - Fix control button display (responsive too)
   - Add MITT Link
-  - Populate final guess before displaying the answer
-  - Disable collect button for timer pause
-  - You already guessed that clears the HTML
   - Update instructions for the different difficulties
+  - High Score mode switch needs style improvement
+  - Mode display on mobile/in-play
+  - Add clip path to input/divs
+  - End screen formatting
 */
+
 :root {
   --mitt-light-blue: #74d2e8;
   --mitt-reg-blue: #0e4174;
@@ -123,8 +120,8 @@ h3 {
   animation: titleFlicker 0.75s infinite alternate;
   transition: var(--app-transition);
 }
-.title.in-play {
-  width: 80svw;
+.in-play .title {
+  width: 40svw;
 }
 .mode {
   width: 100px;
@@ -133,6 +130,7 @@ h3 {
   position: relative;
   z-index: 0;
   cursor: pointer;
+  transition: var(--app-transition);
 }
 .mode img {
   width:100px;
@@ -167,17 +165,22 @@ h3 {
 .mode.scores img {
   width: 60px;
 }
+.in-play .mode {
+  width: 60px;
+}
+.in-play .mode img {
+  width: 60px;
+}
 /*------------------------------------------------>
   Gameplay Area
 <------------------------------------------------*/
 h4 {
   color: var(--mitt-light-blue);
   font-size: 1.6rem;
-  margin: 20px 0;
 }
 .name-scrn {
   overflow: hidden;
-  height: 300px;
+  height: 260px;
   width: 100%;
   justify-content: center;
   align-items: center;
@@ -192,7 +195,7 @@ h4 {
   text-align: center;
 }
 .name-input {
-  margin-bottom: 20px;
+  margin: 20px;
   padding-left: 20px;
   height: 80px;
   width: 200px;
@@ -673,7 +676,18 @@ Media Queries
     width: 50px;
     height: 40px;
   }
-  .title {
-    height: 300px;
+  .mode {
+    height: 40px;
+    width: 60px;
+  }
+  .mode img {
+    width: 60px;
+  }
+  .in-play .mode {
+    height: 30px;
+    width: 40px;
+  }
+  .in-play .mode img {
+    width: 40px;
   }
 }

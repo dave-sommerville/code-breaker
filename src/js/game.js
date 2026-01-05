@@ -66,7 +66,6 @@ export class Game {
   }
   submitGuess(playerGuess) {
     const guessResult = new Guess(playerGuess, this.#masterCode);
-    console.log(guessResult)
     this.#guesses.push(guessResult);
     this.#guessCount++;
     if(guessResult.redTokens === 4) {

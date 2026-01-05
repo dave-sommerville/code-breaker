@@ -27,6 +27,7 @@ const gameArea = select('.game-area');
 const titleImage = select('.title');
 const modeButton = select('.mode');
 /* -- Game Area -- */
+const mainWindow = select('main');
 const gridContainer = select('.grid-container');
 const collectButton = select('.collect-values-button');
 const checkboxContainer = select('.checkbox-container');
@@ -36,6 +37,7 @@ const replayGame = select('.play-again');
 /* -- Control Box -- */
 const rulesButton = select('.info');
 const rulesModal = select('.game-rules');
+const gamePlayPaused = select('.info-paused');
 const scoreModeButton = select('.scores.mode');
 const scoresList = select('.high-scores-list');
 const scoresWrapper = select('.scores-wrapper')
@@ -115,7 +117,7 @@ function launchNewGame() {
     nameError.textContent = '';
     addClass(gameArea, "expanded");
     addClass(nameScrn, "retracted");
-    addClass(titleImage, "in-play");
+    addClass(mainWindow, "in-play");
     addClass(viewScores, "hidden");
     removeClass(muteButton, "hidden");
     removeClass(quitButton, "hidden");
@@ -181,19 +183,19 @@ function collectValues() {
   return numArr;
 }
 async function collectGuess() {
-  nameError.textContent = '';
-  addClass(topGuessDisplay, "hidden");
   const guess = collectValues();
   if (currentGame.containsDuplicateGuess(guess)) {
     nameError.textContent = 'You already guessed that, try again';
     return;
   }
+  nameError.textContent = '';
+  addClass(topGuessDisplay, "hidden");
   pauseTimer(1000);
   guessSound.play();
   currentGame.submitGuess(guess);
   const latestGuess = currentGame.guesses[currentGame.guesses.length - 1];
   await updateLatestGuessDisplay(latestGuess);
-  createGuessDisplays(currentGame);
+  await createGuessDisplays(currentGame);
   gameOverCheck(currentGame);
 }
 /*------------------------------------------------>
@@ -242,13 +244,20 @@ function updateLatestGuessDisplay(guess) {
     }, shuffleDuration);
   });
 }
-function createGuessDisplays(game) {
+async function createGuessDisplays(game, delay = 100) {
+  // 1. Clear the UI immediately
   gridContainer.innerHTML = '';
   checkboxContainer.innerHTML = '';
-  // From 2 to intentionally skip the latest guess 
+
+  // 2. Initial delay before the first item pops in
+  await new Promise(resolve => setTimeout(resolve, delay));
+
   if (game.guesses.length >= 2) {
     for (let i = game.guesses.length - 2; i >= 0; i--) {
       createGuessElement(game.guesses[i]);
+      
+      // 3. Stagger delay between each subsequent item
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 }
@@ -495,6 +504,7 @@ listen('keydown', nameInput, (event) => {
 listen('click', rulesButton, () => {
   rulesModal.showModal();
   stopTimer();
+  gamePlayPaused.innerText = "Game Paused";
 });
 
 listen('click', rulesModal, function(ev) {
@@ -503,6 +513,7 @@ listen('click', rulesModal, function(ev) {
     ev.clientX < rect.left || ev.clientX > rect.right) {
       rulesModal.close();
       startTimer();
+      gamePlayPaused.innerText = '';
   }
 });
 
