@@ -51,6 +51,11 @@ guessSound.load();
 const bgMusic = select('.background-music');
 const winnerSound = select('.winner-sound');
 const loserSound = select('.loser-sound');
+/* -- Number selectors -- */
+const numDisOne = select('.number-display.one');
+const numDisTwo = select('.number-display.two');
+const numDisThree = select('.number-display.three');
+const numDisFour = select('.number-display.four');
 /* -- Top Guess Display -- */
 const topGuessDisplay = select('.top-guess-display');
 const topGuessOne = select('.top-0');
@@ -163,6 +168,10 @@ function resetGame() {
   checkboxContainer.innerHTML = ""; 
   resetTimer();
   currentGame = null;
+  numDisOne.innerText = '1'
+  numDisTwo.innerText = '1'
+  numDisThree.innerText = '1'
+  numDisFour.innerText = '1'
 }
 /*------------------------------------------------>
 
@@ -170,11 +179,6 @@ function resetGame() {
 
 <------------------------------------------------*/
 function collectValues() {
-  const numDisOne = select('.number-display.one');
-  const numDisTwo = select('.number-display.two');
-  const numDisThree = select('.number-display.three');
-  const numDisFour = select('.number-display.four');
-  
   let num0 = parseInt(numDisOne.textContent, 10);
   let num1 = parseInt(numDisTwo.textContent, 10);
   let num2 = parseInt(numDisThree.textContent, 10);
@@ -188,6 +192,8 @@ async function collectGuess() {
     nameError.textContent = 'You already guessed that, try again';
     return;
   }
+  gridContainer.innerHTML = '';
+  checkboxContainer.innerHTML = '';
   nameError.textContent = '';
   addClass(topGuessDisplay, "hidden");
   pauseTimer(1000);
@@ -245,11 +251,9 @@ function updateLatestGuessDisplay(guess) {
   });
 }
 async function createGuessDisplays(game, delay = 100) {
-  // 1. Clear the UI immediately
   gridContainer.innerHTML = '';
   checkboxContainer.innerHTML = '';
 
-  // 2. Initial delay before the first item pops in
   await new Promise(resolve => setTimeout(resolve, delay));
 
   if (game.guesses.length >= 2) {
@@ -503,8 +507,10 @@ listen('keydown', nameInput, (event) => {
 /*  -- Modals --  */
 listen('click', rulesButton, () => {
   rulesModal.showModal();
-  stopTimer();
-  gamePlayPaused.innerText = "Game Paused";
+  if (currentGame) {
+    stopTimer();
+    gamePlayPaused.innerText = "Game Paused";
+  }
 });
 
 listen('click', rulesModal, function(ev) {
@@ -512,8 +518,8 @@ listen('click', rulesModal, function(ev) {
   if (ev.clientY < rect.top || ev.clientY > rect.bottom || 
     ev.clientX < rect.left || ev.clientX > rect.right) {
       rulesModal.close();
-      startTimer();
       gamePlayPaused.innerText = '';
+      if (currentGame) startTimer();
   }
 });
 
