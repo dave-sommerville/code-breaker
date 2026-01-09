@@ -6,7 +6,6 @@
 Code Breaker Work
   - Add MITT Link
   - Fix game music
-  - Fix the size of checkbox displays
   - Fix hard score calcualation
 */
 
@@ -220,19 +219,24 @@ h4 {
 .game-area.expanded {
   height: 160px;
 }
+.grid-container, .top-guess {
+  width: 340px;
+}
 .code-selector, .grid-container, .top-guess {
-
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: auto;
   gap: 20px;
-  margin: 20px;   
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-items: center; /* Add this */
+  margin-inline: auto;   /* Helps keep the whole grid centered */
 }
-.top-guess {
+/* .top-guess {
   margin: 0;
   margin-top: 20px;
   gap: 10px
-}
+} */
 
 .number-selector {
   display: flex;
@@ -633,7 +637,7 @@ Media Queries
     height: 80px;
   }
   .number-display {
-    font-size: 15px;
+    font-size: 20px;
     margin: 4px 0;
   }
   .collect-values-button {
@@ -688,5 +692,9 @@ Media Queries
   }
   .in-play .mode img {
     width: 40px;
+  }
+  .grid-container, .top-guess {
+    width: 170px;
+    gap: 10px;
   }
 }
