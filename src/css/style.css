@@ -5,8 +5,6 @@
 /*
 Code Breaker Work
   - Add MITT Link
-  - Fix game music
-  - Fix hard score calcualation
 */
 
 :root {
@@ -505,7 +503,12 @@ ul {
   opacity: 0.9;
 }
 
-
+.mitt-logo {
+  margin-top: 100px;
+  height: 50px;
+  filter: drop-shadow(0 3px #0f02);
+  animation: titleFlicker 0.75s infinite alternate;
+}
 
 /* ---------------- WIN STATE ---------------- */
 

@@ -17,14 +17,15 @@ export class Game {
     easyMode,
   ){
     this.#name = name;
-    this.#masterCode = this.generateMasterCode();
     this.#guesses = [];
     if (easyMode) {
       this.#maxGuesses = 10;
     } else {
       this.#maxGuesses = 8;
+      this.#maxDigit = 6;
       this.#isEasyMode = false;
     }
+    this.#masterCode = this.generateMasterCode();
   }
   set score(score) {
     this.#score = score;

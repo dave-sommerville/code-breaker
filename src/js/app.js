@@ -127,13 +127,13 @@ function launchNewGame() {
     removeClass(muteButton, "hidden");
     removeClass(quitButton, "hidden");
     startGamePlay(playerName);
-    // bgMusic.muted = false;
-    //   if (muteIcon.classList.contains("fa-volume-off")) {
-    //     muteIcon.classList.toggle("fa-volume-off");
-    //     muteIcon.classList.toggle("fa-volume-xmark");
-    //   }
-    // bgMusic.currentTime = 0;  
-    // bgMusic.play();
+    bgMusic.muted = false;
+      if (muteIcon.classList.contains("fa-volume-off")) {
+        muteIcon.classList.toggle("fa-volume-off");
+        muteIcon.classList.toggle("fa-volume-xmark");
+      }
+    bgMusic.currentTime = 0;  
+    bgMusic.play();
     removeClass(timer, "hidden");
     nameInput.value = '';
   }
@@ -294,6 +294,8 @@ function createGuessElement(guess) {
 }
 async function gameOverCheck(game) {
   if (game.isGameOver) {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
     removeClass(endScreen, "hidden");
     if(game.isGameWon) {
       addClass(endScreen, "win");
@@ -488,6 +490,8 @@ listen('click', replayGame, ()=> {
 });
 
 listen('click', newGame, ()=> {
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
   resetGame();
   addClass(endScreen, "hidden");
   removeClass(endScreen, "win");
