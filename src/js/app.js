@@ -160,12 +160,6 @@ function startGamePlay() {
 <------------------------------------------------*/
 function resetGame() {
   playerName = '';
-  removeClass(gameArea, "expanded");
-  removeClass(nameScrn, "retracted");
-  removeClass(titleImage, "in-play");
-  removeClass(viewScores, "hidden");
-  addClass(muteButton, "hidden");
-  addClass(quitButton, "hidden");
   addClass(topGuessDisplay, "hidden");
   gridContainer.innerHTML = ""; 
   checkboxContainer.innerHTML = ""; 
@@ -175,6 +169,24 @@ function resetGame() {
   numDisTwo.innerText = '1'
   numDisThree.innerText = '1'
   numDisFour.innerText = '1'
+}
+function resetGameLaunch() {
+  removeClass(gameArea, "expanded");
+  removeClass(nameScrn, "retracted");
+  removeClass(titleImage, "in-play");
+  removeClass(viewScores, "hidden");
+  addClass(muteButton, "hidden");
+  addClass(quitButton, "hidden");
+
+}
+function resetEndScreen() {
+  endTitle.innerText = '';
+  endMessageOne.innerText = '';
+  endMessageTwo.innerText = '';
+  endMessageThree.innerText = '';
+  addClass(endScreen, "hidden");
+  removeClass(endScreen, "win");
+  removeClass(endScreen, "lose");
 }
 /*------------------------------------------------>
 
@@ -489,19 +501,19 @@ listen('click', collectButton, () => {
 });
 
 listen('click', replayGame, ()=> {
-  startGamePlay(playerName, isEasyMode);
-  addClass(endScreen, "hidden");
-  removeClass(endScreen, "win");
-  removeClass(endScreen, "lose");
+  let nameHolder = playerName;
+  resetGame();
+
+  startGamePlay(nameHolder, isEasyMode);
+  resetEndScreen();
 });
 
 listen('click', newGame, ()=> {
   bgMusic.pause();
   bgMusic.currentTime = 0;
   resetGame();
-  addClass(endScreen, "hidden");
-  removeClass(endScreen, "win");
-  removeClass(endScreen, "lose");
+  resetGameLaunch();
+  resetEndScreen();
 });
 
 listen('click', nameButton, ()=>{
@@ -554,6 +566,7 @@ listen('click', scoresWrapper, function(ev) {
 /*  -- Other --  */
 listen('click', quitButton, () => {
   resetGame();
+  resetGameLaunch();
 });
 listen('click', muteButton, () => {
   bgMusic.muted = !bgMusic.muted; 
