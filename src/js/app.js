@@ -49,8 +49,11 @@ const quitButton = select('.quit');
 const guessSound = select('.sound-effect');
 guessSound.load();
 const bgMusic = select('.background-music');
+bgMusic.load()
 const winnerSound = select('.winner-sound');
+winnerSound.load()
 const loserSound = select('.loser-sound');
+loserSound.load()
 /* -- Number selectors -- */
 const numDisOne = select('.number-display.one');
 const numDisTwo = select('.number-display.two');
@@ -108,7 +111,7 @@ let scoreModeEasy = true;
 
 <------------------------------------------------*/
 function launchNewGame() {
-  playerName = nameInput.value.trim();
+  playerName = nameInput.value.trim().toUpperCase();
   if(playerName.length <= 0) {
     nameError.textContent = 'Please enter a name';
   } else if(playerName.length > 6) {
@@ -192,6 +195,7 @@ async function collectGuess() {
     nameError.textContent = 'You already guessed that, try again';
     return;
   }
+  guessSound.play();
   gridContainer.innerHTML = '';
   checkboxContainer.innerHTML = '';
   nameError.textContent = '';
@@ -300,6 +304,7 @@ async function gameOverCheck(game) {
     if(game.isGameWon) {
       addClass(endScreen, "win");
       typeText(endTitle, "CODE BROKEN");
+      winnerSound.play();
       await typeText(endMessageOne, `CONGRATULATIONS ${game.name}: YOU WIN`);
       await typeText(endMessageTwo, `FINAL CODE: ${game.masterCode.join('-')}`);
       if (calculateScore(game)) {
@@ -308,6 +313,7 @@ async function gameOverCheck(game) {
     } else {
       addClass(endScreen, "lose");
       typeText(endTitle, "CODE SECURE");
+      loserSound.play();
       await typeText(endMessageOne, `SORRY YOU FAILED ${game.name}: YOU FAILED`);
       await typeText(endMessageTwo, `FINAL CODE: ${game.masterCode.join('-')}`);
     }

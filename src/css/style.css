@@ -107,15 +107,13 @@ h3 {
   color: var(--mitt-light-blue);
 }
 .title {
-  margin-top: 25px;
-  width: 60svw;
-  max-width: 800px;
+  width: 580px;
   filter: drop-shadow(0 3px #0f02);
   animation: titleFlicker 0.75s infinite alternate;
   transition: var(--app-transition);
 }
 .in-play .title {
-  width: 40svw;
+  width: 380;
 }
 .mode {
   width: 100px;
@@ -197,6 +195,7 @@ h4 {
   background-color: var(--mitt-reg-blue);
   color: var(--mitt-light-blue);
   border: solid 2px var(--mitt-light-blue);
+  text-transform: uppercase;
 }
 .name-btn {
   width: 100px;
@@ -504,7 +503,7 @@ ul {
 }
 
 .mitt-logo {
-  margin-top: 100px;
+  margin-top: 25px;
   height: 50px;
   filter: drop-shadow(0 3px #0f02);
   animation: titleFlicker 0.75s infinite alternate;
@@ -620,6 +619,15 @@ Media Queries
 <------------------------------------------------*/
 
 @media (max-width: 600px) {
+  .mitt-logo {
+    height: 30px;
+  }
+  .title {
+    width: 380px;
+  }
+  .in-play .title {
+    width: 280px;
+  }
   h1 {
     font-size: 2.4rem;
   }
