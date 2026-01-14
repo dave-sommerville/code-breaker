@@ -1,16 +1,21 @@
 # Code-Breaker
 ## Overview
-Code Breaker is a Mastermind style logic and guessing game. The project is mostly working, however, more features need to be added. 
+Code Breaker is one of my oldest games, which has gone through many different updates. It is now designed to be a showcase of frontend development skills that I acquired at MITT. The gameplay is that of Mastermind, where you make guesses and get clues for your next guess. Try for a new highscore! 
 
 ## Features
-- Old School, terminal style UI
-- Number selector with guess button 
-- Previous guesses and clues stored and display 
-## Needs
-- Maximum guess set
-- Add how to play area
-- Add timer
-- Create localStorage scoreboard 
+- Object Oriented Code Design
+- Appealing UI
+- CSS transitions and animations
+- Background sound and sound effects
+- Dynamic element creation
+- Game timer
+- Player name input
+- Profanity regex
+- Game rules (which pause the timer if clicked while playing)
+- Two modes of game play (Easy/Hard)
+- Persistant scoreboards (local memory) for both modes
+
+
 ### Languages Used 
 ![HTML](https://img.shields.io/badge/WEB-HTML-%2391D5E8?style=for-the-badge&logo=html5&logoColor=white&labelColor=grey)
 
