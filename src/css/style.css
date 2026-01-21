@@ -479,6 +479,8 @@ ul {
 }
 
 .end-content {
+  width: 400px;
+  height: 400px;
   text-align: center;
   padding: 25px;
   background: rgba(0, 0, 0, 0.7);

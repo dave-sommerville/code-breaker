@@ -310,26 +310,34 @@ function createGuessElement(guess) {
 }
 async function gameOverCheck(game) {
   if (game.isGameOver) {
+    stopTimer(); // Stop the timer immediately so the score is locked in
     bgMusic.pause();
     bgMusic.currentTime = 0;
     removeClass(endScreen, "hidden");
-    if(game.isGameWon) {
+
+    if (game.isGameWon) {
       addClass(endScreen, "win");
-      typeText(endTitle, "CODE BROKEN");
       winnerSound.play();
+      
+      // SAVE SCORE IMMEDIATELY HERE
+      const isNewHighScore = calculateScore(game); 
+
+      // Now start the slow typing animations
+      typeText(endTitle, "CODE BROKEN");
       await typeText(endMessageOne, `CONGRATULATIONS ${game.name}: YOU WIN`);
       await typeText(endMessageTwo, `FINAL CODE: ${game.masterCode.join('-')}`);
-      if (calculateScore(game)) {
+      
+      if (isNewHighScore) {
         await typeText(endMessageThree, "YOU GOT A NEW TOP SCORE!");
       }
     } else {
+      // Losing logic stays the same
       addClass(endScreen, "lose");
       typeText(endTitle, "CODE SECURE");
       loserSound.play();
       await typeText(endMessageOne, `SORRY YOU FAILED ${game.name}: YOU FAILED`);
       await typeText(endMessageTwo, `FINAL CODE: ${game.masterCode.join('-')}`);
     }
-
   }
 }
 
